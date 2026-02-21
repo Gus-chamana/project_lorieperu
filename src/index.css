@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Pinyon+Script&family=Lora:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Tipografía para títulos principales - Lista Masta Regular alternativa */
+  .font-lista-masta {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  
+  /* Tipografía para "LORIE PERÚ" - Aston Script Bold alternativa */
+  .font-aston-script {
+    font-family: 'Pinyon Script', cursive;
+    font-weight: 400;
+  }
+  
+  /* Tipografía elegante para subtítulos del Hero */
+  .font-hero-subtitle {
+    font-family: 'Lora', serif;
+    font-weight: 400;
+  }
+}

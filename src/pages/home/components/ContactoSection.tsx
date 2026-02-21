@@ -1,0 +1,123 @@
+import { motion } from 'framer-motion';
+
+export default function ContactoSection() {
+  return (
+    <section className="py-20 bg-gradient-to-b from-white to-lorie-beige">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          {/* Left Content */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="font-lista-masta text-4xl md:text-5xl text-lorie-dark mb-6">
+              ¿Tienes Alguna Pregunta?
+            </h2>
+            <p className="font-sans text-lg text-lorie-brown leading-relaxed mb-8">
+              Estamos aquí para ayudarte. Contáctanos y te responderemos lo antes posible.
+            </p>
+
+            {/* Contact Info Cards */}
+            <div className="space-y-4">
+              <a
+                href="https://wa.me/51957026753"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-lorie-beige group"
+              >
+                <div className="w-14 h-14 flex items-center justify-center bg-green-500 rounded-full flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                  <i className="ri-whatsapp-line text-white text-2xl"></i>
+                </div>
+                <div>
+                  <h3 className="font-sans font-semibold text-lg text-lorie-dark">
+                    WhatsApp
+                  </h3>
+                  <p className="font-sans text-sm text-lorie-brown">
+                    +51 957 026 753
+                  </p>
+                </div>
+              </a>
+
+              <a
+                href="mailto:lorieventas@gmail.com"
+                className="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-lorie-beige group"
+              >
+                <div className="w-14 h-14 flex items-center justify-center bg-lorie-brown rounded-full flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                  <i className="ri-mail-line text-white text-2xl"></i>
+                </div>
+                <div>
+                  <h3 className="font-sans font-semibold text-lg text-lorie-dark">
+                    Email
+                  </h3>
+                  <p className="font-sans text-sm text-lorie-brown">
+                    lorieventas@gmail.com
+                  </p>
+                </div>
+              </a>
+
+              <a
+                href="https://www.instagram.com/lorie.peru"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-lorie-beige group"
+              >
+                <div className="w-14 h-14 flex items-center justify-center bg-lorie-rose rounded-full flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                  <i className="ri-instagram-line text-white text-2xl"></i>
+                </div>
+                <div>
+                  <h3 className="font-sans font-semibold text-lg text-lorie-dark">
+                    Instagram
+                  </h3>
+                  <p className="font-sans text-sm text-lorie-brown">
+                    @lorie.peru
+                  </p>
+                </div>
+              </a>
+
+              <a
+                href="https://www.tiktok.com/@lorie.peru"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-lorie-beige group"
+              >
+                <div className="w-14 h-14 flex items-center justify-center rounded-full flex-shrink-0 group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: 'rgb(185, 150, 128)' }}>
+                  <i className="ri-tiktok-line text-white text-2xl"></i>
+                </div>
+                <div>
+                  <h3 className="font-sans font-semibold text-lg text-lorie-dark">
+                    TikTok
+                  </h3>
+                  <p className="font-sans text-sm text-lorie-brown">
+                    @lorie.peru
+                  </p>
+                </div>
+              </a>
+            </div>
+          </motion.div>
+
+          {/* Right Image */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative"
+          >
+            <div className="w-full h-96 rounded-3xl overflow-hidden shadow-2xl">
+              <img
+                src="https://readdy.ai/api/search-image?query=friendly%20young%20peruvian%20woman%20artisan%20working%20on%20handmade%20fabric%20bags%2C%20smiling%20at%20camera%2C%20workshop%20setting%2C%20beige%20and%20earth%20tones%2C%20natural%20lighting%2C%20welcoming%20atmosphere%2C%20craftsmanship%2C%20contemporary%20style&width=800&height=600&seq=contacto1&orientation=landscape"
+                alt="Contacto Lorie Perú"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            {/* Decorative Element */}
+            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-lorie-beige rounded-3xl -z-10"></div>
+            <div className="absolute -top-6 -left-6 w-24 h-24 bg-lorie-rose/30 rounded-3xl -z-10"></div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
