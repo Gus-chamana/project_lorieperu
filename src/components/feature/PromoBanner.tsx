@@ -1,4 +1,4 @@
-
+"use client";
 import { useState, useEffect } from 'react';
 
 // Global visibility state shared across all PromoBanner instances

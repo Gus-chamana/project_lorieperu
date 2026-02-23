@@ -1,27 +1,29 @@
-import { Link } from 'react-router-dom';
+"use client";
+import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[rgb(139,90,90)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <footer className="bg-[rgb(139,90,90)] animate-pulse-glow overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Brand Column */}
           <div className="md:col-span-2">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-12 h-12 flex items-center justify-center bg-white rounded-full overflow-hidden shadow-sm">
-                <img 
-                  src="https://static.readdy.ai/image/3b494e0e56ddce0bb796382de2f71287/4c6db6c70ee75d92c4682710727488b0.png" 
-                  alt="Lorie Perú Logo" 
-                  className="w-full h-full object-contain"
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-white overflow-hidden flex-shrink-0 shadow">
+                <Image
+                  src="/logo.ico"
+                  alt="Lorie Perú Logo"
+                  width={44}
+                  height={44}
+                  className="w-11 h-11 object-contain"
                 />
               </div>
               <div>
-                <h3 className="font-serif text-2xl font-bold text-white">Lorie Perú</h3>
-                <p className="font-sans text-sm text-white/90">
-                  Confeccionamos lo que imaginas
-                </p>
+                <span className="font-serif text-xl font-semibold text-white block leading-tight">Lorie Perú</span>
+                <span className="font-sans text-xs text-white/80">Confeccionamos lo que imaginas</span>
               </div>
             </div>
             <p className="font-sans text-sm text-white/80 leading-relaxed mb-6">
@@ -72,7 +74,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link
-                  to="/"
+                  href="/"
                   className="font-sans text-sm text-white/80 hover:text-white transition-colors duration-300 cursor-pointer"
                 >
                   Inicio
@@ -80,7 +82,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to="/productos"
+                  href="/productos"
                   className="font-sans text-sm text-white/80 hover:text-white transition-colors duration-300 cursor-pointer"
                 >
                   Productos
@@ -88,7 +90,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to="/carrito"
+                  href="/carrito"
                   className="font-sans text-sm text-white/80 hover:text-white transition-colors duration-300 cursor-pointer"
                 >
                   Carrito
@@ -96,7 +98,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to="/nosotros"
+                  href="/nosotros"
                   className="font-sans text-sm text-white/80 hover:text-white transition-colors duration-300 cursor-pointer"
                 >
                   Nosotros
@@ -154,7 +156,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-white/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-white/20 mt-8 pt-4 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="font-sans text-sm text-white/70 text-center md:text-left">
             © {currentYear} Lorie Perú. Todos los derechos reservados.
           </p>
@@ -168,14 +170,7 @@ export default function Footer() {
               <i className="ri-book-2-line text-sm"></i>
               Libro de Reclamaciones
             </a>
-            <a
-              href="https://readdy.ai/?ref=logo"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-sans text-sm text-white/70 hover:text-white transition-colors duration-300 cursor-pointer"
-            >
-              Powered by Readdy
-            </a>
+
           </div>
         </div>
       </div>

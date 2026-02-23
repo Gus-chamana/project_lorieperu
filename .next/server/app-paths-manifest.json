@@ -1,0 +1,12 @@
+{
+  "/page": "app/page.js",
+  "/carrito/page": "app/carrito/page.js",
+  "/curso/page": "app/curso/page.js",
+  "/nosotros/page": "app/nosotros/page.js",
+  "/api/productos/route": "app/api/productos/route.js",
+  "/productos/page": "app/productos/page.js",
+  "/api/descuento/validar/route": "app/api/descuento/validar/route.js",
+  "/api/metodos-envio/route": "app/api/metodos-envio/route.js",
+  "/api/distritos/route": "app/api/distritos/route.js",
+  "/checkout/page": "app/checkout/page.js"
+}

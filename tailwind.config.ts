@@ -16,8 +16,8 @@ export default {
         },
       },
       fontFamily: {
-        serif: ['Cormorant', 'serif'],
-        sans: ['Montserrat', 'sans-serif'],
+        serif: ['var(--font-cormorant)', 'serif'],
+        sans: ['var(--font-montserrat)', 'sans-serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.6s ease-out',

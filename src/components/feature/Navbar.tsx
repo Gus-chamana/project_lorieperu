@@ -1,13 +1,20 @@
+"use client";
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import Image from 'next/image'; // Added Image import
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCartCount } from '../../hooks/useCart';
 import { usePromoBannerState, PROMO_HEIGHT } from './PromoBanner';
 
-export default function Navbar() {
+interface NavbarProps {
+  hideCart?: boolean;
+}
+
+export default function Navbar({ hideCart = false }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const location = useLocation();
+  const pathname = usePathname();
   const cartCount = useCartCount();
   const promoBannerVisible = usePromoBannerState();
 
@@ -36,32 +43,34 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-lg'
-          : 'bg-white/80 backdrop-blur-sm'
-      }`}
+      className={`fixed left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+        ? 'bg-white/95 backdrop-blur-md shadow-lg'
+        : 'bg-white/80 backdrop-blur-sm'
+        }`}
       style={{ top: topOffset }}
     >
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 cursor-pointer">
-            <div className="w-14 h-14 flex items-center justify-center rounded-full overflow-hidden bg-white shadow-sm">
-              <img 
-                src="https://static.readdy.ai/image/3b494e0e56ddce0bb796382de2f71287/4c6db6c70ee75d92c4682710727488b0.png" 
-                alt="Lorie Perú Logo" 
-                className="w-full h-full object-contain"
+          <Link href="/" className="flex items-center space-x-3 cursor-pointer">
+            <div className="w-14 h-14 flex items-center justify-center rounded-full overflow-hidden bg-lorie-rose shadow-sm">
+              <Image
+                src="/logo.ico"
+                alt="Lorie Perú Logo"
+                width={56}
+                height={56}
+                className="w-14 h-14 object-contain"
+                priority
               />
             </div>
             <div>
-              <h1 
+              <h1
                 className="font-serif text-2xl font-bold transition-colors duration-300"
                 style={{ color: logoTextColor }}
               >
                 Lorie Perú
               </h1>
-              <p 
+              <p
                 className="font-sans text-xs -mt-1 transition-colors duration-300"
                 style={{ color: logoSubtextColor }}
               >
@@ -75,11 +84,11 @@ export default function Navbar() {
             {navLinks.map((link) => (
               <Link
                 key={link.path}
-                to={link.path}
+                href={link.path}
                 className="font-sans font-medium text-base transition-colors duration-300 cursor-pointer whitespace-nowrap hover:opacity-80"
-                style={{ 
-                  color: location.pathname === link.path ? navLinkHover : navLinkColor,
-                  fontWeight: location.pathname === link.path ? 600 : 500
+                style={{
+                  color: pathname === link.path ? navLinkHover : navLinkColor,
+                  fontWeight: pathname === link.path ? 600 : 500
                 }}
               >
                 {link.name}
@@ -90,19 +99,21 @@ export default function Navbar() {
           {/* Desktop CTA & Icons */}
           <div className="hidden md:flex items-center space-x-3">
             {/* Cart Icon */}
-            <Link
-              to="/carrito"
-              className="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-lorie-cream transition-all duration-300 cursor-pointer"
-              aria-label="Carrito"
-              style={{ color: navLinkColor }}
-            >
-              <i className="ri-shopping-cart-2-line text-xl"></i>
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center bg-lorie-rose text-white text-xs font-bold rounded-full">
-                  {cartCount > 99 ? '99+' : cartCount}
-                </span>
-              )}
-            </Link>
+            {!hideCart && (
+              <Link
+                href="/carrito"
+                className="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-lorie-cream transition-all duration-300 cursor-pointer"
+                aria-label="Carrito"
+                style={{ color: navLinkColor }}
+              >
+                <i className="ri-shopping-cart-2-line text-xl"></i>
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center bg-lorie-rose text-white text-xs font-bold rounded-full">
+                    {cartCount > 99 ? '99+' : cartCount}
+                  </span>
+                )}
+              </Link>
+            )}
 
             {/* WhatsApp Button */}
             <a
@@ -120,19 +131,21 @@ export default function Navbar() {
           {/* Mobile Icons & Menu Button */}
           <div className="md:hidden flex items-center space-x-2">
             {/* Cart Icon Mobile */}
-            <Link
-              to="/carrito"
-              className="relative w-10 h-10 flex items-center justify-center rounded-full cursor-pointer"
-              aria-label="Carrito"
-              style={{ color: logoTextColor }}
-            >
-              <i className="ri-shopping-cart-2-line text-xl"></i>
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center bg-lorie-rose text-white text-xs font-bold rounded-full">
-                  {cartCount > 99 ? '99+' : cartCount}
-                </span>
-              )}
-            </Link>
+            {!hideCart && (
+              <Link
+                href="/carrito"
+                className="relative w-10 h-10 flex items-center justify-center rounded-full cursor-pointer"
+                aria-label="Carrito"
+                style={{ color: logoTextColor }}
+              >
+                <i className="ri-shopping-cart-2-line text-xl"></i>
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center bg-lorie-rose text-white text-xs font-bold rounded-full">
+                    {cartCount > 99 ? '99+' : cartCount}
+                  </span>
+                )}
+              </Link>
+            )}
 
             {/* Menu Button */}
             <button
@@ -163,18 +176,18 @@ export default function Navbar() {
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
-                  to={link.path}
+                  href={link.path}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="block font-sans font-medium text-base py-2 transition-colors duration-300 cursor-pointer"
-                  style={{ 
-                    color: location.pathname === link.path ? navLinkHover : navLinkColor,
-                    fontWeight: location.pathname === link.path ? 600 : 500
+                  style={{
+                    color: pathname === link.path ? navLinkHover : navLinkColor,
+                    fontWeight: pathname === link.path ? 600 : 500
                   }}
                 >
                   {link.name}
                 </Link>
               ))}
-              
+
               {/* Social Links Mobile */}
               <div className="flex items-center gap-4 py-2">
                 <a

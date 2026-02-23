@@ -1,8 +1,8 @@
-
 import { useState, useEffect } from 'react';
+import type { ValidacionDescuento } from '@/types/checkout';
 
 export interface CartItem {
-  id: number;
+  id: string;            // UUID de Supabase
   nombre: string;
   precio: number;
   precioOferta: number | null;
@@ -11,11 +11,14 @@ export interface CartItem {
 }
 
 const CART_STORAGE_KEY = 'lorie_cart';
+const DISCOUNT_STORAGE_KEY = 'lorie_cart_discount';
 
 export function useCart() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [descuentoData, setDescuentoData] = useState<ValidacionDescuento | null>(null);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Cargar carrito desde localStorage al iniciar
+  // Hidratación: cargar desde localStorage solo en el cliente
   useEffect(() => {
     const savedCart = localStorage.getItem(CART_STORAGE_KEY);
     if (savedCart) {
@@ -25,14 +28,33 @@ export function useCart() {
         setCartItems([]);
       }
     }
+
+    const savedDiscount = localStorage.getItem(DISCOUNT_STORAGE_KEY);
+    if (savedDiscount) {
+      try {
+        setDescuentoData(JSON.parse(savedDiscount));
+      } catch {
+        setDescuentoData(null);
+      }
+    }
+    setIsHydrated(true);
   }, []);
 
-  // Guardar carrito en localStorage cuando cambie
+  // Persistir en localStorage cuando el carrito cambie (solo tras hidratación)
   useEffect(() => {
+    if (!isHydrated) return;
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
-    // Disparar evento para actualizar otros componentes
     window.dispatchEvent(new CustomEvent('cartUpdated', { detail: cartItems }));
-  }, [cartItems]);
+  }, [cartItems, isHydrated]);
+
+  useEffect(() => {
+    if (!isHydrated) return;
+    if (descuentoData) {
+      localStorage.setItem(DISCOUNT_STORAGE_KEY, JSON.stringify(descuentoData));
+    } else {
+      localStorage.removeItem(DISCOUNT_STORAGE_KEY);
+    }
+  }, [descuentoData, isHydrated]);
 
   const addToCart = (item: Omit<CartItem, 'cantidad'>) => {
     setCartItems((prev) => {
@@ -46,11 +68,11 @@ export function useCart() {
     });
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: string) => {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const updateQuantity = (id: number, cantidad: number) => {
+  const updateQuantity = (id: string, cantidad: number) => {
     if (cantidad <= 0) {
       removeFromCart(id);
       return;
@@ -62,6 +84,11 @@ export function useCart() {
 
   const clearCart = () => {
     setCartItems([]);
+    setDescuentoData(null);
+  };
+
+  const setDescuento = (descuento: ValidacionDescuento | null) => {
+    setDescuentoData(descuento);
   };
 
   const getCartTotal = () => {
@@ -77,12 +104,15 @@ export function useCart() {
 
   return {
     cartItems,
+    descuentoData,
+    isHydrated,
     addToCart,
     removeFromCart,
     updateQuantity,
     clearCart,
     getCartTotal,
     getCartCount,
+    setDescuento,
   };
 }
 
