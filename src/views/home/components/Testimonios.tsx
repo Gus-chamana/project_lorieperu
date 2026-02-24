@@ -110,7 +110,7 @@ export default function Testimonios() {
 
             {/* Comentario */}
             <p className="font-sans text-lg md:text-xl text-lorie-dark text-center leading-relaxed mb-8 italic">
-              "{testimonios[currentIndex].comentario}"
+              &quot;{testimonios[currentIndex].comentario}&quot;
             </p>
 
             {/* Cliente Info */}

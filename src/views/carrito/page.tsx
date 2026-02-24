@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -100,7 +100,7 @@ export default function CarritoPage() {
         setDescuento(null);
         setErrorDescuento(data.error ?? 'Código inválido o expirado');
       }
-    } catch (e) {
+    } catch {
       setErrorDescuento('Error de red al validar el código');
     } finally {
       setAplicandoDescuento(false);

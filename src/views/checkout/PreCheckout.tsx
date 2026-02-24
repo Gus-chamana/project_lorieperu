@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCart, CartItem } from '@/hooks/useCart';
 import Navbar from '@/components/feature/Navbar';
 import FooterMinimal from '@/components/feature/FooterMinimal';
 import CheckoutSteps from '@/components/feature/CheckoutSteps';
-import type { Distrito, MetodoEnvio, ValidacionDescuento } from '@/types/checkout';
+import type { Distrito, MetodoEnvio } from '@/types/checkout';
 
 interface PreCheckoutProps {
     onOrdenCreada?: (ordenId: string) => void;
