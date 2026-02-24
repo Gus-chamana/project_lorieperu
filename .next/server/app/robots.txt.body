@@ -1,6 +1,0 @@
-User-Agent: *
-Allow: /
-Disallow: /api/
-Disallow: /checkout/
-
-Sitemap: https://www.lorieperu.com/sitemap.xml
