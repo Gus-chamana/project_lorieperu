@@ -409,9 +409,15 @@ export default function ProductosPage() {
                       </label>
                       <input
                         type="text"
+                        inputMode="decimal"
                         id="medidaPulgadas"
                         value={inputMedida}
-                        onChange={(e) => setInputMedida(e.target.value)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                            setInputMedida(value);
+                          }
+                        }}
                         placeholder='Ej: 13", 14", 15.6"'
                         className="w-full px-4 py-3 rounded-xl border border-lorie-beige bg-white text-lorie-dark font-sans text-sm focus:outline-none focus:ring-2 focus:ring-lorie-brown/50 transition-all"
                       />
