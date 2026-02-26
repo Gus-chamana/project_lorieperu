@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useCart } from '../../../hooks/useCart';
 import { useProductos } from '../../../hooks/useProductos';
 import type { ProductoFrontend } from '../../../types/producto';
@@ -23,11 +24,11 @@ function SkeletonCard() {
 
 export default function ProductosDestacados() {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
-  const [addedToCart, setAddedToCart] = useState<string | null>(null);
   const [productoSeleccionado, setProductoSeleccionado] = useState<ProductoFrontend | null>(null);
   const [imagenActiva, setImagenActiva] = useState(0);
 
-  const { addToCart } = useCart();
+  const router = useRouter();
+  const { cartItems, addToCart } = useCart();
   const { productos, cargando } = useProductos({ destacados: true });
 
   const abrirDetalle = (producto: ProductoFrontend) => {
@@ -46,10 +47,12 @@ export default function ProductosDestacados() {
       nombre: producto.nombre,
       precio: producto.precio,
       precioOferta: producto.precioOferta,
-      imagen: producto.imagenes[0] ?? '',
+      imagen: producto.imagenes?.[0] || '',
     });
-    setAddedToCart(producto.id);
-    setTimeout(() => setAddedToCart(null), 2000);
+  };
+
+  const isInCart = (id: string) => {
+    return cartItems.some(item => item.id === id);
   };
 
   return (
@@ -167,18 +170,26 @@ export default function ProductosDestacados() {
                 </div>
 
                 <button
-                  onClick={() => !producto.agotado && handleAddToCart(producto)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (producto.agotado) return;
+                    if (isInCart(producto.id)) {
+                      router.push('/carrito');
+                    } else {
+                      handleAddToCart(producto);
+                    }
+                  }}
                   disabled={producto.agotado}
                   className={`w-full py-3 rounded-full font-sans font-semibold text-sm transition-all duration-300 flex items-center justify-center space-x-2 whitespace-nowrap ${producto.agotado
-                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : addedToCart === producto.id
-                      ? 'bg-green-500 text-white'
-                      : 'text-white hover:opacity-90 hover:shadow-lg cursor-pointer'
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : isInCart(producto.id)
+                        ? 'bg-green-500 text-white'
+                        : 'text-white hover:opacity-90 hover:shadow-lg cursor-pointer'
                     }`}
-                  style={!producto.agotado && addedToCart !== producto.id ? { backgroundColor: 'rgb(185, 150, 128)' } : undefined}
+                  style={!producto.agotado && !isInCart(producto.id) ? { backgroundColor: 'rgb(185, 150, 128)' } : undefined}
                 >
-                  <i className={producto.agotado ? 'ri-close-circle-line' : addedToCart === producto.id ? 'ri-check-line' : 'ri-shopping-cart-2-line'} />
-                  <span>{producto.agotado ? 'Agotado' : addedToCart === producto.id ? '¡Agregado!' : 'Agregar al Carrito'}</span>
+                  <i className={producto.agotado ? 'ri-close-circle-line' : isInCart(producto.id) ? 'ri-check-line' : 'ri-shopping-cart-2-line'} />
+                  <span>{producto.agotado ? 'Agotado' : isInCart(producto.id) ? '¡Añadido a tu carrito!' : 'Añadir al carrito'}</span>
                 </button>
               </div>
             </motion.div>
@@ -289,20 +300,39 @@ export default function ProductosDestacados() {
                     </span>
                   </div>
 
-                  <div className="mt-auto space-y-3">
+                  <div className="mt-auto flex flex-col gap-3">
                     <button
-                      onClick={() => { if (!productoSeleccionado.agotado) handleAddToCart(productoSeleccionado); }}
+                      onClick={() => {
+                        if (productoSeleccionado.agotado) return;
+                        if (isInCart(productoSeleccionado.id)) {
+                          router.push('/carrito');
+                        } else {
+                          handleAddToCart(productoSeleccionado);
+                        }
+                      }}
                       disabled={productoSeleccionado.agotado}
-                      className={`w-full py-3 rounded-full font-sans font-semibold text-sm transition-all duration-300 flex items-center justify-center space-x-2 whitespace-nowrap ${productoSeleccionado.agotado ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : addedToCart === productoSeleccionado.id ? 'bg-green-500 text-white' : 'text-white hover:opacity-90 hover:shadow-lg cursor-pointer'}`}
-                      style={!productoSeleccionado.agotado && addedToCart !== productoSeleccionado.id ? { backgroundColor: 'rgb(185, 150, 128)' } : undefined}
+                      className={`w-full py-3.5 rounded-full font-sans font-semibold text-base transition-all duration-300 flex items-center justify-center space-x-2 whitespace-nowrap shadow-md ${productoSeleccionado.agotado ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : isInCart(productoSeleccionado.id) ? 'bg-green-600 text-white' : 'text-white hover:opacity-90 hover:shadow-lg cursor-pointer'}`}
+                      style={!productoSeleccionado.agotado && !isInCart(productoSeleccionado.id) ? { backgroundColor: 'rgb(187,155,138)' } : undefined}
                     >
-                      <i className={productoSeleccionado.agotado ? 'ri-close-circle-line' : addedToCart === productoSeleccionado.id ? 'ri-check-line' : 'ri-shopping-cart-2-line'} />
-                      <span>{productoSeleccionado.agotado ? 'Agotado' : addedToCart === productoSeleccionado.id ? '¡Agregado al Carrito!' : 'Agregar al Carrito'}</span>
+                      <i className={productoSeleccionado.agotado ? 'ri-close-circle-line text-lg' : isInCart(productoSeleccionado.id) ? 'ri-check-line text-lg' : 'ri-shopping-bag-3-line text-lg'} />
+                      <span>{productoSeleccionado.agotado ? 'Agotado' : isInCart(productoSeleccionado.id) ? '¡Añadido a tu carrito!' : 'Añadir a mi carrito'}</span>
                     </button>
-                    {/* Botón ver detalles redirige al catálogo general o cierra si ya estamos ahí, pero aquí mejor cerramos */}
-                    <button onClick={cerrarDetalle} className="w-full py-3 rounded-full font-sans font-medium text-sm border border-lorie-beige text-lorie-brown hover:bg-lorie-cream transition-all cursor-pointer whitespace-nowrap">
-                      Cerrar Vista Rápida
-                    </button>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+                      <Link
+                        href="/carrito"
+                        className="w-full py-3 rounded-full font-sans font-medium text-sm bg-lorie-dark text-white hover:bg-black transition-all flex items-center justify-center gap-2 whitespace-nowrap shadow-sm border border-lorie-dark"
+                      >
+                        <i className="ri-shopping-cart-2-fill"></i>
+                        Ver mi carrito
+                      </Link>
+                      <button
+                        onClick={cerrarDetalle}
+                        className="w-full py-3 rounded-full font-sans font-medium text-sm bg-white text-lorie-brown border border-lorie-beige hover:bg-lorie-cream transition-all cursor-pointer whitespace-nowrap text-center"
+                      >
+                        Seguir explorando
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
