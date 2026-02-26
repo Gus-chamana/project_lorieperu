@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import type { ValidacionDescuento } from '@/types/checkout';
 
 export interface CartItem {
+  cartItemId: string;    // id + '-' + medida (para diferenciar tallas del mismo producto)
   id: string;            // UUID de Supabase
   nombre: string;
   precio: number;
   precioOferta: number | null;
   imagen: string;
   cantidad: number;
+  medida?: string;       // Ej: "13 pulgadas"
 }
 
 const CART_STORAGE_KEY = 'lorie_cart';
@@ -56,29 +58,31 @@ export function useCart() {
     }
   }, [descuentoData, isHydrated]);
 
-  const addToCart = (item: Omit<CartItem, 'cantidad'>) => {
+  const addToCart = (item: Omit<CartItem, 'cantidad' | 'cartItemId'>) => {
+    const generatedCartItemId = item.medida ? `${item.id}-${item.medida}` : item.id;
+
     setCartItems((prev) => {
-      const existingItem = prev.find((i) => i.id === item.id);
+      const existingItem = prev.find((i) => i.cartItemId === generatedCartItemId);
       if (existingItem) {
         return prev.map((i) =>
-          i.id === item.id ? { ...i, cantidad: i.cantidad + 1 } : i
+          i.cartItemId === generatedCartItemId ? { ...i, cantidad: i.cantidad + 1 } : i
         );
       }
-      return [...prev, { ...item, cantidad: 1 }];
+      return [...prev, { ...item, cartItemId: generatedCartItemId, cantidad: 1 }];
     });
   };
 
-  const removeFromCart = (id: string) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
+  const removeFromCart = (cartItemId: string) => {
+    setCartItems((prev) => prev.filter((item) => item.cartItemId !== cartItemId));
   };
 
-  const updateQuantity = (id: string, cantidad: number) => {
+  const updateQuantity = (cartItemId: string, cantidad: number) => {
     if (cantidad <= 0) {
-      removeFromCart(id);
+      removeFromCart(cartItemId);
       return;
     }
     setCartItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, cantidad } : item))
+      prev.map((item) => (item.cartItemId === cartItemId ? { ...item, cantidad } : item))
     );
   };
 

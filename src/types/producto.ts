@@ -12,4 +12,5 @@ export interface ProductoFrontend {
     stock: number;
     nuevo: boolean;
     agotado: boolean;
+    requiere_medida?: boolean;
 }

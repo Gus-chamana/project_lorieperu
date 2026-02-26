@@ -10,7 +10,7 @@ export async function GET(request: Request) {
         // 1️⃣ Traer productos (sin join por flexibilidad)
         let query = supabase
             .from('productos')
-            .select('id, nombre, descripcion, caracteristicas, precio, precio_oferta, stock, nuevo, agotado, activo, creado_en')
+            .select('id, nombre, descripcion, caracteristicas, precio, precio_oferta, stock, nuevo, agotado, activo, creado_en, requiere_medida')
             .eq('activo', true)
             .order('creado_en', { ascending: false });
 
@@ -77,6 +77,7 @@ export async function GET(request: Request) {
             stock: p.stock ?? 0,
             nuevo: p.nuevo ?? false,
             agotado: p.agotado ?? false,
+            requiere_medida: p.requiere_medida ?? false,
         }));
 
         return NextResponse.json(productos);

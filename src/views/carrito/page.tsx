@@ -41,22 +41,22 @@ export default function CarritoPage() {
     return catalogoBD.find(p => p.id === id) || null;
   };
 
-  const handleUpdateQuantity = (id: string, currentQty: number, change: number) => {
+  const handleUpdateQuantity = (cartItemId: string, productoId: string, currentQty: number, change: number) => {
     const newQty = currentQty + change;
     if (newQty <= 0) {
-      removeFromCart(id);
+      removeFromCart(cartItemId);
       return;
     }
 
     // Validar stock usando BD fresca (si ya cargó)
-    const dataReal = getProductoReal(id);
+    const dataReal = getProductoReal(productoId);
     const maxStock = dataReal ? dataReal.stock : Infinity;
 
     if (newQty > maxStock) {
       return;
     }
 
-    updateQuantity(id, newQty);
+    updateQuantity(cartItemId, newQty);
   };
 
   const subtotalProductos = cartItems.reduce((acc, item) => {
@@ -121,7 +121,7 @@ export default function CarritoPage() {
     cartItems.forEach((item, index) => {
       const pReal = getProductoReal(item.id);
       const precioUnit = pReal ? (pReal.precioOferta || pReal.precio) : (item.precioOferta || item.precio);
-      mensaje += `${index + 1}. ${item.nombre}\n`;
+      mensaje += `${index + 1}. ${item.nombre}${item.medida ? ` (Medida: ${item.medida})` : ''}\n`;
       mensaje += `   Cantidad: ${item.cantidad}\n`;
       mensaje += `   Subtotal: S/ ${(precioUnit * item.cantidad).toFixed(2)}\n\n`;
     });
@@ -214,7 +214,7 @@ export default function CarritoPage() {
 
                         return (
                           <motion.div
-                            key={item.id}
+                            key={item.cartItemId}
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: 10, scale: 0.95 }}
@@ -222,7 +222,7 @@ export default function CarritoPage() {
                             className={`group relative grid grid-cols-1 sm:grid-cols-12 gap-y-6 sm:gap-x-4 items-center p-4 sm:p-6 transition-colors hover:bg-lorie-cream/10 ${index !== cartItems.length - 1 ? 'border-b border-lorie-beige/30' : ''}`}
                           >
                             <button
-                              onClick={() => removeFromCart(item.id)}
+                              onClick={() => removeFromCart(item.cartItemId)}
                               className="absolute sm:hidden top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-red-50 text-red-400 hover:text-red-500 transition-colors"
                             >
                               <i className="ri-close-line text-lg"></i>
@@ -242,6 +242,11 @@ export default function CarritoPage() {
                                 <Link href={`/productos`} className="font-serif text-xl sm:text-2xl font-semibold text-lorie-dark hover:text-lorie-brown transition-colors truncate mb-1">
                                   {item.nombre}
                                 </Link>
+                                {item.medida && (
+                                  <p className="text-sm text-lorie-brown font-medium mb-1">
+                                    Tamaño: {item.medida}
+                                  </p>
+                                )}
 
                                 {cargandoBD ? (
                                   <div className="animate-pulse flex flex-col gap-2 mt-2">
@@ -286,7 +291,7 @@ export default function CarritoPage() {
                             <div className="col-span-1 sm:col-span-3 flex flex-col items-center justify-center">
                               <div className="flex items-center bg-lorie-cream/30 border border-lorie-beige rounded-xl p-1 shadow-inner sm:w-28 justify-between gap-2">
                                 <button
-                                  onClick={() => handleUpdateQuantity(item.id, item.cantidad, -1)}
+                                  onClick={() => handleUpdateQuantity(item.cartItemId, item.id, item.cantidad, -1)}
                                   className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white text-lorie-brown transition-all shadow-sm cursor-pointer"
                                 >
                                   <i className="ri-subtract-line"></i>
@@ -295,7 +300,7 @@ export default function CarritoPage() {
                                   {item.cantidad}
                                 </span>
                                 <button
-                                  onClick={() => handleUpdateQuantity(item.id, item.cantidad, 1)}
+                                  onClick={() => handleUpdateQuantity(item.cartItemId, item.id, item.cantidad, 1)}
                                   disabled={isMaxReached || isOutOfStock}
                                   className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all shadow-sm ${isMaxReached || isOutOfStock ? 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-60' : 'hover:bg-white text-lorie-brown cursor-pointer'}`}
                                 >
@@ -318,7 +323,7 @@ export default function CarritoPage() {
                                 </div>
                                 <div className="w-10 flex justify-end ml-4">
                                   <button
-                                    onClick={() => removeFromCart(item.id)}
+                                    onClick={() => removeFromCart(item.cartItemId)}
                                     title="Eliminar del carrito"
                                     className="w-10 h-10 flex items-center justify-center rounded-full bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600 transition-colors flex-shrink-0"
                                   >

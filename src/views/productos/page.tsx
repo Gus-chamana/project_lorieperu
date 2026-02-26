@@ -35,6 +35,7 @@ export default function ProductosPage() {
   const [filtroActivo, setFiltroActivo] = useState<Filtro>('Todas');
   const [productoSeleccionado, setProductoSeleccionado] = useState<ProductoFrontend | null>(null);
   const [imagenActiva, setImagenActiva] = useState(0);
+  const [inputMedida, setInputMedida] = useState('');
 
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
@@ -81,6 +82,7 @@ export default function ProductosPage() {
   const abrirDetalle = (producto: ProductoFrontend) => {
     setProductoSeleccionado(producto);
     setImagenActiva(0);
+    setInputMedida('');
   };
 
   const cerrarDetalle = () => {
@@ -95,12 +97,15 @@ export default function ProductosPage() {
       precio: producto.precio,
       precioOferta: producto.precioOferta,
       imagen: producto.imagenes?.[0] || '',
+      medida: producto.requiere_medida ? inputMedida.trim() : undefined,
     });
-
   };
 
   // Función auxiliar para saber si el producto actual ya está en el carrito
-  const isInCart = (id: string) => {
+  const isInCart = (id: string, medidaReq?: string) => {
+    if (medidaReq) {
+      return cartItems.some(item => item.id === id && item.medida === medidaReq);
+    }
     return cartItems.some(item => item.id === id);
   };
 
@@ -270,11 +275,18 @@ export default function ProductosPage() {
                         onClick={(e) => {
                           e.stopPropagation();
                           if (producto.agotado) return;
+
                           if (isInCart(producto.id)) {
                             router.push('/carrito');
-                          } else {
-                            handleAddToCart(producto);
+                            return;
                           }
+
+                          if (producto.requiere_medida) {
+                            abrirDetalle(producto);
+                            return;
+                          }
+
+                          handleAddToCart(producto);
                         }}
                         disabled={producto.agotado}
                         className={`w-full py-3 rounded-full font-sans font-semibold text-sm transition-all duration-300 flex items-center justify-center space-x-2 whitespace-nowrap ${producto.agotado
@@ -285,8 +297,8 @@ export default function ProductosPage() {
                           }`}
                         style={!producto.agotado && !isInCart(producto.id) ? { backgroundColor: 'rgb(185, 150, 128)' } : undefined}
                       >
-                        <i className={producto.agotado ? 'ri-close-circle-line' : isInCart(producto.id) ? 'ri-check-line' : 'ri-shopping-cart-2-line'} />
-                        <span>{producto.agotado ? 'Agotado' : isInCart(producto.id) ? '¡Añadido a tu carrito!' : 'Añadir al carrito'}</span>
+                        <i className={producto.agotado ? 'ri-close-circle-line' : isInCart(producto.id) ? 'ri-check-line' : producto.requiere_medida ? 'ri-ruler-line' : 'ri-shopping-cart-2-line'} />
+                        <span>{producto.agotado ? 'Agotado' : isInCart(producto.id) ? '¡Añadido a tu carrito!' : producto.requiere_medida ? 'Elegir Medida' : 'Añadir al carrito'}</span>
                       </button>
                     </div>
                   </motion.div>
@@ -390,22 +402,46 @@ export default function ProductosPage() {
                     </span>
                   </div>
 
+                  {productoSeleccionado.requiere_medida && !productoSeleccionado.agotado && (
+                    <div className="mb-6 bg-lorie-cream/30 p-4 rounded-xl border border-lorie-beige">
+                      <label htmlFor="medidaPulgadas" className="block text-lorie-dark font-sans font-semibold text-sm mb-2">
+                        Especifica el tamaño en pulgadas <span className="text-lorie-rose">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="medidaPulgadas"
+                        value={inputMedida}
+                        onChange={(e) => setInputMedida(e.target.value)}
+                        placeholder='Ej: 13", 14", 15.6"'
+                        className="w-full px-4 py-3 rounded-xl border border-lorie-beige bg-white text-lorie-dark font-sans text-sm focus:outline-none focus:ring-2 focus:ring-lorie-brown/50 transition-all"
+                      />
+                      <p className="text-xs text-lorie-brown/70 mt-2">
+                        Necesitamos conocer la medida exacta de tu dispositivo para confeccionar la funda a medida.
+                      </p>
+                    </div>
+                  )}
+
                   <div className="mt-auto flex flex-col gap-3">
                     <button
                       onClick={() => {
                         if (productoSeleccionado.agotado) return;
-                        if (isInCart(productoSeleccionado.id)) {
+                        if (productoSeleccionado.requiere_medida && !inputMedida.trim()) return;
+
+                        const isSpecificItemInCart = productoSeleccionado.requiere_medida
+                          ? isInCart(productoSeleccionado.id, inputMedida.trim())
+                          : isInCart(productoSeleccionado.id);
+                        if (isSpecificItemInCart) {
                           router.push('/carrito');
                         } else {
                           handleAddToCart(productoSeleccionado);
                         }
                       }}
-                      disabled={productoSeleccionado.agotado}
-                      className={`w-full py-3.5 rounded-full font-sans font-semibold text-base transition-all duration-300 flex items-center justify-center space-x-2 whitespace-nowrap shadow-md ${productoSeleccionado.agotado ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : isInCart(productoSeleccionado.id) ? 'bg-green-600 text-white' : 'text-white hover:opacity-90 hover:shadow-lg cursor-pointer'}`}
-                      style={!productoSeleccionado.agotado && !isInCart(productoSeleccionado.id) ? { backgroundColor: 'rgb(187,155,138)' } : undefined}
+                      disabled={productoSeleccionado.agotado || !!(productoSeleccionado.requiere_medida && !inputMedida.trim() && !isInCart(productoSeleccionado.id, inputMedida.trim()))}
+                      className={`w-full py-3.5 rounded-full font-sans font-semibold text-base transition-all duration-300 flex items-center justify-center space-x-2 whitespace-nowrap shadow-md ${(productoSeleccionado.agotado || (productoSeleccionado.requiere_medida && !inputMedida.trim())) ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : (productoSeleccionado.requiere_medida ? isInCart(productoSeleccionado.id, inputMedida.trim()) : isInCart(productoSeleccionado.id)) ? 'bg-green-600 text-white' : 'text-white hover:opacity-90 hover:shadow-lg cursor-pointer'}`}
+                      style={!(productoSeleccionado.agotado || (productoSeleccionado.requiere_medida && !inputMedida.trim())) && !(productoSeleccionado.requiere_medida ? isInCart(productoSeleccionado.id, inputMedida.trim()) : isInCart(productoSeleccionado.id)) ? { backgroundColor: 'rgb(187,155,138)' } : undefined}
                     >
-                      <i className={productoSeleccionado.agotado ? 'ri-close-circle-line text-lg' : isInCart(productoSeleccionado.id) ? 'ri-check-line text-lg' : 'ri-shopping-bag-3-line text-lg'} />
-                      <span>{productoSeleccionado.agotado ? 'Agotado' : isInCart(productoSeleccionado.id) ? '¡Añadido a tu carrito!' : 'Añadir a mi carrito'}</span>
+                      <i className={productoSeleccionado.agotado ? 'ri-close-circle-line text-lg' : (productoSeleccionado.requiere_medida ? isInCart(productoSeleccionado.id, inputMedida.trim()) : isInCart(productoSeleccionado.id)) ? 'ri-check-line text-lg' : 'ri-shopping-bag-3-line text-lg'} />
+                      <span>{productoSeleccionado.agotado ? 'Agotado' : (productoSeleccionado.requiere_medida ? isInCart(productoSeleccionado.id, inputMedida.trim()) : isInCart(productoSeleccionado.id)) ? '¡Añadido a tu carrito!' : 'Añadir a mi carrito'}</span>
                     </button>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">

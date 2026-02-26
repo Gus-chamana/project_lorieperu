@@ -194,7 +194,7 @@ export default function CursoPage() {
               <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
                 <div className="relative h-52 overflow-hidden">
                   <Image
-                    src="https://static.readdy.ai/image/3b494e0e56ddce0bb796382de2f71287/f0c3dfcceb6ab8a6b22108b4af235db3.png"
+                    src="https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/curso/cur_tarjetero.jpeg"
                     alt="Puntada a Mano"
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
@@ -241,7 +241,7 @@ export default function CursoPage() {
               <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
                 <div className="relative h-52 overflow-hidden">
                   <Image
-                    src="https://static.readdy.ai/image/3b494e0e56ddce0bb796382de2f71287/b7877b7d44e885fe5f7febf0a272469f.png"
+                    src="https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/curso/cur_minipuf.jpeg"
                     alt="Mini Puffer"
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
