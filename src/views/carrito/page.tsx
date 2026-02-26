@@ -193,9 +193,13 @@ export default function CarritoPage() {
               <div className="lg:col-span-8 space-y-6">
                 <div className="bg-white rounded-3xl shadow-sm border border-lorie-beige/50 overflow-hidden">
                   <div className="hidden sm:grid grid-cols-12 gap-4 p-6 border-b border-lorie-beige/50 bg-lorie-cream/20 text-lorie-brown font-semibold text-sm uppercase tracking-wider">
-                    <div className="col-span-7">Producto</div>
+                    <div className="col-span-6">Producto</div>
                     <div className="col-span-3 text-center">Cantidad</div>
-                    <div className="col-span-2 text-right">Subtotal</div>
+                    <div className="col-span-3 flex justify-end items-center gap-4">
+                      <span>Subtotal</span>
+                      {/* Espaciador invisible para alinear el header con el margen que ocupa el botón eliminar abajo */}
+                      <div className="w-10"></div>
+                    </div>
                   </div>
 
                   <div className="p-2 sm:p-0">
@@ -224,7 +228,7 @@ export default function CarritoPage() {
                               <i className="ri-close-line text-lg"></i>
                             </button>
 
-                            <div className="col-span-1 sm:col-span-7 flex flex-col sm:flex-row gap-5">
+                            <div className="col-span-1 sm:col-span-6 flex flex-col sm:flex-row gap-5">
                               <div className="relative w-full sm:w-32 aspect-square rounded-2xl overflow-hidden bg-lorie-cream border border-lorie-beige/40 flex-shrink-0">
                                 <Image
                                   src={item.imagen}
@@ -280,20 +284,20 @@ export default function CarritoPage() {
                             </div>
 
                             <div className="col-span-1 sm:col-span-3 flex flex-col items-center justify-center">
-                              <div className="flex items-center bg-lorie-cream/30 border border-lorie-beige rounded-xl p-1 shadow-inner w-full sm:w-auto justify-between sm:justify-center gap-4 sm:gap-2">
+                              <div className="flex items-center bg-lorie-cream/30 border border-lorie-beige rounded-xl p-1 shadow-inner sm:w-28 justify-between gap-2">
                                 <button
                                   onClick={() => handleUpdateQuantity(item.id, item.cantidad, -1)}
-                                  className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white text-lorie-brown transition-all shadow-sm cursor-pointer"
+                                  className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white text-lorie-brown transition-all shadow-sm cursor-pointer"
                                 >
                                   <i className="ri-subtract-line"></i>
                                 </button>
-                                <span className="w-8 text-center font-semibold text-lorie-dark text-lg">
+                                <span className="w-6 text-center font-semibold text-lorie-dark text-base">
                                   {item.cantidad}
                                 </span>
                                 <button
                                   onClick={() => handleUpdateQuantity(item.id, item.cantidad, 1)}
                                   disabled={isMaxReached || isOutOfStock}
-                                  className={`w-10 h-10 flex items-center justify-center rounded-lg transition-all shadow-sm ${isMaxReached || isOutOfStock ? 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-60' : 'hover:bg-white text-lorie-brown cursor-pointer'}`}
+                                  className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all shadow-sm ${isMaxReached || isOutOfStock ? 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-60' : 'hover:bg-white text-lorie-brown cursor-pointer'}`}
                                 >
                                   <i className="ri-add-line"></i>
                                 </button>
@@ -303,20 +307,25 @@ export default function CarritoPage() {
                               )}
                             </div>
 
-                            <div className="hidden sm:flex col-span-2 items-center justify-end gap-4">
-                              <div className="text-right">
-                                <div className="text-xs text-lorie-brown/60 mb-1">Precio S/ {precioActual.toFixed(2)}</div>
-                                <span className="font-bold text-lorie-dark text-xl">
-                                  S/ {(precioActual * item.cantidad).toFixed(2)}
-                                </span>
+                            <div className="hidden sm:flex col-span-3 items-center justify-end">
+                              <div className="flex items-center justify-between w-full">
+                                <div className="text-right whitespace-nowrap min-w-max flex-1">
+
+                                  <span className="font-bold text-lorie-dark text-xl flex items-center justify-end gap-1">
+                                    <span>S/</span>
+                                    <span>{(precioActual * item.cantidad).toFixed(2)}</span>
+                                  </span>
+                                </div>
+                                <div className="w-10 flex justify-end ml-4">
+                                  <button
+                                    onClick={() => removeFromCart(item.id)}
+                                    title="Eliminar del carrito"
+                                    className="w-10 h-10 flex items-center justify-center rounded-full bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600 transition-colors flex-shrink-0"
+                                  >
+                                    <i className="ri-delete-bin-line text-lg"></i>
+                                  </button>
+                                </div>
                               </div>
-                              <button
-                                onClick={() => removeFromCart(item.id)}
-                                title="Eliminar del carrito"
-                                className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-red-50 text-lorie-beige hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
-                              >
-                                <i className="ri-delete-bin-line text-lg"></i>
-                              </button>
                             </div>
                           </motion.div>
                         );
@@ -333,7 +342,7 @@ export default function CarritoPage() {
                   transition={{ delay: 0.3 }}
                   className="bg-white rounded-3xl shadow-lg border border-lorie-beige/60 p-6 sm:p-8 sticky top-28"
                 >
-                  <h3 className="font-serif text-2xl font-semibold text-lorie-dark mb-6">Resumen del Pedido</h3>
+                  <h3 className="font-serif text-2xl font-semibold text-lorie-dark mb-6">Resumen del Carrito</h3>
 
                   <div className="mb-6 pb-6 border-b border-lorie-beige/50">
                     <label className="block text-sm font-semibold text-lorie-dark mb-3">
