@@ -35,7 +35,7 @@ export default function ProductosPage() {
   const [filtroActivo, setFiltroActivo] = useState<Filtro>('Todas');
   const [productoSeleccionado, setProductoSeleccionado] = useState<ProductoFrontend | null>(null);
   const [imagenActiva, setImagenActiva] = useState(0);
-  const [addedToCart, setAddedToCart] = useState<string | null>(null);
+
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   const router = useRouter();
@@ -69,8 +69,7 @@ export default function ProductosPage() {
       precioOferta: producto.precioOferta,
       imagen: producto.imagenes?.[0] || '',
     });
-    setAddedToCart(producto.id);
-    // Removemos el setTimeout para que el estado de "Añadido" persista hasta que recargue o lo quite del carrito.
+
   };
 
   // Función auxiliar para saber si el producto actual ya está en el carrito
@@ -252,10 +251,10 @@ export default function ProductosPage() {
                         }}
                         disabled={producto.agotado}
                         className={`w-full py-3 rounded-full font-sans font-semibold text-sm transition-all duration-300 flex items-center justify-center space-x-2 whitespace-nowrap ${producto.agotado
-                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                            : isInCart(producto.id)
-                              ? 'bg-green-500 text-white'
-                              : 'text-white hover:opacity-90 hover:shadow-lg cursor-pointer'
+                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                          : isInCart(producto.id)
+                            ? 'bg-green-500 text-white'
+                            : 'text-white hover:opacity-90 hover:shadow-lg cursor-pointer'
                           }`}
                         style={!producto.agotado && !isInCart(producto.id) ? { backgroundColor: 'rgb(185, 150, 128)' } : undefined}
                       >
