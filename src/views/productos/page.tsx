@@ -44,11 +44,38 @@ export default function ProductosPage() {
 
   const filtros: Filtro[] = ['Todas', 'Nuevas', 'Ofertas'];
 
-  // Filtrado en cliente (ya tenemos todos los productos)
+  // Filtrado y ordenamiento en cliente
   const productosFiltrados = useMemo(() => {
-    if (filtroActivo === 'Nuevas') return productos.filter((p) => p.nuevo);
-    if (filtroActivo === 'Ofertas') return productos.filter((p) => p.precioOferta !== null);
-    return productos;
+    let filtrados = [...productos];
+
+    // 1. Filtrar por pestaña
+    if (filtroActivo === 'Nuevas') {
+      filtrados = filtrados.filter((p) => p.nuevo);
+    } else if (filtroActivo === 'Ofertas') {
+      filtrados = filtrados.filter((p) => p.precioOferta !== null);
+    }
+
+    // 2. Ordenar según jerarquía requerida
+    filtrados.sort((a, b) => {
+      // Función auxiliar para asignar un "peso" o prioridad al producto
+      const getPriority = (p: ProductoFrontend) => {
+        const isNuevo = p.nuevo;
+        const isOferta = p.precioOferta !== null;
+
+        if (isNuevo && isOferta) return 4; // Mayor prioridad: Nuevo + Oferta
+        if (isNuevo) return 3;             // Segunda prioridad: Solo Nuevo
+        if (isOferta) return 2;            // Tercera prioridad: Solo Oferta
+        return 1;                          // Última prioridad: Normal (Sin etiquetas)
+      };
+
+      const priorityA = getPriority(a);
+      const priorityB = getPriority(b);
+
+      // Ordenar de mayor prioridad (4) a menor prioridad (1)
+      return priorityB - priorityA;
+    });
+
+    return filtrados;
   }, [filtroActivo, productos]);
 
   const abrirDetalle = (producto: ProductoFrontend) => {
