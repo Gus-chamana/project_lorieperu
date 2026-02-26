@@ -71,7 +71,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="es">
+        <html lang="es" className="overflow-x-hidden">
             <head>
                 {/* Remix Icon */}
                 <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet" />
@@ -79,7 +79,7 @@ export default function RootLayout({
                 <link rel="icon" href="/logo.ico" type="image/x-icon" />
                 <link rel="shortcut icon" href="/logo.ico" />
             </head>
-            <body className={`${cormorant.variable} ${montserrat.variable} ${cormorantGaramond.variable} ${pinyonScript.variable} ${lora.variable} font-sans bg-lorie-cream text-lorie-dark antialiased`}>
+            <body className={`${cormorant.variable} ${montserrat.variable} ${cormorantGaramond.variable} ${pinyonScript.variable} ${lora.variable} font-sans bg-lorie-cream text-lorie-dark antialiased overflow-x-hidden w-full`}>
                 {/* Renderizado de las páginas y componentes preservando la estructura actual */}
                 <ClientProviders>
                     {children}
