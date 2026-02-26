@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import Link from 'next/link';
@@ -30,6 +30,22 @@ export default function ProductosDestacados() {
   const router = useRouter();
   const { cartItems, addToCart } = useCart();
   const { productos, cargando } = useProductos({ destacados: true });
+
+  const productosOrdenados = useMemo(() => {
+    const filtrados = [...productos];
+    filtrados.sort((a, b) => {
+      const getPriority = (p: ProductoFrontend) => {
+        const isNuevo = p.nuevo;
+        const isOferta = p.precioOferta !== null;
+        if (isNuevo && isOferta) return 4;
+        if (isNuevo) return 3;
+        if (isOferta) return 2;
+        return 1;
+      };
+      return getPriority(b) - getPriority(a);
+    });
+    return filtrados;
+  }, [productos]);
 
   const abrirDetalle = (producto: ProductoFrontend) => {
     setProductoSeleccionado(producto);
@@ -97,7 +113,7 @@ export default function ProductosDestacados() {
           {cargando && Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
 
           {/* Productos de Supabase */}
-          {!cargando && productos.map((producto, index) => (
+          {!cargando && productosOrdenados.map((producto, index) => (
             <motion.div
               key={producto.id}
               initial={{ opacity: 0, y: 30 }}
@@ -181,10 +197,10 @@ export default function ProductosDestacados() {
                   }}
                   disabled={producto.agotado}
                   className={`w-full py-3 rounded-full font-sans font-semibold text-sm transition-all duration-300 flex items-center justify-center space-x-2 whitespace-nowrap ${producto.agotado
-                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      : isInCart(producto.id)
-                        ? 'bg-green-500 text-white'
-                        : 'text-white hover:opacity-90 hover:shadow-lg cursor-pointer'
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : isInCart(producto.id)
+                      ? 'bg-green-500 text-white'
+                      : 'text-white hover:opacity-90 hover:shadow-lg cursor-pointer'
                     }`}
                   style={!producto.agotado && !isInCart(producto.id) ? { backgroundColor: 'rgb(185, 150, 128)' } : undefined}
                 >
