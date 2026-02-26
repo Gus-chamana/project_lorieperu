@@ -7,6 +7,18 @@ export default function NosotrosPreview() {
   return (
     <section className="py-20 relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className="font-lista-masta text-4xl md:text-5xl text-lorie-dark mb-2">
+            Nuestra Historia
+          </h2>
+        </motion.div>
+
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <motion.div
@@ -15,9 +27,6 @@ export default function NosotrosPreview() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="font-lista-masta text-4xl md:text-5xl text-lorie-dark mb-6">
-              Nuestra Historia
-            </h2>
             <p className="font-sans text-base text-lorie-brown leading-relaxed mb-6">
               <strong className="text-lorie-dark">LORIE PERÚ</strong> nació hace cuatro años como un emprendimiento personal, iniciado en una habitación con una máquina doméstica de segunda mano y una visión clara: crear productos de calidad con identidad propia.
             </p>

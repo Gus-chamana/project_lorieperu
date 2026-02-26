@@ -17,13 +17,13 @@ export default function NosotrosPage() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-36 pb-20 bg-gradient-to-b from-lorie-cream to-white">
+      <section className="pt-36 pb-8 bg-gradient-to-b from-lorie-cream to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            className="text-center mb-8"
           >
             <h1 className="font-lista-masta text-5xl md:text-6xl text-lorie-dark mb-6">
               Nuestra Historia
@@ -36,7 +36,7 @@ export default function NosotrosPage() {
       </section>
 
       {/* Story Section */}
-      <section className="py-20 bg-white">
+      <section className="pt-8 pb-20 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Fila 1: Texto izquierda, Imagen derecha */}
           <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
@@ -171,9 +171,9 @@ export default function NosotrosPage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-10 bg-lorie-brown text-white">
+      <section className="py-6 bg-lorie-brown text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
               { number: '4+', label: 'Años de Experiencia' },
               { number: '1000+', label: 'Clientas Satisfechas' },
@@ -188,7 +188,7 @@ export default function NosotrosPage() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="text-center"
               >
-                <div className="font-serif text-5xl md:text-6xl font-bold mb-2">
+                <div className="font-serif text-4xl md:text-5xl font-bold mb-1">
                   {stat.number}
                 </div>
                 <div className="font-sans text-sm md:text-base text-white/80">

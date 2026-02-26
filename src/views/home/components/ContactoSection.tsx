@@ -6,6 +6,21 @@ export default function ContactoSection() {
   return (
     <section className="py-20 relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className="font-lista-masta text-4xl md:text-5xl text-lorie-dark mb-6">
+            ¿Tienes Alguna Pregunta?
+          </h2>
+          <p className="font-sans text-lg text-lorie-brown max-w-3xl mx-auto">
+            Estamos aquí para ayudarte. Contáctanos y te responderemos lo antes posible.
+          </p>
+        </motion.div>
+
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <motion.div
@@ -14,13 +29,6 @@ export default function ContactoSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="font-lista-masta text-4xl md:text-5xl text-lorie-dark mb-6">
-              ¿Tienes Alguna Pregunta?
-            </h2>
-            <p className="font-sans text-lg text-lorie-brown leading-relaxed mb-8">
-              Estamos aquí para ayudarte. Contáctanos y te responderemos lo antes posible.
-            </p>
-
             {/* Contact Info Cards */}
             <div className="space-y-4">
               <a

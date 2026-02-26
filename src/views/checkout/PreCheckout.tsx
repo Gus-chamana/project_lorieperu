@@ -332,8 +332,8 @@ export default function PreCheckout({ onOrdenCreada }: PreCheckoutProps) {
                                     </div>
                                 </div>
 
-                                {/* SECCIÓN 4 – Política de cambios */}
-                                <div className="bg-white rounded-3xl shadow-md p-6">
+                                {/* SECCIÓN 4 – Política de cambios (Desktop) */}
+                                <div className="hidden lg:block bg-white rounded-3xl shadow-md p-6">
                                     <h2 className="font-serif text-lg font-bold text-lorie-dark mb-4 flex items-center gap-2">
                                         <i className="ri-shield-check-line text-lorie-brown"></i>
                                         Política de Cambios y Devoluciones
@@ -541,6 +541,38 @@ export default function PreCheckout({ onOrdenCreada }: PreCheckoutProps) {
                                             />
                                         </div>
                                     </div>
+                                </div>
+
+                                {/* SECCIÓN 4 – Política de cambios (Móvil) */}
+                                <div className="block lg:hidden bg-white rounded-3xl shadow-md p-6">
+                                    <h2 className="font-serif text-lg font-bold text-lorie-dark mb-4 flex items-center gap-2">
+                                        <i className="ri-shield-check-line text-lorie-brown"></i>
+                                        Política de Cambios y Devoluciones
+                                    </h2>
+                                    <ul className="space-y-2 mb-5">
+                                        {[
+                                            'Producto sin uso',
+                                            'Con etiquetas originales',
+                                            'En empaque original intacto',
+                                            'No se aceptan productos usados o con daños',
+                                        ].map((item, i) => (
+                                            <li key={i} className="flex items-start gap-2 text-xs text-lorie-brown/70 font-sans">
+                                                <i className="ri-checkbox-circle-fill text-lorie-brown mt-0.5 flex-shrink-0"></i>
+                                                {item}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <label className="flex items-start gap-3 cursor-pointer group">
+                                        <input
+                                            type="checkbox"
+                                            checked={aceptaPolitica}
+                                            onChange={e => setAceptaPolitica(e.target.checked)}
+                                            className="mt-0.5 w-4 h-4 rounded border-lorie-rose/40 text-lorie-brown cursor-pointer"
+                                        />
+                                        <span className="text-xs text-lorie-dark font-sans leading-relaxed group-hover:text-lorie-brown transition-colors">
+                                            He leído y acepto la <strong>política de cambios y devoluciones</strong> de Lorie Perú.
+                                        </span>
+                                    </label>
                                 </div>
 
                                 {/* Botón de envío */}
