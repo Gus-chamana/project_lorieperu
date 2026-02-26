@@ -4,7 +4,7 @@ const currentYear = new Date().getFullYear();
 
 export default function FooterMinimal() {
     return (
-        <footer className="bg-[rgb(139,90,90)] animate-pulse-glow overflow-hidden">
+        <footer className="bg-[#6B4444)] animate-pulse-glow overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="border-t border-white/20 pt-4 pb-2 flex flex-col md:flex-row justify-between items-center gap-4">
                     <p className="font-sans text-sm text-white/70 text-center md:text-left">
