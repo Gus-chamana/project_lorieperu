@@ -1,5 +1,5 @@
-"use client";
 import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
 
 // Global visibility state shared across all PromoBanner instances
 let globalIsVisible = true;
@@ -56,12 +56,45 @@ export const PROMO_HEIGHT = 36;
 export default function PromoBanner() {
   // Local state mirrors the global state on initial render
   const [isVisible, setIsVisible] = useState(globalIsVisible);
+  const [config, setConfig] = useState({
+    texto_principal: "Cargando promociones...",
+    descuento_porcentaje: "",
+    codigo_cupon: "",
+    activo: false
+  });
+  const [loaded, setLoaded] = useState(false);
 
   // Keep local state in sync with global changes (e.g., if another component
   // closes the banner)
   useEffect(() => {
     const sync = (v: boolean) => setIsVisible(v);
     listeners.push(sync);
+
+    const fetchConfig = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("configuracion_tienda")
+          .select("valor")
+          .eq("llave", "promo_banner")
+          .single();
+
+        if (data && data.valor && data.valor.activo) {
+          setConfig(data.valor);
+          setLoaded(true);
+        } else {
+          // If not active in DB, hide it
+          setGlobalVisible(false);
+          setIsVisible(false);
+        }
+      } catch (e) {
+        // Fallback or hide
+        setGlobalVisible(false);
+        setIsVisible(false);
+      }
+    };
+
+    fetchConfig();
+
     return () => {
       const idx = listeners.indexOf(sync);
       if (idx > -1) listeners.splice(idx, 1);
@@ -73,8 +106,8 @@ export default function PromoBanner() {
     setGlobalVisible(false);
   };
 
-  // Do not render anything when the banner is hidden
-  if (!isVisible) return null;
+  // Do not render anything when the banner is hidden or not loaded
+  if (!isVisible || !loaded) return null;
 
   return (
     <div
@@ -87,10 +120,13 @@ export default function PromoBanner() {
         <div className="flex items-center justify-center gap-2 text-center">
           <i className="ri-gift-line text-sm hidden sm:block" aria-hidden="true"></i>
           <p className="text-xs font-medium tracking-wide">
-            <span className="font-semibold">CELEBRA EL DÍA DE LA MUJER</span> con 50% de descuento usando el código{' '}
-            <span className="inline-block px-2 py-0.5 bg-white/20 rounded font-bold text-yellow-300 mx-1 text-xs">
-              MUJER50
-            </span>
+            <span className="font-semibold">{config.texto_principal}</span>
+            {config.descuento_porcentaje && ` con ${config.descuento_porcentaje}% de descuento usando el código `}
+            {config.codigo_cupon && (
+              <span className="inline-block px-2 py-0.5 bg-white/20 rounded font-bold text-yellow-300 mx-1 text-xs uppercase">
+                {config.codigo_cupon}
+              </span>
+            )}
           </p>
           <i className="ri-gift-line text-sm hidden sm:block" aria-hidden="true"></i>
         </div>
