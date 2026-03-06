@@ -41,6 +41,32 @@ export default function AdminOrdenesLista() {
         }).format(new Date(isoString));
     };
 
+    // Función para manejar el cambio de estado de pago
+    const cambiarEstadoPago = async (id: string, nuevoEstado: string) => {
+        if (!confirm(`¿Estás seguro de cambiar el estado a ${nuevoEstado}?`)) return;
+
+        try {
+            setCargando(true);
+            const res = await fetch(`/api/admin/ordenes/${id}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ estado_pago: nuevoEstado })
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || "Error al actualizar la orden");
+            }
+
+            // Recargar órdenes tras el éxito
+            await fetchOrdenes();
+        } catch (error: any) {
+            console.error("Error al cambiar estado de pago:", error);
+            alert(`No se pudo cambiar el estado. Detalles: ${error.message}`);
+            setCargando(false);
+        }
+    };
+
     return (
         <div className="p-8 w-full max-w-7xl mx-auto space-y-6">
             <header className="flex items-center justify-between">
@@ -110,12 +136,22 @@ export default function AdminOrdenesLista() {
                                             </p>
                                         </td>
                                         <td className="py-4 px-6 text-right">
-                                            <span className="font-sans font-bold text-lorie-dark text-lg block">S/ {orden.total.toFixed(2)}</span>
-                                            {orden.estado_pago === 'VERIFICADO' ? (
-                                                <span className="inline-block mt-1 px-2 py-0.5 bg-green-50 text-green-700 text-[10px] uppercase font-bold rounded-sm tracking-wider">Verificado</span>
-                                            ) : (
-                                                <span className="inline-block mt-1 px-2 py-0.5 bg-yellow-50 text-yellow-700 text-[10px] uppercase font-bold rounded-sm tracking-wider">{orden.estado_pago}</span>
-                                            )}
+                                            <span className="font-sans font-bold text-lorie-dark text-lg block mb-2">S/ {orden.total.toFixed(2)}</span>
+
+                                            <select
+                                                value={orden.estado_pago}
+                                                onChange={(e) => cambiarEstadoPago(orden.id, e.target.value)}
+                                                className={`text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-sm cursor-pointer outline-none border border-transparent hover:border-black/10 focus:ring-2 focus:ring-lorie-brown/30 font-sans right-0 ml-auto block appearance-none text-center ${orden.estado_pago === 'VERIFICADO'
+                                                        ? 'bg-green-50 text-green-700'
+                                                        : orden.estado_pago === 'RECHAZADO'
+                                                            ? 'bg-red-50 text-red-700'
+                                                            : 'bg-yellow-50 text-yellow-700'
+                                                    }`}
+                                            >
+                                                <option value="PENDIENTE" className="bg-white text-lorie-dark">Pendiente</option>
+                                                <option value="VERIFICADO" className="bg-white text-lorie-dark">Verificado</option>
+                                                <option value="RECHAZADO" className="bg-white text-lorie-dark">Rechazado</option>
+                                            </select>
                                         </td>
                                     </tr>
                                 ))

@@ -16,38 +16,38 @@ export default function Testimonios() {
 
   const testimonios: Testimonio[] = [
     {
-      nombre: 'María González',
-      comentario: 'Me encanta mi bolso de Lorie Perú. La calidad es excepcional y el diseño es único. Recibo muchos cumplidos cada vez que lo uso. ¡Totalmente recomendado!',
+      nombre: 'Celeste',
+      comentario: 'Bella ya me llegó mi pedido esta muy bonito todo.',
       rating: 5,
-      fecha: 'Hace 2 semanas',
+      fecha: 'Hace 2 semanas _ TikTok',
       avatar: 'https://readdy.ai/api/search-image?query=professional%20portrait%20young%20peruvian%20woman%20smiling%2C%20natural%20lighting%2C%20friendly%20expression%2C%20modern%20style%2C%20headshot%20photography&width=200&height=200&seq=avatar1&orientation=squarish'
     },
     {
-      nombre: 'Lucía Ramírez',
-      comentario: 'La atención al cliente es excelente y el producto superó mis expectativas. El bolso es hermoso, funcional y muy bien hecho. Definitivamente volveré a comprar.',
+      nombre: 'Alee',
+      comentario: 'Case recogí mi pedido, me encantó mi monedero es super grande 🤗🤗',
       rating: 5,
-      fecha: 'Hace 1 mes',
+      fecha: 'Hace 1 mes _ Tiktok',
       avatar: 'https://readdy.ai/api/search-image?query=professional%20portrait%20young%20latina%20woman%20smiling%2C%20natural%20lighting%2C%20friendly%20expression%2C%20contemporary%20style%2C%20headshot%20photography&width=200&height=200&seq=avatar2&orientation=squarish'
     },
     {
-      nombre: 'Sofía Torres',
-      comentario: 'Compré un bolso personalizado y quedó perfecto. El equipo de Lorie Perú entendió exactamente lo que quería. La calidad artesanal se nota en cada detalle.',
+      nombre: 'Jessi',
+      comentario: 'si es buena tengo una de Marie y es amplio ❤️❤️❤️',
       rating: 5,
-      fecha: 'Hace 3 semanas',
+      fecha: 'Hace 3 semanas _ Tiktok',
       avatar: 'https://readdy.ai/api/search-image?query=professional%20portrait%20young%20hispanic%20woman%20smiling%2C%20natural%20lighting%2C%20friendly%20expression%2C%20modern%20style%2C%20headshot%20photography&width=200&height=200&seq=avatar3&orientation=squarish'
     },
     {
-      nombre: 'Valentina Castro',
-      comentario: 'Estoy fascinada con mi compra. El diseño es precioso y los acabados impecables. Es justo lo que buscaba: un accesorio único que refleja mi personalidad.',
+      nombre: 'MILAGROS DEL PILAR',
+      comentario: 'recomiendo yo compré mi cartera hace 1 año y medio y no se hace nada',
       rating: 5,
-      fecha: 'Hace 1 semana',
+      fecha: 'Hace 1 semana _ Tiktok',
       avatar: 'https://readdy.ai/api/search-image?query=professional%20portrait%20young%20peruvian%20woman%20smiling%2C%20natural%20lighting%2C%20friendly%20expression%2C%20contemporary%20style%2C%20headshot%20photography&width=200&height=200&seq=avatar4&orientation=squarish'
     },
     {
-      nombre: 'Camila Flores',
-      comentario: 'La mejor inversión en accesorios que he hecho. El bolso es resistente, hermoso y muy práctico. El envío fue rápido y el empaque muy cuidado. ¡100% satisfecha!',
+      nombre: 'KeiciAdrianne❤️',
+      comentario: 'sii, yo tengo mi puffer de la case desde el año pasado y sigue bonito, lo lavo solo a mano ...',
       rating: 5,
-      fecha: 'Hace 2 días',
+      fecha: 'Hace 2 días _ Tiktok',
       avatar: 'https://readdy.ai/api/search-image?query=professional%20portrait%20young%20latina%20woman%20smiling%2C%20natural%20lighting%2C%20friendly%20expression%2C%20modern%20style%2C%20headshot%20photography&width=200&height=200&seq=avatar5&orientation=squarish'
     }
   ];
