@@ -1,29 +1,183 @@
 "use client";
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, animate } from 'framer-motion';
 import Image from 'next/image';
+import { useRef, useState, useEffect } from 'react';
 
 export default function ModelosGallery() {
-  const images = [
+  // URLs de imágenes desde tu bucket "home" en Supabase.
+  // IMPORTANTE: Reemplaza 'SU_PROYECTO' por tu Project Reference de Supabase
+  // Y asegúrate de que el nombre del archivo coincida con los que subiste.
+  const rawImages = [
     {
-      url: 'https://readdy.ai/api/search-image?query=young%20modern%20woman%20model%20wearing%20casual%20outfit%20holding%20handmade%20beige%20pastel%20fabric%20handbag%2C%20full%20body%20lifestyle%20fashion%20photography%2C%20natural%20outdoor%20setting%2C%20soft%20daylight%2C%20earth%20tones%20aesthetic%2C%20contemporary%20style%2C%20minimalist%20background%2C%20artisan%20crafted%20bag%20accessories&width=800&height=1000&seq=modelo1&orientation=portrait',
-      alt: 'Modelo con bolso Lorie Perú estilo casual'
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h1.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 1'
     },
     {
-      url: 'https://readdy.ai/api/search-image?query=stylish%20young%20woman%20in%20modern%20outfit%20carrying%20cute%20aesthetic%20handmade%20purse%20bag%2C%20beige%20and%20earth%20tones%2C%20lifestyle%20fashion%20photography%2C%20urban%20setting%2C%20natural%20lighting%2C%20feminine%20accessories%2C%20artisan%20crafted%20handbag%2C%20contemporary%20fashion%20style&width=800&height=1000&seq=modelo2&orientation=portrait',
-      alt: 'Modelo con bolso Lorie Perú estilo urbano'
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h2.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 2'
     },
     {
-      url: 'https://readdy.ai/api/search-image?query=elegant%20young%20woman%20model%20with%20handmade%20fabric%20bag%20accessory%2C%20pastel%20beige%20and%20neutral%20tones%2C%20lifestyle%20fashion%20photography%2C%20soft%20natural%20light%2C%20minimalist%20aesthetic%2C%20artisan%20crafted%20purse%2C%20delicate%20details%2C%20contemporary%20feminine%20style&width=800&height=1000&seq=modelo3&orientation=portrait',
-      alt: 'Modelo con bolso Lorie Perú estilo elegante'
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h3.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 3'
     },
     {
-      url: 'https://readdy.ai/api/search-image?query=modern%20woman%20holding%20cute%20handmade%20fabric%20handbag%20with%20aesthetic%20design%2C%20beige%20pastel%20and%20earth%20tones%2C%20lifestyle%20fashion%20photography%2C%20natural%20setting%2C%20soft%20lighting%2C%20artisan%20crafted%20bag%2C%20contemporary%20style%2C%20feminine%20accessories&width=800&height=1000&seq=modelo4&orientation=portrait',
-      alt: 'Modelo con bolso Lorie Perú estilo moderno'
-    }
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h4.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 4'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h5.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 5'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h6.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 6'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h7.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 7'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h8.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 8'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h9.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 9'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h10.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 10'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h11.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 11'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h12.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 12'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h13.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 13'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h14.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 14'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h15.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 15'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h16.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 16'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h17.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 17'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h18.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 18'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h19.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 19'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h20.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 20'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h21.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 21'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h22.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 22'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h23.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 23'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h24.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 24'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h25.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 25'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h26.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 26'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h27.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 27'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h28.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 28'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h29.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 29'
+    },
+    {
+      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h30.jpeg',
+      alt: 'Bolso Lorie Perú - Diseño 30'
+    },
   ];
 
+  /* 
+   Optimización de Supabase:
+   Agregamos parámetros a la URL pública para indicarle al servidor de Supabase que 
+   re-escale y entregue un webp optimizado de 600x800 antes de enviarlo al cliente.
+   Esto ahorra Mbs masivos en la carga inicial independientemente del peso original.
+  */
+  const images = rawImages.map(img => ({
+    ...img,
+    url: `${img.url}?width=600&height=800&resize=cover`
+  }));
+
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(0);
+  const x = useMotionValue(0);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      if (carouselRef.current) {
+        setWidth(carouselRef.current.scrollWidth - carouselRef.current.offsetWidth);
+      }
+    };
+
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+
+    // Fallback: update again after images load naturally to prevent jumping
+    const timeoutId = setTimeout(updateWidth, 1000);
+
+    return () => {
+      window.removeEventListener("resize", updateWidth);
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
+  const handleArrowClick = (direction: 'left' | 'right') => {
+    const currentX = x.get();
+    // Move slightly more than one card's width depending on screen
+    const shift = direction === 'left' ? 350 : -350;
+    let newX = currentX + shift;
+
+    if (newX > 0) newX = 0;
+    if (newX < -width) newX = -width;
+
+    animate(x, newX, { type: 'spring', stiffness: 300, damping: 30 });
+  };
+
   return (
-    <section className="py-20 relative z-10">
+    <section className="py-20 relative z-10 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
@@ -72,17 +226,7 @@ export default function ModelosGallery() {
               {/* Línea ondulada principal */}
               <path
                 className="floral-line"
-                d="M 4 18
-                   C 20 10, 36 26, 52 18
-                   C 68 10, 84 26, 100 18
-                   C 116 10, 132 26, 148 18
-                   C 164 10, 180 26, 196 18
-                   C 212 10, 228 26, 244 18
-                   C 260 10, 276 26, 292 18
-                   C 308 10, 324 26, 340 18
-                   C 356 10, 372 26, 388 18
-                   C 404 10, 420 26, 436 18
-                   C 452 10, 468 24, 476 18"
+                d="M 4 18 C 20 10, 36 26, 52 18 C 68 10, 84 26, 100 18 C 116 10, 132 26, 148 18 C 164 10, 180 26, 196 18 C 212 10, 228 26, 244 18 C 260 10, 276 26, 292 18 C 308 10, 324 26, 340 18 C 356 10, 372 26, 388 18 C 404 10, 420 26, 436 18 C 452 10, 468 24, 476 18"
                 fill="none"
                 stroke="#A67C7C"
                 strokeWidth="2"
@@ -165,34 +309,75 @@ export default function ModelosGallery() {
           </p>
         </motion.div>
 
-        {/* Gallery Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          {images.map((image, index) => (
+        {/* Hero Container for Carousel and Arrows */}
+        <div className="relative group">
+          {/* Btn Left */}
+          <button
+            onClick={() => handleArrowClick('left')}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 flex items-center justify-center bg-white/90 text-lorie-brown rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] opacity-0 md:group-hover:opacity-100 transition-all duration-300 hover:scale-110 hover:bg-lorie-dark hover:text-white"
+            aria-label="Anterior"
+          >
+            <i className="ri-arrow-left-s-line text-3xl"></i>
+          </button>
+
+          {/* Hero Animated Carousel */}
+          <motion.div
+            ref={carouselRef}
+            className="w-full overflow-hidden cursor-grab active:cursor-grabbing px-2 py-4"
+          >
             <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="group relative overflow-hidden rounded-2xl aspect-[4/5] cursor-pointer"
+              drag="x"
+              dragConstraints={{ right: 0, left: -width }}
+              style={{ x }}
+              whileTap={{ cursor: "grabbing" }}
+              className="flex gap-4 md:gap-6 min-w-max"
             >
-              {/* The Image component needs a parent with relative positioning and defined dimensions */}
-              {/* The motion.div already provides 'relative' and 'aspect-[4/5]' */}
-              <Image
-                src={image.url}
-                alt={image.alt}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              {/* Overlay on hover */}
-              <div className="absolute inset-0 bg-gradient-to-t from-lorie-dark/80 via-lorie-dark/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                <div className="text-white">
-                  <p className="font-sans text-sm font-medium">Lorie Perú</p>
-                  <p className="font-serif text-lg">Estilo {index + 1}</p>
-                </div>
-              </div>
+              {images.map((image, index) => (
+                <motion.div
+                  key={index}
+                  className="relative rounded-3xl overflow-hidden shadow-xl"
+                  style={{
+                    width: 'clamp(260px, 30vw, 360px)',
+                    aspectRatio: '4/5'
+                  }}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.7, delay: index * 0.1, ease: "easeOut" }}
+                >
+                  <Image
+                    src={image.url}
+                    alt={image.alt}
+                    fill
+                    className="object-cover pointer-events-none transition-transform duration-700 hover:scale-110"
+                    sizes="(max-width: 640px) 280px, (max-width: 1024px) 300px, 360px"
+                    loading={index < 3 ? 'eager' : 'lazy'}
+                    priority={index < 3}
+                  />
+                  {/* Sutil gradiente inferior para darle estética premium (sin texto) */}
+                  <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-lorie-dark/40 to-transparent pointer-events-none mix-blend-multiply opacity-60"></div>
+                </motion.div>
+              ))}
             </motion.div>
-          ))}
+          </motion.div>
+
+          {/* Btn Right */}
+          <button
+            onClick={() => handleArrowClick('right')}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 flex items-center justify-center bg-white/90 text-lorie-brown rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] opacity-0 md:group-hover:opacity-100 transition-all duration-300 hover:scale-110 hover:bg-lorie-dark hover:text-white"
+            aria-label="Siguiente"
+          >
+            <i className="ri-arrow-right-s-line text-3xl"></i>
+          </button>
+        </div>
+
+        {/* Indicador de arrastre para dar mejor UX */}
+        <div className="flex justify-center mt-6 opacity-50 text-lorie-brown">
+          <div className="flex items-center gap-2 font-sans text-sm tracking-wide">
+            <i className="ri-arrow-left-line"></i>
+            <span>Desliza para explorar</span>
+            <i className="ri-arrow-right-line"></i>
+          </div>
         </div>
 
         {/* CTA */}
@@ -207,7 +392,7 @@ export default function ModelosGallery() {
             href="https://www.instagram.com/lorie.peru"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center px-8 py-4 bg-lorie-brown text-white rounded-full font-sans font-semibold text-base hover:bg-lorie-dark transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer whitespace-nowrap"
+            className="inline-flex items-center justify-center px-10 py-4 bg-lorie-brown text-white rounded-full font-sans font-semibold text-sm tracking-widest uppercase hover:bg-lorie-dark transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer"
           >
             <i className="ri-instagram-line mr-2 text-xl"></i>
             Síguenos en Instagram
@@ -217,3 +402,4 @@ export default function ModelosGallery() {
     </section>
   );
 }
+
