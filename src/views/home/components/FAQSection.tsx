@@ -12,6 +12,10 @@ export default function FAQSection() {
 
   const faqs: FAQItem[] = [
     {
+      question: '¿Cuánto tiempo demora la confección del producto personalizado?',
+      answer: 'El tiempo de confección es de 5 a 7 días hábiles aproximadamente. Una vez que tu producto esté listo, te enviaremos una foto por WhatsApp para que puedas ver el resultado antes del envío.'
+    },
+    {
       question: '¿Cuánto demora el envío?',
       answer: 'El tiempo de envío es de 3 a 6 días hábiles, dependiendo de la zona de destino. Una vez despachado el pedido, se te brindará la información necesaria para el seguimiento.'
     },
@@ -20,8 +24,28 @@ export default function FAQSection() {
       answer: 'Sí, realizamos envíos a todo el Perú a través de Shalom. Para Lima Metropolitana, contamos con envío motorizado con tarifa plana de S/ 10 para zonas no alejadas.'
     },
     {
-      question: '¿Cuál es la política de cambios o devoluciones?',
-      answer: 'Aceptamos cambios siempre que el producto se encuentre en las mismas condiciones en las que fue entregado, sin señales de uso, manchas, daños o alteraciones. El producto debe conservar sus etiquetas y empaque original. No se aceptan cambios por productos usados o deteriorados.'
+      question: '¿Qué sucede si no me encuentro disponible al momento de la entrega?',
+      answer: 'Si al momento de la entrega no te encuentras disponible, puedes dejar encargado el pedido a un familiar, portero o persona de confianza para que pueda recibirlo en tu nombre. En caso de que el servicio de envío no logre concretar la entrega, se podrá coordinar un nuevo intento. Es importante considerar que los costos adicionales de reenvío deberán ser asumidos por el cliente.'
+    },
+    {
+      question: '¿Me enviarán información cuando mi pedido sea despachado?',
+      answer: 'Sí. Cuando tu pedido esté listo y haya sido enviado, te compartiremos la confirmación del despacho. Además, el motorizado se pondrá en contacto contigo horas antes de la entrega para coordinar la recepción del pedido. 🚚'
+    },
+    {
+      question: '¿Puedo recoger mi pedido personalmente?',
+      answer: 'Actualmente no contamos con la opción de recojo en almacén, por lo que todos los pedidos se realizan únicamente mediante envío. Si tienes alguna consulta adicional sobre la entrega de tu pedido, puedes comunicarte con nosotros a través de nuestros canales de atención. 🚚'
+    },
+    {
+      question: '¿Qué métodos de pago aceptan?',
+      answer: 'Aceptamos pagos mediante transferencia bancaria, Yape, Interbank y todo tipo de tarjetas de débito y crédito.'
+    },
+    {
+      question: '¿Puedo solicitar un cambio o devolución?',
+      answer: 'Debido a que muchos de nuestros productos son confeccionados especialmente para cada cliente, no realizamos devoluciones por cambio de opinión. Sin embargo, si tu producto presenta algún inconveniente, puedes comunicarte con nosotros para revisar el caso y brindarte una solución.'
+    },
+    {
+      question: '¿Ofrecen algún beneficio por cumpleaños?',
+      answer: '¡Sí! Si realizas una compra durante tu mes de cumpleaños, recibirás un detalle especial de nuestra parte como muestra de cariño. Para hacer válido este beneficio es importante enviar una foto de tu DNI, ya que el regalo es personal y solo aplica para el titular. No es válido para otras personas.'
     }
   ];
 
