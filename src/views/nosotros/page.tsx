@@ -64,7 +64,7 @@ export default function NosotrosPage() {
               className="relative w-full h-80 rounded-3xl overflow-hidden shadow-2xl"
             >
               <Image
-                src="https://static.readdy.ai/image/3b494e0e56ddce0bb796382de2f71287/8ae8e4ba436fc71ce346fbb6b69a2503.png"
+                src="https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/nosotros/nosotros_1.jpg"
                 alt="Inicio de Lorie Perú"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -83,7 +83,7 @@ export default function NosotrosPage() {
               className="relative w-full h-80 rounded-3xl overflow-hidden shadow-2xl order-2 md:order-1"
             >
               <Image
-                src="https://static.readdy.ai/image/3b494e0e56ddce0bb796382de2f71287/4a621741bbcf16d470df04ddfc8b4491.png"
+                src="https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/nosotros/nosotros_2.jpg"
                 alt="Equipo Lorie Perú"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
