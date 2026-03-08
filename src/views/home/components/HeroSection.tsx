@@ -6,11 +6,12 @@ export default function HeroSection() {
   return (
     <section className="relative h-screen w-full overflow-hidden">
       {/* Hero Background Video */}
-      <div className="absolute inset-0 bg-black pointer-events-none">
+      <div className="absolute inset-0 bg-transparent pointer-events-none">
         <iframe
-          src="https://player.vimeo.com/video/1171546404?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1"
+          src="https://player.vimeo.com/video/1171546404?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1&autopause=0&playsinline=1"
           frameBorder="0"
-          allow="autoplay; fullscreen; picture-in-picture"
+          allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+          loading="eager"
           className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 object-cover"
           title="Video Prueba Lorie"
         ></iframe>

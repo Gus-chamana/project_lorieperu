@@ -223,7 +223,7 @@ export default function CursoPage() {
               <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
                 <div className="relative h-52 overflow-hidden">
                   <Image
-                    src="https://static.readdy.ai/image/3b494e0e56ddce0bb796382de2f71287/4a621741bbcf16d470df04ddfc8b4491.png"
+                    src="https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/curso/cur_necezer.jpeg"
                     alt="Neceser"
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
@@ -245,7 +245,7 @@ export default function CursoPage() {
               <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
                 <div className="relative h-52 overflow-hidden">
                   <Image
-                    src="https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/curso/cur_minipuf.jpeg"
+                    src="https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/curso/cur_minipufer.jpeg"
                     alt="Mini Puffer"
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
