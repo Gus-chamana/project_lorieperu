@@ -101,7 +101,7 @@ export default function NosotrosPreview() {
             <div className="space-y-4">
               <div className="w-full h-64 rounded-2xl overflow-hidden relative">
                 <Image
-                  src="https://readdy.ai/api/search-image?query=artisan%20hands%20sewing%20handmade%20fabric%20handbag%2C%20craftsmanship%20process%2C%20beige%20and%20earth%20tones%20materials%2C%20workshop%20setting%2C%20natural%20lighting%2C%20textile%20art%2C%20detailed%20close%20up%20of%20sewing%20machine%20work&width=400&height=500&seq=proceso1&orientation=portrait"
+                  src="https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/homeNH_1.jpg"
                   alt="Proceso artesanal Lorie Perú"
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
@@ -110,7 +110,7 @@ export default function NosotrosPreview() {
               </div>
               <div className="w-full h-48 rounded-2xl overflow-hidden relative">
                 <Image
-                  src="https://readdy.ai/api/search-image?query=collection%20of%20handmade%20fabric%20bags%20and%20purses%2C%20beige%20pastel%20and%20earth%20tones%2C%20artisan%20crafted%20accessories%2C%20organized%20display%2C%20natural%20lighting%2C%20textile%20products%2C%20contemporary%20design&width=400&height=400&seq=proceso2&orientation=squarish"
+                  src="https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/homeNH_2.jpg"
                   alt="Colección Lorie Perú"
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
@@ -121,7 +121,7 @@ export default function NosotrosPreview() {
             <div className="space-y-4 pt-8">
               <div className="w-full h-48 rounded-2xl overflow-hidden relative">
                 <Image
-                  src="https://readdy.ai/api/search-image?query=fabric%20materials%20and%20sewing%20supplies%20for%20handbag%20making%2C%20beige%20and%20earth%20tone%20textiles%2C%20artisan%20workspace%2C%20crafting%20tools%2C%20natural%20lighting%2C%20textile%20design%20materials&width=400&height=400&seq=proceso3&orientation=squarish"
+                  src="https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/homeNH_3.jpg"
                   alt="Materiales Lorie Perú"
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
@@ -130,7 +130,7 @@ export default function NosotrosPreview() {
               </div>
               <div className="w-full h-64 rounded-2xl overflow-hidden relative">
                 <Image
-                  src="https://readdy.ai/api/search-image?query=finished%20handmade%20fabric%20handbags%20with%20cute%20aesthetic%20details%2C%20beige%20pastel%20and%20earth%20tones%2C%20artisan%20crafted%20bags%2C%20product%20photography%2C%20natural%20lighting%2C%20contemporary%20design%2C%20quality%20accessories&width=400&height=500&seq=proceso4&orientation=portrait"
+                  src="https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/homeNH_4.jpg"
                   alt="Productos terminados Lorie Perú"
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"

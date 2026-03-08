@@ -117,7 +117,7 @@ export default function ContactoSection() {
           >
             <div className="w-full h-96 rounded-3xl overflow-hidden shadow-2xl relative">
               <Image
-                src="https://readdy.ai/api/search-image?query=friendly%20young%20peruvian%20woman%20artisan%20working%20on%20handmade%20fabric%20bags%2C%20smiling%20at%20camera%2C%20workshop%20setting%2C%20beige%20and%20earth%20tones%2C%20natural%20lighting%2C%20welcoming%20atmosphere%2C%20craftsmanship%2C%20contemporary%20style&width=800&height=600&seq=contacto1&orientation=landscape"
+                src="https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/home_1.jpg"
                 alt="Contacto Lorie Perú"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
