@@ -4,9 +4,7 @@ import Image from 'next/image';
 import { useRef, useState, useEffect } from 'react';
 
 export default function ModelosGallery() {
-  // URLs de imágenes desde tu bucket "home" en Supabase.
-  // IMPORTANTE: Reemplaza 'SU_PROYECTO' por tu Project Reference de Supabase
-  // Y asegúrate de que el nombre del archivo coincida con los que subiste.
+  // URLs de imágenes desde el bucket "home" en Supabase.
   const rawImages = [
     {
       url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h1.jpeg',

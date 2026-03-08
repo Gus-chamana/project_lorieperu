@@ -114,7 +114,7 @@ export default function ProductosPage() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-36 pb-16 px-4 sm:px-6 lg:px-8">
+      <section className="pt-44 lg:pt-36 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

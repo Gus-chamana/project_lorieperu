@@ -227,7 +227,7 @@ export default function PreCheckout({ onOrdenCreada }: PreCheckoutProps) {
     return (
         <>
             <Navbar hideCart />
-            <div className="flex-1 min-h-screen bg-lorie-cream px-4 pt-36 pb-16">
+            <div className="flex-1 min-h-screen bg-lorie-cream px-4 pt-24 mt-16 lg:mt-0 lg:pt-36 pb-16">
                 <div className="max-w-6xl mx-auto">
                     {/* Stepper de pasos */}
                     <CheckoutSteps paso={2} />

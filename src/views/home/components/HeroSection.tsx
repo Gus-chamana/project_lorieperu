@@ -22,7 +22,7 @@ export default function HeroSection() {
 
       {/* Hero Content */}
       <div className="relative z-10 h-full flex items-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-20 mt-10 lg:pt-0 lg:mt-0">
           <div className="max-w-2xl">
             {/* Badge */}
             <motion.div
