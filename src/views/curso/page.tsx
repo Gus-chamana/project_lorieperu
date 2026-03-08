@@ -81,24 +81,28 @@ export default function CursoPage() {
               initial={{ opacity: 0, x: -30 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.6 }}
-              className="relative"
+              className="relative flex justify-center"
             >
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl h-96">
-                <Image
-                  src="https://static.readdy.ai/image/3b494e0e56ddce0bb796382de2f71287/8ae8e4ba436fc71ce346fbb6b69a2503.png"
-                  alt="Clases de costura"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover object-center"
-                  priority
-                />
-              </div>
+              <div className="relative w-full max-w-[240px] sm:max-w-[280px] lg:max-w-[320px]">
+                <div
+                  className="relative rounded-3xl overflow-hidden shadow-2xl w-full"
+                  style={{ paddingTop: '177.78%' }}
+                >
+                  <iframe
+                    src="https://player.vimeo.com/video/1171549173?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1&background=1"
+                    frameBorder="0"
+                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                    className="absolute top-0 left-0 w-full h-full object-cover"
+                    title="curso video lorie"
+                  ></iframe>
+                </div>
 
-              {/* Floating Price Badge */}
-              <div className="absolute -bottom-4 left-6 bg-lorie-rose text-white px-8 py-4 rounded-2xl shadow-xl">
-                <div className="text-center">
-                  <div className="text-2xl font-bold font-sans">S/ 250</div>
-                  <div className="text-xs font-sans">4 Clases</div>
+                {/* Floating Price Badge */}
+                <div className="absolute -bottom-4 -left-4 sm:-left-6 lg:-left-8 bg-lorie-rose text-white px-6 py-3 rounded-2xl shadow-xl z-10 w-32">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold font-sans">S/ 280</div>
+                    <div className="text-xs font-sans">4 Clases</div>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -157,7 +161,7 @@ export default function CursoPage() {
                     <div className="space-y-1">
                       <div className="flex justify-between items-center">
                         <span className="text-lorie-brown font-sans text-sm">Presencial (4 clases)</span>
-                        <span className="text-lg font-bold text-lorie-dark font-sans">S/ 250</span>
+                        <span className="text-lg font-bold text-lorie-dark font-sans">S/ 280</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-lorie-brown font-sans text-sm">Material extra</span>
