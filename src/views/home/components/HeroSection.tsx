@@ -8,7 +8,7 @@ export default function HeroSection() {
       {/* Hero Background Video */}
       <div className="absolute inset-0 bg-transparent pointer-events-none">
         <iframe
-          src="https://player.vimeo.com/video/1171546404?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1&autopause=0&playsinline=1"
+          src="https://player.vimeo.com/video/1171546404?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1&autopause=0&playsinline=1&dnt=1"
           frameBorder="0"
           allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
           loading="eager"
