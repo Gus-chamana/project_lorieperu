@@ -201,7 +201,8 @@ export default function PreCheckout({ onOrdenCreada }: PreCheckoutProps) {
                 localStorage.setItem('ultimoPedido', JSON.stringify(pedidoParaConfirmacion));
                 clearCart();
                 onOrdenCreada?.(data.orden_id);
-                router.push('/confirmacion');
+                // PASARELA IZIPAY: Ahora redirigimos al pasillo de pago embebido en lugar de la confirmación directa
+                router.push(`/pago/${data.orden_id}`);
             } else {
                 alert('Hubo un problema al procesar tu pedido. Por favor inténtalo nuevamente.');
             }
