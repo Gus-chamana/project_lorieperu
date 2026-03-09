@@ -111,6 +111,52 @@ export default function NosotrosPage() {
         </div>
       </section>
 
+      {/* Nuestras Trabajadoras */}
+      <section className="pt-8 pb-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="font-lista-masta text-4xl md:text-5xl text-lorie-dark mb-6">
+              NUESTRAS TRABAJADORAS
+            </h2>
+            <p className="font-sans text-lg text-lorie-brown max-w-3xl mx-auto">
+              El talento y dedicación detrás de cada costura y detalle que llega a tus manos
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 max-w-5xl mx-auto">
+            {[
+
+              { id: 1, src: "https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/nosotros/staf1.jpeg" },
+              { id: 2, src: "https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/nosotros/staf2.jpeg" },
+              { id: 3, src: "https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/nosotros/staf3.jpeg" }
+            ].map((img, index) => (
+              <motion.div
+                key={img.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.15 }}
+                className="relative w-full max-w-[260px] sm:max-w-[320px] md:max-w-none mx-auto aspect-[4/5] sm:aspect-[3/4] md:aspect-[4/5] rounded-3xl overflow-hidden shadow-lg border border-lorie-beige"
+              >
+                <Image
+                  src={img.src}
+                  alt={`Trabajadora Lorie Perú ${img.id}`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover object-top transition-transform duration-700 hover:scale-105"
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* What Makes Us Special */}
       <section className="py-20 bg-gradient-to-b from-white to-lorie-beige">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
