@@ -131,6 +131,12 @@ export default function PreCheckout({ onOrdenCreada }: PreCheckoutProps) {
         e.preventDefault();
         if (!validarFormulario() || !aceptaPolitica || cartItems.length === 0) return;
 
+        // Verificar que el método de envío esté asignado
+        if (!metodoEnvioId) {
+            alert('Selecciona un distrito para continuar. El método de envío no está asignado.');
+            return;
+        }
+
         setEnviando(true);
         try {
             const payload = {
@@ -204,7 +210,13 @@ export default function PreCheckout({ onOrdenCreada }: PreCheckoutProps) {
                 // PASARELA IZIPAY: Ahora redirigimos al pasillo de pago embebido en lugar de la confirmación directa
                 router.push(`/pago/${data.orden_id}`);
             } else {
-                alert('Hubo un problema al procesar tu pedido. Por favor inténtalo nuevamente.');
+                // Mostrar el error real del backend para diagnóstico
+                const errorMsg = data?.error || data?.detalles || 'Error desconocido del servidor';
+                const errorDetalle = typeof data?.detalles === 'object'
+                    ? JSON.stringify(data.detalles, null, 2)
+                    : errorMsg;
+                console.error('Error del backend al crear orden:', data);
+                alert(`Hubo un problema al procesar tu pedido:\n\n${errorDetalle}\n\nPor favor revisa los datos e inténtalo nuevamente.`);
             }
         } catch {
             alert('Error de conexión. Por favor inténtalo nuevamente.');
