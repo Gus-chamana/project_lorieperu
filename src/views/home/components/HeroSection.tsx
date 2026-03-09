@@ -21,7 +21,7 @@ export default function HeroSection() {
 
       {/* Hero Content */}
       <div className="relative z-10 h-full flex items-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-20 mt-10 lg:pt-0 lg:mt-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-16 mt-8 pb-32 lg:pt-0 lg:mt-0 lg:pb-0">
           <div className="max-w-2xl">
             {/* Badge */}
             <motion.div
@@ -99,9 +99,9 @@ export default function HeroSection() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 1 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 text-center"
+        className="absolute bottom-4 lg:bottom-8 left-1/2 transform -translate-x-1/2 z-10 text-center w-full max-w-[200px]"
       >
-        <p className="text-white/80 text-sm font-sans mb-2">Desliza para descubrir</p>
+        <p className="text-white/80 text-sm font-sans mb-1 md:mb-2">Desliza para descubrir</p>
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 2 }}
