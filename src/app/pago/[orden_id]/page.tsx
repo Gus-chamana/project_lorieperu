@@ -53,10 +53,10 @@ export default function IzipayPaymentPage({ params }: { params: { orden_id: stri
 
         const loadScript = () => {
             return new Promise<void>((resolve, reject) => {
-                // CSS oficial de Izipay (tema classic limpio)
+                // CSS oficial de Izipay - tema Material (moderno, con pestañas por método de pago)
                 const cssLink = document.createElement('link');
                 cssLink.rel = 'stylesheet';
-                cssLink.href = `${STATIC_CDN}/static/js/krypton-client/V4.0/ext/classic.css`;
+                cssLink.href = `${STATIC_CDN}/static/js/krypton-client/V4.0/ext/material.css`;
                 document.head.appendChild(cssLink);
 
                 // Script principal de Krypton
@@ -133,9 +133,9 @@ export default function IzipayPaymentPage({ params }: { params: { orden_id: stri
                         </div>
                     )}
 
-                    {/* Formulario embebido Izipay – Krypton lo llena dinámicamente */}
+                    {/* Smart Form de Izipay – muestra automáticamente todos los métodos de pago habilitados (Tarjeta, Plin, QR, Yape...) */}
                     <div
-                        className={`kr-embedded mx-auto transition-opacity duration-500 ${loading || error ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100'}`}
+                        className={`kr-smart-form mx-auto transition-opacity duration-500 ${loading || error ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100'}`}
                         kr-form-token={formToken}
                     ></div>
 
