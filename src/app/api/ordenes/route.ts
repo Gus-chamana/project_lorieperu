@@ -100,11 +100,6 @@ export async function POST(req: Request) {
 
         // 5. Incrementar uso del código de descuento si aplica
         if (codigo_descuento_id) {
-            await supabase
-                .from('codigos_descuento')
-                .update({ veces_usado: supabase.rpc('veces_usado') })
-                .eq('id', codigo_descuento_id);
-            // Forma alternativa sin RPC:
             const { data: codigoActual } = await supabase
                 .from('codigos_descuento')
                 .select('veces_usado')
@@ -117,6 +112,44 @@ export async function POST(req: Request) {
                     .eq('id', codigo_descuento_id);
             }
         }
+
+        // 6. Buscar nombre del distrito para incluirlo en el correo
+        const { data: distritoData } = await supabase
+            .from('distritos')
+            .select('nombre')
+            .eq('id', direccion.distrito_id)
+            .single();
+
+        // 7. Enviar correo de confirmación al cliente (fire-and-forget: no bloquea la respuesta)
+        const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+        fetch(`${baseUrl}/api/email/confirmacion`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: cliente.email,
+                nombre_completo: cliente.nombre_completo,
+                numero_pedido: orden.id.split('-')[0].toUpperCase(),
+                productos: items.map(item => ({
+                    nombre: item.nombre_producto_snapshot,
+                    cantidad: item.cantidad,
+                    precio_unitario: item.precio_unitario_snapshot,
+                    subtotal_linea: item.subtotal_linea,
+                })),
+                subtotal,
+                monto_descuento: monto_descuento > 0 ? monto_descuento : undefined,
+                costo_envio,
+                total,
+                direccion: direccion.direccion,
+                distrito: distritoData?.nombre ?? direccion.distrito_id,
+                tipo_envio: direccion.tipo_envio,
+                celular: cliente.celular,
+                nombre_agencia: direccion.nombre_agencia,
+                referencia: direccion.referencia,
+            }),
+        }).catch(err => {
+            // Si el email falla, no bloqueamos ni rompemos la orden del cliente
+            console.error('⚠️ Error al disparar correo de confirmación (no bloquea la orden):', err);
+        });
 
         return NextResponse.json({ success: true, orden_id: orden.id }, { status: 201 });
 

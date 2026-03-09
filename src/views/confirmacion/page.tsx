@@ -97,7 +97,6 @@ export default function ConfirmacionPage() {
               ¡Gracias por tu Compra!
             </motion.h1>
 
-            {/* Mensaje Principal */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -105,10 +104,10 @@ export default function ConfirmacionPage() {
               className="text-center mb-8"
             >
               <p className="text-lg text-lorie-brown mb-2">
-                Tu pedido ha sido confirmado exitosamente.
+                Tu pedido y pago han sido confirmados exitosamente.
               </p>
-              <p className="text-sm text-lorie-brown/70">
-                Hemos enviado todos los detalles a tu correo electrónico.
+              <p className="text-sm text-lorie-brown/70 leading-relaxed px-4">
+                Hemos enviado todos los detalles a tu correo electrónico. Cualquier comunicación sobre tu envío se realizará obligatoriamente por ese medio o a través del número de WhatsApp que nos proporcionaste.
               </p>
             </motion.div>
 
@@ -138,11 +137,11 @@ export default function ConfirmacionPage() {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-serif text-lg font-semibold text-lorie-dark mb-1">
-                    Confirmación por Correo
+                    Detalles por Correo
                   </h3>
                   <p className="text-sm text-lorie-brown leading-relaxed">
-                    Hemos enviado los detalles de tu pedido a tu correo electrónico.
-                    Por favor, revisa tu bandeja de entrada y la carpeta de spam.
+                    Hemos enviado los detalles completos de tu pedido e información de pago a tu correo electrónico.
+                    Por favor, revisa tu bandeja de entrada o la carpeta de spam.
                   </p>
                 </div>
               </div>
@@ -153,11 +152,10 @@ export default function ConfirmacionPage() {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-serif text-lg font-semibold text-lorie-dark mb-1">
-                    Nos Comunicaremos Contigo
+                    Canales de Comunicación
                   </h3>
                   <p className="text-sm text-lorie-brown leading-relaxed">
-                    Nuestro equipo se pondrá en contacto contigo por WhatsApp o correo
-                    electrónico para confirmar los detalles del envío y coordinar la entrega.
+                    Cualquier novedad referente a tu pedido o envío será notificada de forma obligatoria a través del correo electrónico o número de WhatsApp que registraste en tu compra.
                   </p>
                 </div>
               </div>
