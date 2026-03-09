@@ -1,14 +1,16 @@
+import dynamic from 'next/dynamic';
 import Navbar from '../components/feature/Navbar';
-import Footer from '../components/feature/Footer';
-import WhatsAppButton from '../components/feature/WhatsAppButton';
-import ScrollToTop from '../components/feature/ScrollToTop';
 import HeroSection from '../views/home/components/HeroSection';
 import ModelosGallery from '../views/home/components/ModelosGallery';
-import ProductosDestacados from '../views/home/components/ProductosDestacados';
-import NosotrosPreview from '../views/home/components/NosotrosPreview';
-import Testimonios from '../views/home/components/Testimonios';
-import ContactoSection from '../views/home/components/ContactoSection';
-import FAQSection from '../views/home/components/FAQSection';
+
+const ProductosDestacados = dynamic(() => import('../views/home/components/ProductosDestacados'));
+const NosotrosPreview = dynamic(() => import('../views/home/components/NosotrosPreview'));
+const Testimonios = dynamic(() => import('../views/home/components/Testimonios'));
+const ContactoSection = dynamic(() => import('../views/home/components/ContactoSection'));
+const FAQSection = dynamic(() => import('../views/home/components/FAQSection'));
+const Footer = dynamic(() => import('../components/feature/Footer'));
+const WhatsAppButton = dynamic(() => import('../components/feature/WhatsAppButton'), { ssr: false });
+const ScrollToTop = dynamic(() => import('../components/feature/ScrollToTop'), { ssr: false });
 
 export default function HomePage() {
     return (

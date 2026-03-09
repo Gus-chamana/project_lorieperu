@@ -163,8 +163,9 @@ export default function ProductosDestacados() {
                 <button
                   onClick={(e) => { e.stopPropagation(); abrirDetalle(producto); }}
                   className="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all duration-300 cursor-pointer"
+                  aria-label="Ver detalles del producto"
                 >
-                  <i className="ri-eye-line text-lorie-brown" />
+                  <i className="ri-eye-line text-lorie-brown" aria-hidden="true" />
                 </button>
               </div>
 

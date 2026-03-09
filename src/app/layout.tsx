@@ -73,7 +73,9 @@ export default function RootLayout({
     return (
         <html lang="es" className="overflow-x-hidden">
             <head>
-                {/* Remix Icon */}
+                {/* Remix Icon Preload & Load */}
+                <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
+                <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" />
                 <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet" />
                 {/* Favicon */}
                 <link rel="icon" href="/logo.ico" type="image/x-icon" />

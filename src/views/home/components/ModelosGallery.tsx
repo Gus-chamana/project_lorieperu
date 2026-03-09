@@ -348,7 +348,7 @@ export default function ModelosGallery() {
                     alt={image.alt}
                     fill
                     className="object-cover pointer-events-none transition-transform duration-700 hover:scale-110"
-                    sizes="(max-width: 640px) 280px, (max-width: 1024px) 300px, 360px"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     loading={index < 3 ? 'eager' : 'lazy'}
                     priority={index < 3}
                   />
