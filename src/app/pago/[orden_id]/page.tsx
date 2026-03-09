@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/feature/Navbar';
 import FooterMinimal from '@/components/feature/FooterMinimal';
+import CheckoutSteps from '@/components/feature/CheckoutSteps';
 
 export default function IzipayPaymentPage({ params }: { params: { orden_id: string } }) {
     const ordenId = params.orden_id;
@@ -102,10 +103,17 @@ export default function IzipayPaymentPage({ params }: { params: { orden_id: stri
     }, [formToken]);
 
     return (
-        <div className="min-h-screen bg-lorie-cream flex flex-col pt-24 lg:pt-36">
+        <div className="min-h-screen bg-lorie-cream flex flex-col pt-24 mt-16 lg:mt-0 lg:pt-36">
             <Navbar hideCart />
 
             <main className="flex-1 flex flex-col items-center justify-center p-4">
+                <div className="max-w-6xl w-full mx-auto">
+                    {/* Stepper de pasos */}
+                    <div className="mb-10 w-full flex justify-center">
+                        <CheckoutSteps paso={3} />
+                    </div>
+                </div>
+
                 <div className="bg-white rounded-3xl shadow-lg p-8 w-full max-w-lg text-center border border-lorie-beige">
                     <h1 className="font-lista-masta text-3xl text-lorie-dark mb-2">Completar Pago Seguro</h1>
                     <p className="font-sans text-lorie-brown/70 mb-8 text-sm">

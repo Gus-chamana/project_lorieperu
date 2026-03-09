@@ -141,15 +141,15 @@ export default function AdminOrdenesLista() {
                                             <select
                                                 value={orden.estado_pago}
                                                 onChange={(e) => cambiarEstadoPago(orden.id, e.target.value)}
-                                                className={`text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-sm cursor-pointer outline-none border border-transparent hover:border-black/10 focus:ring-2 focus:ring-lorie-brown/30 font-sans right-0 ml-auto block appearance-none text-center ${orden.estado_pago === 'VERIFICADO'
-                                                        ? 'bg-green-50 text-green-700'
-                                                        : orden.estado_pago === 'RECHAZADO'
-                                                            ? 'bg-red-50 text-red-700'
-                                                            : 'bg-yellow-50 text-yellow-700'
+                                                className={`text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-sm cursor-pointer outline-none border border-transparent hover:border-black/10 focus:ring-2 focus:ring-lorie-brown/30 font-sans right-0 ml-auto block appearance-none text-center ${orden.estado_pago === 'CONFIRMADO EL PAGO'
+                                                    ? 'bg-green-50 text-green-700'
+                                                    : orden.estado_pago === 'RECHAZADO'
+                                                        ? 'bg-red-50 text-red-700'
+                                                        : 'bg-yellow-50 text-yellow-700'
                                                     }`}
                                             >
                                                 <option value="PENDIENTE" className="bg-white text-lorie-dark">Pendiente</option>
-                                                <option value="VERIFICADO" className="bg-white text-lorie-dark">Verificado</option>
+                                                <option value="VERIFICADO" className="bg-white text-lorie-dark">Confirmado el pago</option>
                                                 <option value="RECHAZADO" className="bg-white text-lorie-dark">Rechazado</option>
                                             </select>
                                         </td>

@@ -21,7 +21,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Orden no encontrada' }, { status: 404 });
         }
 
-        if (orden.estado_pago === 'VERIFICADO') {
+        if (orden.estado_pago === 'CONFIRMADO EL PAGO') {
             return NextResponse.json({ error: 'Esta orden ya fue pagada' }, { status: 400 });
         }
 
