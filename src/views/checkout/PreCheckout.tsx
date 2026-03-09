@@ -149,9 +149,9 @@ export default function PreCheckout({ onOrdenCreada }: PreCheckoutProps) {
                 direccion: {
                     distrito_id: form.distrito_id,
                     direccion: form.direccion,
-                    referencia: form.referencia,
+                    referencia: form.referencia || undefined,
                     tipo_envio: distritoSeleccionado?.es_lima_metropolitana ? 'LIMA_MOTORIZADO' : 'PROVINCIA_SHALOM',
-                    nombre_agencia: form.nombre_agencia || null,
+                    nombre_agencia: form.nombre_agencia || undefined,
                 },
                 metodo_envio_id: metodoEnvioId,
                 codigo_descuento_id: descuentoData?.codigo_id ?? null,
