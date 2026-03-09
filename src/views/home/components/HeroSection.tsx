@@ -20,8 +20,8 @@ export default function HeroSection() {
       </div>
 
       {/* Hero Content */}
-      <div className="relative z-10 h-full flex items-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-16 mt-8 pb-32 lg:pt-0 lg:mt-0 lg:pb-0">
+      <div className="relative z-10 h-full flex flex-col justify-center pt-24 lg:pt-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-10 lg:pb-0">
           <div className="max-w-2xl">
             {/* Badge */}
             <motion.div
@@ -41,13 +41,13 @@ export default function HeroSection() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-white mb-6"
             >
-              <div className="font-aston-script text-7xl md:text-8xl lg:text-9xl leading-tight mb-4" style={{ textShadow: '0 4px 20px rgba(139, 90, 90, 0.6)' }}>
+              <div className="font-aston-script text-6xl sm:text-7xl md:text-8xl lg:text-9xl leading-tight mb-4" style={{ textShadow: '0 4px 20px rgba(139, 90, 90, 0.6)' }}>
                 Lorie Perú
               </div>
-              <div className="font-hero-subtitle text-2xl md:text-3xl lg:text-4xl font-light leading-relaxed mb-2" style={{ textShadow: '0 4px 20px rgba(139, 90, 90, 0.6)' }}>
+              <div className="font-hero-subtitle text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light leading-relaxed mb-2" style={{ textShadow: '0 4px 20px rgba(139, 90, 90, 0.6)' }}>
                 Confeccionamos lo que imaginas
               </div>
-              <div className="font-hero-subtitle text-lg md:text-xl lg:text-2xl font-light leading-relaxed" style={{ textShadow: '0 4px 20px rgba(139, 90, 90, 0.6)' }}>
+              <div className="font-hero-subtitle text-base sm:text-lg md:text-xl lg:text-2xl font-light leading-relaxed" style={{ textShadow: '0 4px 20px rgba(139, 90, 90, 0.6)' }}>
                 Bolsos artesanales con identidad propia
               </div>
             </motion.h1>
@@ -68,11 +68,11 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="flex flex-col sm:flex-row gap-4"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4"
             >
               <Link
                 href="/productos"
-                className="inline-flex items-center justify-center px-8 py-4 text-white rounded-full font-sans font-semibold text-base transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer whitespace-nowrap hover:opacity-90"
+                className="inline-flex items-center justify-center px-6 py-3 sm:px-8 sm:py-4 text-white rounded-full font-sans font-semibold text-sm sm:text-base transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer whitespace-nowrap hover:opacity-90"
                 style={{ backgroundColor: 'rgb(185, 150, 128)' }}
               >
                 Ver Colección
@@ -82,10 +82,10 @@ export default function HeroSection() {
                 href="https://wa.me/51957026753?text=Hola%20Lorie%20Perú,%20me%20interesa%20conocer%20más%20sobre%20sus%20productos"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-sans font-semibold text-base hover:bg-white/10 transition-all duration-300 cursor-pointer whitespace-nowrap"
+                className="inline-flex items-center justify-center px-6 py-3 sm:px-8 sm:py-4 bg-transparent border-2 border-white text-white rounded-full font-sans font-semibold text-sm sm:text-base hover:bg-white/10 transition-all duration-300 cursor-pointer whitespace-nowrap"
               >
-                <div className="w-8 h-8 flex items-center justify-center">
-                  <i className="ri-whatsapp-line text-white text-xl"></i>
+                <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center">
+                  <i className="ri-whatsapp-line text-white text-lg sm:text-xl"></i>
                 </div>
                 <span className="ml-2">Contáctanos</span>
               </a>
