@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createAdminClient } from '@/lib/supabase-admin';
 
 export async function POST(req: Request) {
     try {
         const body = await req.json();
         const { orden_id } = body;
+
+        // Admin client: bypasea RLS para leer la orden del servidor
+        const supabase = createAdminClient();
 
         if (!orden_id) {
             return NextResponse.json({ error: 'ID de orden requerido' }, { status: 400 });
