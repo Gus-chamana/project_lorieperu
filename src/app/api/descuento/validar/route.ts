@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
     if (!configError && configData?.valor?.activo) {
         const { codigo_cupon, descuento_porcentaje } = configData.valor;
-        if (codigo_cupon === codigoLimpio) {
+        if (codigo_cupon && codigo_cupon.toUpperCase() === codigoLimpio) {
             // El código coincide con el banner activo
             const descuentoNumeric = Number(descuento_porcentaje);
             const montoCalculado = (subtotal * descuentoNumeric) / 100;
