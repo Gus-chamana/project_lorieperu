@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { createAdminClient } from '@/lib/supabase-admin';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import type { PayloadOrden } from '@/types/checkout';
@@ -38,6 +38,9 @@ export async function POST(req: Request) {
     try {
         const body: PayloadOrden = await req.json();
 
+        // Cliente admin: usa service role key para bypasear RLS de Supabase en el backend
+        const supabase = createAdminClient();
+
         // Validar con Zod
         const parsed = ordenSchema.safeParse(body);
         if (!parsed.success) {
@@ -45,6 +48,7 @@ export async function POST(req: Request) {
         }
 
         const { cliente, direccion, metodo_envio_id, codigo_descuento_id, items, subtotal, monto_descuento, costo_envio, total } = parsed.data;
+
 
         // 1. Crear cliente
         const { data: clienteCreado, error: errCliente } = await supabase
