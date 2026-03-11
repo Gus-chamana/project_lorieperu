@@ -1,49 +1,20 @@
 /*
- * Lorie Perú – Ajuste de layout para formulario Izipay (material.css + kr-embedded)
- * Solo afecta contenedores externos; NO toca las clases internas de los iframes de Krypton.
+ * Lorie Perú – CSS MÍNIMO para Izipay (classic.css base)
+ * REGLA ESTRICTA: NO sobreescribir .kr-embedded ni ninguna clase de campo.
+ * Solo se estiliza el botón de pago para que coincida con la marca.
+ * Todo lo demás lo controla Krypton internamente.
  */
-
-/* ── CONTENEDOR RAÍZ ─────────────────────────────────────────────────────── */
-.kr-embedded {
-    background-color: #ffffff !important;
-    border: 1px solid #e0e0e0 !important;
-    border-radius: 8px !important;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08) !important;
-    padding: 16px 20px 20px !important;
-    width: 100% !important;
-    max-width: 480px !important;
-}
-
-/* ── EXPIRY + CVV EN DOS COLUMNAS ─────────────────────────────────────────── */
-.content-security-expiry {
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 12px !important;
-    justify-content: space-between !important;
-}
-
-.kr-expiry {
-    flex: 1 !important;
-    max-width: 49% !important;
-}
-
-.kr-security-code {
-    flex: 1 !important;
-    max-width: 49% !important;
-}
 
 /* ── BOTÓN DE PAGO ────────────────────────────────────────────────────────── */
 .kr-embedded .kr-payment-button {
     background: linear-gradient(135deg, #8B5A5A 0%, #6B4444 100%) !important;
-    border: none !important;
     border-radius: 8px !important;
-    color: #ffffff !important;
-    font-weight: 600 !important;
     height: 52px !important;
     letter-spacing: 1px !important;
+    font-weight: 600 !important;
     text-transform: uppercase !important;
-    transition: all 0.2s ease !important;
     box-shadow: 0 4px 14px rgba(107, 68, 68, 0.28) !important;
+    transition: all 0.2s ease !important;
 }
 
 .kr-embedded .kr-payment-button:hover {

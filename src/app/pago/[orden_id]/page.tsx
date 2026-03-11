@@ -53,13 +53,13 @@ export default function IzipayPaymentPage({ params }: { params: { orden_id: stri
 
         const loadScript = () => {
             return new Promise<void>((resolve, reject) => {
-                // CSS oficial de Izipay - tema Material (campos planos y modernos)
+                // CSS oficial de Izipay - tema Classic (único confirmado que muestra campos visibles)
                 const cssLink = document.createElement('link');
                 cssLink.rel = 'stylesheet';
-                cssLink.href = `${STATIC_CDN}/static/js/krypton-client/V4.0/ext/material.css`;
+                cssLink.href = `${STATIC_CDN}/static/js/krypton-client/V4.0/ext/classic.css`;
                 document.head.appendChild(cssLink);
 
-                // CSS de ajuste de layout Lorie Perú
+                // CSS mínimo: solo estiliza el botón, NO toca campos ni contenedor
                 const cssCustom = document.createElement('link');
                 cssCustom.rel = 'stylesheet';
                 cssCustom.href = '/izipay-lorie.css';
