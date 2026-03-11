@@ -1,113 +1,94 @@
 /*
- * Lorie Perú – Personalización del Formulario de Pago Izipay (Krypton)
- * REGLA: Solo estilar el EXTERIOR del formulario (container, bordes, botón).
- * Los campos internos (.kr-pan, .kr-expiry, etc.) usan iframes → no se pueden
- * estilizar internamente desde CSS externo sin romper la visibilidad del texto.
+ * CSS oficial de personalización Izipay – Formulario Incrustado
+ * Fuente: https://github.com/izipay-pe/Personalizacion
+ * Aplicado sobre el tema base: classic.css
  */
 
-/* ── CONTENEDOR RAÍZ ─────────────────────────────────────────────────────── */
-.kr-embedded,
-.kr-smart-form {
-    background-color: #ffffff !important;
-    border-radius: 16px !important;
-    border: 1px solid #F5E6D3 !important;
-    box-shadow: 0 8px 32px rgba(107, 68, 68, 0.10) !important;
+.kr-field-wrapper {
+    margin-top: 6px !important;
+    margin-left: 10px !important;
+}
+
+.Contains-form {
+    display: flex;
+    justify-content: center;
+    border-radius: 5px;
+    background: #ffffff;
+    background-repeat: no-repeat;
+    background-position: center top 15px;
+    background-size: 160px;
+    background-image: url("https://github.com/izipay-pe/Imagenes/blob/main/logos_izipay/logo-izipay-sinFondo-250x102.png?raw=true") !important;
+    border-radius: 6px;
+    box-shadow: 0px 10px 25px rgba(92, 99, 105, .2);
+    border: 1px solid #b3b6b5 !important;
+    margin-bottom: 25px;
+    padding: 20px !important;
+    width: 360px;
+    padding: 25px !important;
+}
+
+.kr-embedded {
+    background-color: #fff !important;
+    border-radius: 6px;
+    border: 1px solid #b3b6b5 !important;
+    margin-top: 58px !important;
+    box-shadow: 0px 10px 25px rgba(92, 99, 105, .2);
     padding: 20px !important;
     width: 100% !important;
-    max-width: 420px !important;
-    animation: kr-lorie-fadein 0.4s ease-out !important;
+    max-width: 300px !important;
 }
 
-/* ── CABECERA DEL SMART FORM ──────────────────────────────────────────────── */
-.kr-smart-form .kr-header {
-    background-color: #FFF9F0 !important;
-    border-bottom: 1px solid #F5E6D3 !important;
-    border-radius: 12px 12px 0 0 !important;
-    padding: 12px 16px !important;
+.content-security-expiry {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-around !important;
 }
 
-/* ── PESTAÑAS DE MÉTODOS DE PAGO ──────────────────────────────────────────── */
-.kr-smart-form .kr-methods-tab-list {
-    background-color: #FFF9F0 !important;
-    border-bottom: 2px solid #F5E6D3 !important;
-    gap: 6px !important;
-    padding: 0 12px !important;
+/*** Número de tarjeta ***/
+.kr-pan {
+    margin-top: 14px !important;
+    height: 45px !important;
+    border-radius: 4px !important;
 }
 
-.kr-smart-form .kr-method-tab {
-    border-radius: 8px 8px 0 0 !important;
-    color: #8B5A5A !important;
-    font-size: 13px !important;
-    transition: background-color 0.2s ease !important;
+.kr-expiry {
+    height: 45px !important;
+    border-radius: 4px !important;
+    max-width: 49% !important;
 }
 
-.kr-smart-form .kr-method-tab:hover {
-    background-color: #F5E6D3 !important;
-    color: #6B4444 !important;
+.kr-security-code {
+    height: 45px !important;
+    border-radius: 4px !important;
+    max-width: 49% !important;
 }
 
-.kr-smart-form .kr-method-tab.kr-active,
-.kr-smart-form .kr-method-tab[aria-selected="true"] {
-    background-color: #ffffff !important;
-    border-bottom-color: #ffffff !important;
-    color: #6B4444 !important;
-    font-weight: 600 !important;
+.kr-installment-number {
+    border-radius: 4px !important;
+    height: 45px !important;
 }
 
-/* ── BORDES EXTERIORES DE LOS CAMPOS ─────────────────────────────────────── */
-/* IMPORTANTE: Solo borde exterior, NO tocar background ni height para no    */
-/* ocultar el texto del iframe interno de Krypton.                           */
-.kr-pan,
-.kr-expiry,
-.kr-security-code,
-.kr-cardholder-name,
-.kr-installment-number,
 .kr-first-installment-delay {
-    border-radius: 10px !important;
-    border-color: #F5E6D3 !important;
-    transition: border-color 0.2s ease !important;
+    border-radius: 4px !important;
+    height: 45px !important;
 }
 
-/* ── BOTÓN DE PAGO ────────────────────────────────────────────────────────── */
-.kr-embedded .kr-payment-button,
-.kr-smart-form .kr-payment-button {
-    background: linear-gradient(135deg, #8B5A5A 0%, #6B4444 100%) !important;
-    border: none !important;
-    border-radius: 12px !important;
+.kr-embedded .kr-payment-button {
     color: #ffffff !important;
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    height: 54px !important;
-    letter-spacing: 1.5px !important;
-    margin-top: 8px !important;
-    text-transform: uppercase !important;
-    transition: all 0.25s ease !important;
-    width: 100% !important;
-    box-shadow: 0 4px 16px rgba(107, 68, 68, 0.30) !important;
+    background-color: #00A09D !important;
+    border-radius: 4px !important;
+    height: 55px !important;
+    margin-bottom: 0px !important;
 }
 
-.kr-embedded .kr-payment-button:hover,
-.kr-smart-form .kr-payment-button:hover {
-    background: linear-gradient(135deg, #9d6666 0%, #7a4e4e 100%) !important;
-    box-shadow: 0 6px 20px rgba(107, 68, 68, 0.40) !important;
-    transform: translateY(-1px) !important;
+.kr-embedded .kr-payment-button span:hover {
+    transition-duration: 0.2s;
+    font-size: large;
+    text-shadow: -0.5px -0.5px 0.5px #000, 0.5px 0.5px 0.5px #000, -0.5px 0.5px 0.5px #000, 0.5px -0.5px 0.5px #000;
 }
 
-.kr-embedded .kr-payment-button:active,
-.kr-smart-form .kr-payment-button:active {
-    transform: translateY(0) !important;
-    box-shadow: 0 2px 8px rgba(107, 68, 68, 0.25) !important;
-}
-
-/* ── ANIMACIÓN DE ENTRADA ─────────────────────────────────────────────────── */
-@keyframes kr-lorie-fadein {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.kr-embedded .kr-payment-button:hover {
+    background-color: #3DD2CE !important;
+    border-radius: 4px !important;
+    color: #ffffff !important;
 }

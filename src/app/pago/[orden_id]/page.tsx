@@ -53,13 +53,13 @@ export default function IzipayPaymentPage({ params }: { params: { orden_id: stri
 
         const loadScript = () => {
             return new Promise<void>((resolve, reject) => {
-                // CSS oficial de Izipay - tema Material (moderno, con pestañas por método de pago)
+                // CSS oficial de Izipay - tema Classic
                 const cssLink = document.createElement('link');
                 cssLink.rel = 'stylesheet';
-                cssLink.href = `${STATIC_CDN}/static/js/krypton-client/V4.0/ext/material.css`;
+                cssLink.href = `${STATIC_CDN}/static/js/krypton-client/V4.0/ext/classic.css`;
                 document.head.appendChild(cssLink);
 
-                // CSS personalizado Lorie Perú – sobreescribe los colores/estilos de Krypton
+                // CSS de personalización oficial Izipay (logo, campos, botón turquesa)
                 const cssCustom = document.createElement('link');
                 cssCustom.rel = 'stylesheet';
                 cssCustom.href = '/izipay-lorie.css';
@@ -139,11 +139,13 @@ export default function IzipayPaymentPage({ params }: { params: { orden_id: stri
                         </div>
                     )}
 
-                    {/* Smart Form de Izipay – muestra automáticamente todos los métodos de pago habilitados (Tarjeta, Plin, QR, Yape...) */}
-                    <div
-                        className={`kr-smart-form mx-auto transition-opacity duration-500 ${loading || error ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100'}`}
-                        kr-form-token={formToken}
-                    ></div>
+                    {/* Contains-form: wrapper oficial Izipay con logo + formulario clásico embebido */}
+                    <div className={`Contains-form transition-opacity duration-500 ${loading || error ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100'}`}>
+                        <div
+                            className="kr-embedded"
+                            kr-form-token={formToken}
+                        ></div>
+                    </div>
 
                     {/* Pie de seguridad */}
                     {!loading && !error && (
