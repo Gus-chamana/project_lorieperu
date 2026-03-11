@@ -1,50 +1,44 @@
 /*
- * Lorie Perú – Personalización Premium del Formulario de Pago Izipay (Krypton)
- * Basado en: https://github.com/izipay-pe/Personalizacion
- * Paleta: cream #FFF9F0 | beige #F5E6D3 | rose #A67C7C | brown #8B5A5A | dark #6B4444
+ * Lorie Perú – Personalización del Formulario de Pago Izipay (Krypton)
+ * REGLA: Solo estilar el EXTERIOR del formulario (container, bordes, botón).
+ * Los campos internos (.kr-pan, .kr-expiry, etc.) usan iframes → no se pueden
+ * estilizar internamente desde CSS externo sin romper la visibilidad del texto.
  */
 
-/* ── GOOGLE FONTS ─────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap');
-
-/* ── CONTENEDOR RAÍZ DEL FORMULARIO ──────────────────────────────────────── */
+/* ── CONTENEDOR RAÍZ ─────────────────────────────────────────────────────── */
 .kr-embedded,
 .kr-smart-form {
     background-color: #ffffff !important;
     border-radius: 16px !important;
     border: 1px solid #F5E6D3 !important;
     box-shadow: 0 8px 32px rgba(107, 68, 68, 0.10) !important;
-    padding: 24px 20px !important;
+    padding: 20px !important;
     width: 100% !important;
     max-width: 420px !important;
-    font-family: 'Montserrat', sans-serif !important;
+    animation: kr-lorie-fadein 0.4s ease-out !important;
 }
 
-/* ── CABECERA / LOGO DEL SMART FORM ──────────────────────────────────────── */
+/* ── CABECERA DEL SMART FORM ──────────────────────────────────────────────── */
 .kr-smart-form .kr-header {
     background-color: #FFF9F0 !important;
     border-bottom: 1px solid #F5E6D3 !important;
     border-radius: 12px 12px 0 0 !important;
-    padding: 14px 20px !important;
+    padding: 12px 16px !important;
 }
 
-/* ── PESTAÑAS DE MÉTODOS DE PAGO (Tarjeta, Plin, QR, Yape...) ─────────────── */
+/* ── PESTAÑAS DE MÉTODOS DE PAGO ──────────────────────────────────────────── */
 .kr-smart-form .kr-methods-tab-list {
     background-color: #FFF9F0 !important;
     border-bottom: 2px solid #F5E6D3 !important;
-    padding: 0 16px !important;
-    gap: 8px !important;
+    gap: 6px !important;
+    padding: 0 12px !important;
 }
 
 .kr-smart-form .kr-method-tab {
     border-radius: 8px 8px 0 0 !important;
-    border: 1px solid transparent !important;
     color: #8B5A5A !important;
-    font-family: 'Montserrat', sans-serif !important;
     font-size: 13px !important;
-    font-weight: 500 !important;
-    padding: 10px 16px !important;
-    transition: all 0.2s ease !important;
+    transition: background-color 0.2s ease !important;
 }
 
 .kr-smart-form .kr-method-tab:hover {
@@ -55,79 +49,23 @@
 .kr-smart-form .kr-method-tab.kr-active,
 .kr-smart-form .kr-method-tab[aria-selected="true"] {
     background-color: #ffffff !important;
-    border-color: #F5E6D3 !important;
     border-bottom-color: #ffffff !important;
     color: #6B4444 !important;
     font-weight: 600 !important;
 }
 
-/* ── CAMPOS DE ENTRADA (Número tarjeta, Fecha, CVV, Nombre) ──────────────── */
-.kr-field-wrapper {
-    margin-top: 10px !important;
-    margin-left: 0 !important;
-}
-
+/* ── BORDES EXTERIORES DE LOS CAMPOS ─────────────────────────────────────── */
+/* IMPORTANTE: Solo borde exterior, NO tocar background ni height para no    */
+/* ocultar el texto del iframe interno de Krypton.                           */
 .kr-pan,
 .kr-expiry,
 .kr-security-code,
 .kr-cardholder-name,
 .kr-installment-number,
 .kr-first-installment-delay {
-    height: 50px !important;
     border-radius: 10px !important;
-    border: 1.5px solid #F5E6D3 !important;
-    background-color: #FFFCF8 !important;
-    color: #6B4444 !important;
-    font-family: 'Montserrat', sans-serif !important;
-    font-size: 14px !important;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
-}
-
-.kr-pan:focus-within,
-.kr-expiry:focus-within,
-.kr-security-code:focus-within,
-.kr-cardholder-name:focus-within {
-    border-color: #A67C7C !important;
-    box-shadow: 0 0 0 3px rgba(166, 124, 124, 0.15) !important;
-    background-color: #ffffff !important;
-}
-
-/* Fecha + CVV en una fila */
-.content-security-expiry {
-    display: flex !important;
-    flex-direction: row !important;
-    justify-content: space-between !important;
-    gap: 12px !important;
-}
-
-.kr-expiry {
-    max-width: 48% !important;
-    flex: 1 !important;
-}
-
-.kr-security-code {
-    max-width: 48% !important;
-    flex: 1 !important;
-}
-
-/* ── ETIQUETAS / PLACEHOLDERS ─────────────────────────────────────────────── */
-.kr-label,
-.kr-field-label {
-    color: #8B5A5A !important;
-    font-family: 'Montserrat', sans-serif !important;
-    font-size: 11px !important;
-    font-weight: 500 !important;
-    letter-spacing: 0.5px !important;
-    text-transform: uppercase !important;
-    margin-bottom: 4px !important;
-}
-
-/* ── SELECTOR DE CUOTAS ───────────────────────────────────────────────────── */
-.kr-installment-number select,
-.kr-first-installment-delay select {
-    color: #6B4444 !important;
-    font-family: 'Montserrat', sans-serif !important;
-    background-color: #FFFCF8 !important;
+    border-color: #F5E6D3 !important;
+    transition: border-color 0.2s ease !important;
 }
 
 /* ── BOTÓN DE PAGO ────────────────────────────────────────────────────────── */
@@ -137,13 +75,11 @@
     border: none !important;
     border-radius: 12px !important;
     color: #ffffff !important;
-    font-family: 'Montserrat', sans-serif !important;
-    font-size: 15px !important;
+    font-size: 14px !important;
     font-weight: 600 !important;
     height: 54px !important;
-    letter-spacing: 1px !important;
+    letter-spacing: 1.5px !important;
     margin-top: 8px !important;
-    margin-bottom: 4px !important;
     text-transform: uppercase !important;
     transition: all 0.25s ease !important;
     width: 100% !important;
@@ -163,49 +99,11 @@
     box-shadow: 0 2px 8px rgba(107, 68, 68, 0.25) !important;
 }
 
-.kr-embedded .kr-payment-button span,
-.kr-smart-form .kr-payment-button span {
-    font-size: 15px !important;
-    font-weight: 600 !important;
-    letter-spacing: 1.5px !important;
-}
-
-/* ── MENSAJES DE ERROR ────────────────────────────────────────────────────── */
-.kr-error-message,
-.kr-field-error {
-    color: #c0392b !important;
-    font-family: 'Montserrat', sans-serif !important;
-    font-size: 12px !important;
-    margin-top: 4px !important;
-    padding-left: 4px !important;
-}
-
-/* ── ICONOS DE TARJETA (Visa, MC, Amex) ──────────────────────────────────── */
-.kr-card-icons {
-    opacity: 0.7 !important;
-    transition: opacity 0.2s !important;
-}
-
-.kr-card-icons:hover {
-    opacity: 1 !important;
-}
-
-/* ── SELLO DE SEGURIDAD INFERIOR ──────────────────────────────────────────── */
-.kr-spinner,
-.kr-loading {
-    color: #A67C7C !important;
-}
-
 /* ── ANIMACIÓN DE ENTRADA ─────────────────────────────────────────────────── */
-.kr-embedded,
-.kr-smart-form {
-    animation: kr-lorie-fadein 0.4s ease-out !important;
-}
-
 @keyframes kr-lorie-fadein {
     from {
         opacity: 0;
-        transform: translateY(12px);
+        transform: translateY(10px);
     }
 
     to {
