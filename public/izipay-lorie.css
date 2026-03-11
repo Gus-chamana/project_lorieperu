@@ -1,94 +1,57 @@
 /*
- * CSS oficial de personalización Izipay – Formulario Incrustado
- * Fuente: https://github.com/izipay-pe/Personalizacion
- * Aplicado sobre el tema base: classic.css
+ * Lorie Perú – Ajuste de layout para formulario Izipay (material.css + kr-embedded)
+ * Solo afecta contenedores externos; NO toca las clases internas de los iframes de Krypton.
  */
 
-.kr-field-wrapper {
-    margin-top: 6px !important;
-    margin-left: 10px !important;
-}
-
-.Contains-form {
-    display: flex;
-    justify-content: center;
-    border-radius: 5px;
-    background: #ffffff;
-    background-repeat: no-repeat;
-    background-position: center top 15px;
-    background-size: 160px;
-    background-image: url("https://github.com/izipay-pe/Imagenes/blob/main/logos_izipay/logo-izipay-sinFondo-250x102.png?raw=true") !important;
-    border-radius: 6px;
-    box-shadow: 0px 10px 25px rgba(92, 99, 105, .2);
-    border: 1px solid #b3b6b5 !important;
-    margin-bottom: 25px;
-    padding: 20px !important;
-    width: 360px;
-    padding: 25px !important;
-}
-
+/* ── CONTENEDOR RAÍZ ─────────────────────────────────────────────────────── */
 .kr-embedded {
-    background-color: #fff !important;
-    border-radius: 6px;
-    border: 1px solid #b3b6b5 !important;
-    margin-top: 58px !important;
-    box-shadow: 0px 10px 25px rgba(92, 99, 105, .2);
-    padding: 20px !important;
+    background-color: #ffffff !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08) !important;
+    padding: 16px 20px 20px !important;
     width: 100% !important;
-    max-width: 300px !important;
+    max-width: 480px !important;
 }
 
+/* ── EXPIRY + CVV EN DOS COLUMNAS ─────────────────────────────────────────── */
 .content-security-expiry {
     display: flex !important;
     flex-direction: row !important;
-    justify-content: space-around !important;
-}
-
-/*** Número de tarjeta ***/
-.kr-pan {
-    margin-top: 14px !important;
-    height: 45px !important;
-    border-radius: 4px !important;
+    gap: 12px !important;
+    justify-content: space-between !important;
 }
 
 .kr-expiry {
-    height: 45px !important;
-    border-radius: 4px !important;
+    flex: 1 !important;
     max-width: 49% !important;
 }
 
 .kr-security-code {
-    height: 45px !important;
-    border-radius: 4px !important;
+    flex: 1 !important;
     max-width: 49% !important;
 }
 
-.kr-installment-number {
-    border-radius: 4px !important;
-    height: 45px !important;
-}
-
-.kr-first-installment-delay {
-    border-radius: 4px !important;
-    height: 45px !important;
-}
-
+/* ── BOTÓN DE PAGO ────────────────────────────────────────────────────────── */
 .kr-embedded .kr-payment-button {
+    background: linear-gradient(135deg, #8B5A5A 0%, #6B4444 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
     color: #ffffff !important;
-    background-color: #00A09D !important;
-    border-radius: 4px !important;
-    height: 55px !important;
-    margin-bottom: 0px !important;
-}
-
-.kr-embedded .kr-payment-button span:hover {
-    transition-duration: 0.2s;
-    font-size: large;
-    text-shadow: -0.5px -0.5px 0.5px #000, 0.5px 0.5px 0.5px #000, -0.5px 0.5px 0.5px #000, 0.5px -0.5px 0.5px #000;
+    font-weight: 600 !important;
+    height: 52px !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 4px 14px rgba(107, 68, 68, 0.28) !important;
 }
 
 .kr-embedded .kr-payment-button:hover {
-    background-color: #3DD2CE !important;
-    border-radius: 4px !important;
-    color: #ffffff !important;
+    background: linear-gradient(135deg, #9d6666 0%, #7a4e4e 100%) !important;
+    box-shadow: 0 6px 18px rgba(107, 68, 68, 0.38) !important;
+    transform: translateY(-1px) !important;
+}
+
+.kr-embedded .kr-payment-button:active {
+    transform: translateY(0) !important;
 }

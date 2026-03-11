@@ -53,13 +53,13 @@ export default function IzipayPaymentPage({ params }: { params: { orden_id: stri
 
         const loadScript = () => {
             return new Promise<void>((resolve, reject) => {
-                // CSS oficial de Izipay - tema Classic
+                // CSS oficial de Izipay - tema Material (campos planos y modernos)
                 const cssLink = document.createElement('link');
                 cssLink.rel = 'stylesheet';
-                cssLink.href = `${STATIC_CDN}/static/js/krypton-client/V4.0/ext/classic.css`;
+                cssLink.href = `${STATIC_CDN}/static/js/krypton-client/V4.0/ext/material.css`;
                 document.head.appendChild(cssLink);
 
-                // CSS de personalización oficial Izipay (logo, campos, botón turquesa)
+                // CSS de ajuste de layout Lorie Perú
                 const cssCustom = document.createElement('link');
                 cssCustom.rel = 'stylesheet';
                 cssCustom.href = '/izipay-lorie.css';
@@ -139,13 +139,11 @@ export default function IzipayPaymentPage({ params }: { params: { orden_id: stri
                         </div>
                     )}
 
-                    {/* Contains-form: wrapper oficial Izipay con logo + formulario clásico embebido */}
-                    <div className={`Contains-form transition-opacity duration-500 ${loading || error ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100'}`}>
-                        <div
-                            className="kr-embedded"
-                            kr-form-token={formToken}
-                        ></div>
-                    </div>
+                    {/* Formulario clásico embebido de Izipay */}
+                    <div
+                        className={`kr-embedded mx-auto transition-opacity duration-500 ${loading || error ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100'}`}
+                        kr-form-token={formToken}
+                    ></div>
 
                     {/* Pie de seguridad */}
                     {!loading && !error && (
