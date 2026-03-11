@@ -59,6 +59,12 @@ export default function IzipayPaymentPage({ params }: { params: { orden_id: stri
                 cssLink.href = `${STATIC_CDN}/static/js/krypton-client/V4.0/ext/material.css`;
                 document.head.appendChild(cssLink);
 
+                // CSS personalizado Lorie Perú – sobreescribe los colores/estilos de Krypton
+                const cssCustom = document.createElement('link');
+                cssCustom.rel = 'stylesheet';
+                cssCustom.href = '/izipay-lorie.css';
+                document.head.appendChild(cssCustom);
+
                 // Script principal de Krypton
                 const script = document.createElement('script');
                 script.src = `${STATIC_CDN}/static/js/krypton-client/V4.0/stable/kr-payment-form.min.js`;
