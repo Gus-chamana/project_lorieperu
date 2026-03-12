@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 export default function AdminOrdenesLista() {
     const [ordenes, setOrdenes] = useState<any[]>([]);
     const [cargando, setCargando] = useState(true);
+    const [toast, setToast] = useState<string | null>(null);
 
     const fetchOrdenes = async () => {
         setCargando(true);
@@ -32,10 +33,18 @@ export default function AdminOrdenesLista() {
         }).format(new Date(isoString));
     };
 
+    const LABELS: Record<string, string> = {
+        PENDIENTE: 'Pendiente',
+        PAGADO: 'Pago Confirmado',
+        RECHAZADO: 'Rechazado',
+    };
+
     const cambiarEstadoPago = async (id: string, nuevoEstado: string) => {
-        if (!confirm(`¿Estás seguro de cambiar el estado a ${nuevoEstado}?`)) return;
+        // Actualizar optimistamente la UI de inmediato (sin confirm ni espera)
+        setOrdenes(prev =>
+            prev.map(o => o.id === id ? { ...o, estado_pago: nuevoEstado } : o)
+        );
         try {
-            setCargando(true);
             const res = await fetch(`/api/admin/ordenes/${id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
@@ -46,11 +55,14 @@ export default function AdminOrdenesLista() {
                 const errorData = await res.json();
                 throw new Error(errorData.error || "Error al actualizar la orden");
             }
-            await fetchOrdenes();
+            // Éxito: mostrar toast brevemente
+            setToast(`Estado actualizado a "${LABELS[nuevoEstado] ?? nuevoEstado}"`);
+            setTimeout(() => setToast(null), 2500);
         } catch (error: any) {
             console.error("Error al cambiar estado de pago:", error);
-            alert(`No se pudo cambiar el estado. Detalles: ${error.message}`);
-            setCargando(false);
+            // Revertir cambio optimista
+            await fetchOrdenes();
+            alert(`No se pudo cambiar el estado.\n${error.message}`);
         }
     };
 
@@ -97,6 +109,13 @@ export default function AdminOrdenesLista() {
 
     return (
         <div className="p-8 w-full max-w-7xl mx-auto space-y-6">
+            {/* Toast de confirmación */}
+            {toast && (
+                <div className="fixed top-6 right-6 z-50 bg-green-600 text-white px-5 py-3 rounded-xl shadow-lg font-sans text-sm flex items-center gap-2 animate-fade-in">
+                    <i className="ri-checkbox-circle-fill text-lg"></i>
+                    {toast}
+                </div>
+            )}
             <header className="flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-serif font-bold text-lorie-dark mb-1">
