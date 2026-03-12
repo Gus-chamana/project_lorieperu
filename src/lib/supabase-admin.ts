@@ -12,6 +12,12 @@ export const createAdminClient = () => {
     }
 
     return createClient(supabaseUrl, supabaseServiceKey, {
-        auth: { persistSession: false }
+        auth: { persistSession: false },
+        // CRÍTICO: Next.js 14 cachea las llamadas fetch internas del SDK de Supabase.
+        // Sin este override, las consultas SELECT devuelven datos obsoletos después de un UPDATE.
+        global: {
+            fetch: (url: RequestInfo | URL, options?: RequestInit) =>
+                fetch(url, { ...options, cache: 'no-store' })
+        }
     });
 };
