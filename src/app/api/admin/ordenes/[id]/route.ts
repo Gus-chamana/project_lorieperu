@@ -25,13 +25,21 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
             return NextResponse.json({ error: 'No hay datos válidos para actualizar' }, { status: 400 });
         }
 
-        // 2. Actualizar la orden en la base de datos
-        const { error } = await adminSupabase
+        // 2. Actualizar la orden en la base de datos (count:exact detecta si realmente se actualizó)
+        const { error, count } = await adminSupabase
             .from("ordenes")
-            .update(updateData)
+            .update(updateData, { count: 'exact' })
             .eq("id", id);
 
         if (error) throw error;
+
+        if (count === 0) {
+            // Esto ocurre cuando RLS bloquea el update silenciosamente (anon key sin permisos)
+            // o cuando el ID no existe en la base de datos
+            return NextResponse.json({
+                error: `No se actualizó ninguna fila. Verifique que SUPABASE_SERVICE_ROLE_KEY esté configurada en Vercel → Settings → Environment Variables.`
+            }, { status: 500 });
+        }
 
         return NextResponse.json({ success: true });
 

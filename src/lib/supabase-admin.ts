@@ -7,9 +7,11 @@ export const createAdminClient = () => {
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseServiceKey) {
-        console.warn("⚠️ ADVERTENCIA DE SEGURIDAD: Falla al encontrar SUPABASE_SERVICE_ROLE_KEY en las variables de entorno. Usando clave anónima como respaldo. Si el RLS está activado en Supabase, las peticiones backend fallarán.");
-        return createClient(supabaseUrl, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+        // No usar fallback silencioso: el anon key NO puede hacer UPDATE/INSERT si RLS está activo
+        throw new Error('SUPABASE_SERVICE_ROLE_KEY no está configurado en las variables de entorno de Vercel. Ve a Vercel → Settings → Environment Variables y agrégalo.');
     }
 
-    return createClient(supabaseUrl, supabaseServiceKey);
+    return createClient(supabaseUrl, supabaseServiceKey, {
+        auth: { persistSession: false }
+    });
 };
