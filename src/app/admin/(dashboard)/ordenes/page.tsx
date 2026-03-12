@@ -56,7 +56,7 @@ export default function AdminOrdenesLista() {
 
     // Badge visual según el estado de pago
     const PagoBadge = ({ estado, ordenId }: { estado: string; ordenId: string }) => {
-        const isConfirmado = estado === 'CONFIRMADO EL PAGO';
+        const isConfirmado = estado === 'VERIFICADO';
         const isRechazado = estado === 'RECHAZADO';
 
         return (
@@ -88,7 +88,7 @@ export default function AdminOrdenesLista() {
                     className="text-xs text-lorie-brown/60 font-sans cursor-pointer outline-none border border-lorie-beige/50 rounded px-1 py-0.5 bg-transparent hover:border-lorie-brown/20 focus:ring-1 focus:ring-lorie-brown/20 transition-colors"
                 >
                     <option value="PENDIENTE">Pendiente</option>
-                    <option value="CONFIRMADO EL PAGO">Confirmado el pago</option>
+                    <option value="VERIFICADO">Pago Verificado</option>
                     <option value="RECHAZADO">Rechazado</option>
                 </select>
             </div>
@@ -143,7 +143,7 @@ export default function AdminOrdenesLista() {
                                 </tr>
                             ) : (
                                 ordenes.map((orden) => (
-                                    <tr key={orden.id} className={`hover:bg-lorie-cream/10 transition-colors ${orden.estado_pago === 'CONFIRMADO EL PAGO' ? 'border-l-4 border-l-green-400' : orden.estado_pago === 'RECHAZADO' ? 'border-l-4 border-l-red-300' : 'border-l-4 border-l-yellow-300'}`}>
+                                    <tr key={orden.id} className={`hover:bg-lorie-cream/10 transition-colors ${orden.estado_pago === 'VERIFICADO' ? 'border-l-4 border-l-green-400' : orden.estado_pago === 'RECHAZADO' ? 'border-l-4 border-l-red-300' : 'border-l-4 border-l-yellow-300'}`}>
                                         <td className="py-4 px-6">
                                             <p className="font-mono text-xs font-semibold text-lorie-dark uppercase mb-1" title={orden.id}>
                                                 #{orden.id.split('-')[0]}

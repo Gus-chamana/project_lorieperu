@@ -46,10 +46,10 @@ export async function POST(req: Request) {
         const supabaseAdmin = createAdminClient();
 
         if (orderStatus === 'PAID') {
-            // Actualizar la orden local de 'PENDIENTE' a 'CONFIRMADO EL PAGO' transparentemente para el Panel Administrativo
+            // Actualizar la orden de 'PENDIENTE' a 'VERIFICADO' (valor válido del check constraint de Supabase)
             const { error: errUpdate } = await supabaseAdmin
                 .from('ordenes')
-                .update({ estado_pago: 'CONFIRMADO EL PAGO', estado: 'PAGADO' })
+                .update({ estado_pago: 'VERIFICADO' })
                 .eq('id', orderId);
 
             if (errUpdate) {
