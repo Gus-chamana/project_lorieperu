@@ -46,10 +46,10 @@ export async function POST(req: Request) {
         const supabaseAdmin = createAdminClient();
 
         if (orderStatus === 'PAID') {
-            // Actualizar la orden de 'PENDIENTE' a 'VERIFICADO' (valor válido del check constraint de Supabase)
+            // Actualizar la orden de 'PENDIENTE' a 'PAGADO' (único valor válido del check constraint de Supabase)
             const { error: errUpdate } = await supabaseAdmin
                 .from('ordenes')
-                .update({ estado_pago: 'VERIFICADO' })
+                .update({ estado_pago: 'PAGADO' })
                 .eq('id', orderId);
 
             if (errUpdate) {
