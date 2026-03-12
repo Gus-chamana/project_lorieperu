@@ -69,7 +69,7 @@ export default function IzipayPaymentPage({ params }: { params: { orden_id: stri
                 const script = document.createElement('script');
                 script.src = `${STATIC_CDN}/static/js/krypton-client/V4.0/stable/kr-payment-form.min.js`;
                 script.setAttribute('kr-public-key', publicKey);
-                script.setAttribute('kr-post-url-success', successUrl);   // URL absoluta público
+                script.setAttribute('kr-get-url-success', successUrl);    // GET redirect: compatible con Next.js pages
                 script.setAttribute('kr-language', 'es-ES');
                 document.body.appendChild(script);
 
