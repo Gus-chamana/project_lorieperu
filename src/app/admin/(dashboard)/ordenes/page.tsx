@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
 
 export default function AdminOrdenesLista() {
     const [ordenes, setOrdenes] = useState<any[]>([]);
@@ -9,17 +8,10 @@ export default function AdminOrdenesLista() {
     const fetchOrdenes = async () => {
         setCargando(true);
         try {
-            const { data, error } = await supabase
-                .from("ordenes")
-                .select(`
-          *,
-          cliente:clientes!cliente_id (*),
-          direccion:direcciones!direccion_id (*)
-        `)
-                .order("creado_en", { ascending: false });
-
-            if (error) throw error;
-            setOrdenes(data || []);
+            const res = await fetch('/api/admin/ordenes');
+            if (!res.ok) throw new Error('Error al cargar órdenes');
+            const data = await res.json();
+            setOrdenes(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error("Error al cargar órdenes:", error);
             alert("No se pudieron cargar las órdenes. ¿Existen las relaciones en la base de datos?");
