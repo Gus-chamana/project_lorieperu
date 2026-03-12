@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase-admin';
 
+// Deshabilitar cache de Next.js/Vercel para que siempre devuelva datos frescos de Supabase
+export const dynamic = 'force-dynamic';
+
 // GET /api/admin/ordenes – Lista todas las órdenes (usa service role para bypassear RLS)
 export async function GET() {
     try {
