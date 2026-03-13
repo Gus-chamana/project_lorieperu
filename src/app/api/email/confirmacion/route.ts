@@ -80,7 +80,10 @@ function buildEmailHtml(d: EmailPayload): string {
                         <!-- Header con branding Lorie Perú -->
                         <tr>
                             <td style="background: linear-gradient(135deg, #c4a38c 0%, #a67c7c 100%); padding: 40px 40px 30px; text-align: center;">
-                                <h1 style="margin: 0; color: #ffffff; font-family: Georgia, serif; font-size: 30px; letter-spacing: 3px;">LORIE PERÚ</h1>
+                                <style>
+                                  @import url('https://fonts.googleapis.com/css2?family=Parisienne&display=swap');
+                                </style>
+                                <h1 style="margin: 0; color: #ffffff; font-family: 'Parisienne', cursive; font-size: 42px; font-weight: normal; letter-spacing: normal;">Lorie Perú</h1>
                                 <p style="margin: 8px 0 0; color: rgba(255,255,255,0.85); font-size: 13px; letter-spacing: 1px;">Confeccionamos lo que imaginas</p>
                             </td>
                         </tr>
