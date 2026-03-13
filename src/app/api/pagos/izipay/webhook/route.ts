@@ -5,34 +5,21 @@ import { createAdminClient } from '@/lib/supabase-admin';
 export async function POST(req: Request) {
     try {
         // Izipay envia los datos vía application/x-www-form-urlencoded
-        // IMPORTANTE: Leemos en crudo (text) para parsearlo manualmente.
-        // Si usamos = await req.formData(), Next.js decodifica (decodeURIComponent) 
-        // los caracteres especiales automáticamente (ej: acentos, signos, JSON). 
-        // Al alterar un solo bit del json original, el hash calculado no coincidirá 
-        // y saltará el FAILED_SERVER_403_ERROR.
-        const rawBody = await req.text();
+        // Usamos formData nativo de Next.js que parsea los datos perfectamente 
+        // de acuerdo con el estándar de la W3C, sin romper caracteres especiales.
+        const formData = await req.formData();
         
-        // Parsear application/x-www-form-urlencoded manteniendo el string crudo
-        const urlParams = new URLSearchParams(rawBody);
-        const krHash = urlParams.get('kr-hash');
-        
-        // NOTA: Para obtener el krAnswer exactamente original tal y cómo llegó (sin decodificar),
-        // no usamos urlParams.get() pues internamente hace decodeURIComponent.
-        // Lo extraemos de la cadena bruta usando expresiones regulares:
-        const krAnswerMatch = rawBody.match(/kr-answer=([^&]*)/);
-        const krAnswerEncoded = krAnswerMatch ? krAnswerMatch[1] : null;
+        const krHash = formData.get('kr-hash') as string | null;
+        const krAnswerEncoded = formData.get('kr-answer') as string | null;
 
         if (!krHash || !krAnswerEncoded) {
             return NextResponse.json({ error: 'Faltan parámetros requeridos por Izipay.' }, { status: 400 });
         }
 
-        // El string original codificado que Izipay usó para calcular su propio hash
-        // lo decodificamos solo visualmente si queremos leerlo en JS después, 
-        // pero la matematica (Hash) requiere la cadena original NO modificada.
-        let krAnswerCrudoParaFirma = decodeURIComponent(krAnswerEncoded);
-        
-        // Excepción documentada por Izipay en NodeJS: Los espacios '+' a veces no son decodificados a espacio libre.
-        krAnswerCrudoParaFirma = krAnswerCrudoParaFirma.replace(/\+/g, ' ');
+        // Ya que formData() retorna el texto EXACTO decodificado desde la red (incluido JSON válido)
+        // No necesitamos hacer ningún decodeURIComponent ni reemplazar "+" manualmente.
+        // Ese era el causante de la alteración binaria del documento.
+        const krAnswerCrudoParaFirma = krAnswerEncoded;
 
         const HMAC_KEY = process.env.IZIPAY_HMAC_SHA256;
         const CLIENT_SECRET = process.env.IZIPAY_CLIENT_SECRET;
