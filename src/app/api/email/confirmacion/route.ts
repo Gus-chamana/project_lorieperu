@@ -81,9 +81,14 @@ function buildEmailHtml(d: EmailPayload): string {
                         <tr>
                             <td style="background: linear-gradient(135deg, #c4a38c 0%, #a67c7c 100%); padding: 40px 40px 30px; text-align: center;">
                                 <style>
-                                  @import url('https://fonts.googleapis.com/css2?family=Parisienne&display=swap');
+                                  @font-face {
+                                    font-family: 'Aston';
+                                    src: url('https://www.lorieperu.com/fonts/Aston-Script.woff2') format('woff2');
+                                    font-weight: normal;
+                                    font-style: normal;
+                                  }
                                 </style>
-                                <h1 style="margin: 0; color: #ffffff; font-family: 'Parisienne', cursive; font-size: 42px; font-weight: normal; letter-spacing: normal;">Lorie Perú</h1>
+                                <h1 style="margin: 0; color: #ffffff; font-family: 'Aston', 'Parisienne', Georgia, cursive; font-size: 56px; font-weight: normal; letter-spacing: normal;">LORIE PERÚ</h1>
                                 <p style="margin: 8px 0 0; color: rgba(255,255,255,0.85); font-size: 13px; letter-spacing: 1px;">Confeccionamos lo que imaginas</p>
                             </td>
                         </tr>
