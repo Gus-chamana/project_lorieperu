@@ -35,22 +35,29 @@ export async function POST(req: Request) {
         krAnswerCrudoParaFirma = krAnswerCrudoParaFirma.replace(/\+/g, ' ');
 
         const HMAC_KEY = process.env.IZIPAY_HMAC_SHA256;
+        const CLIENT_SECRET = process.env.IZIPAY_CLIENT_SECRET;
 
-        if (!HMAC_KEY) {
-            console.error("FATAL: Llave HMAC no configurada en el servidor.");
+        if (!HMAC_KEY || !CLIENT_SECRET) {
+            console.error("FATAL: Llaves HMAC o Password no configuradas en el servidor.");
             return NextResponse.json({ error: 'Error interno de configuración de la pasarela.' }, { status: 500 });
         }
 
         // --- 1. Verificación Criptográfica de la Identidad de Izipay ---
-        // Se cifra la respuesta cruda 'kr-answer' usando el HMAC_SHA256 Secret key del Back-Office
-        const calculatedHash = crypto.createHmac('sha256', HMAC_KEY)
+        // Izipay usa llave HMAC para los redirects al front-end y la llave Password (API Secret) para los Webhooks (IPN)
+        // Calculamos ambos hashes y aceptamos la transacción si coincide con cualquiera de nuestras llaves oficiales.
+        const hashObtenidoPorHmac = crypto.createHmac('sha256', HMAC_KEY)
             .update(krAnswerCrudoParaFirma)
             .digest('hex');
 
-        if (calculatedHash !== krHash) {
+        const hashObtenidoPorPassword = crypto.createHmac('sha256', CLIENT_SECRET)
+            .update(krAnswerCrudoParaFirma)
+            .digest('hex');
+
+        if (hashObtenidoPorHmac !== krHash && hashObtenidoPorPassword !== krHash) {
             console.error('ALERTA DE SEGURIDAD: Intento de validación Webhook fallido. Hash inválido.');
             console.error(`  - Hash Recibido (Izipay): ${krHash}`);
-            console.error(`  - Hash Calculado (Nosotros): ${calculatedHash}`);
+            console.error(`  - Hash Calculado c/ HMAC: ${hashObtenidoPorHmac}`);
+            console.error(`  - Hash Calculado c/ Password: ${hashObtenidoPorPassword}`);
             return NextResponse.json({ error: 'Firma de seguridad no coincide.' }, { status: 403 });
         }
 
