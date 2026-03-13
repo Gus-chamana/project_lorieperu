@@ -160,7 +160,18 @@ export default function ConfirmacionPage() {
   /* ── Envío de email (fire-and-forget, solo una vez) ── */
   function enviarEmail(data: OrdenData) {
     if (emailEnviado.current) return;
+
+    // Prevenir reenvío si el usuario recarga la página (F5)
+    const sessionKey = `email_enviado_${data.orden_id}`;
+    if (typeof window !== 'undefined' && sessionStorage.getItem(sessionKey) === 'true') {
+      emailEnviado.current = true;
+      return;
+    }
+
     emailEnviado.current = true;
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(sessionKey, 'true');
+    }
 
     fetch('/api/email/confirmacion', {
       method: 'POST',
