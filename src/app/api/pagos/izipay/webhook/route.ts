@@ -4,16 +4,35 @@ import { createAdminClient } from '@/lib/supabase-admin';
 
 export async function POST(req: Request) {
     try {
-        // Izipay Notification URL (IPN) manda los datos vía application/x-www-form-urlencoded
-        const formData = await req.formData();
+        // Izipay envia los datos vía application/x-www-form-urlencoded
+        // IMPORTANTE: Leemos en crudo (text) para parsearlo manualmente.
+        // Si usamos = await req.formData(), Next.js decodifica (decodeURIComponent) 
+        // los caracteres especiales automáticamente (ej: acentos, signos, JSON). 
+        // Al alterar un solo bit del json original, el hash calculado no coincidirá 
+        // y saltará el FAILED_SERVER_403_ERROR.
+        const rawBody = await req.text();
+        
+        // Parsear application/x-www-form-urlencoded manteniendo el string crudo
+        const urlParams = new URLSearchParams(rawBody);
+        const krHash = urlParams.get('kr-hash');
+        
+        // NOTA: Para obtener el krAnswer exactamente original tal y cómo llegó (sin decodificar),
+        // no usamos urlParams.get() pues internamente hace decodeURIComponent.
+        // Lo extraemos de la cadena bruta usando expresiones regulares:
+        const krAnswerMatch = rawBody.match(/kr-answer=([^&]*)/);
+        const krAnswerEncoded = krAnswerMatch ? krAnswerMatch[1] : null;
 
-        // Extraer la firma de autenticidad (Signature) enviada por Izipay en la notificación
-        const krHash = formData.get('kr-hash')?.toString();
-        const krAnswer = formData.get('kr-answer')?.toString();
-
-        if (!krHash || !krAnswer) {
+        if (!krHash || !krAnswerEncoded) {
             return NextResponse.json({ error: 'Faltan parámetros requeridos por Izipay.' }, { status: 400 });
         }
+
+        // El string original codificado que Izipay usó para calcular su propio hash
+        // lo decodificamos solo visualmente si queremos leerlo en JS después, 
+        // pero la matematica (Hash) requiere la cadena original NO modificada.
+        let krAnswerCrudoParaFirma = decodeURIComponent(krAnswerEncoded);
+        
+        // Excepción documentada por Izipay en NodeJS: Los espacios '+' a veces no son decodificados a espacio libre.
+        krAnswerCrudoParaFirma = krAnswerCrudoParaFirma.replace(/\+/g, ' ');
 
         const HMAC_KEY = process.env.IZIPAY_HMAC_SHA256;
 
@@ -25,28 +44,29 @@ export async function POST(req: Request) {
         // --- 1. Verificación Criptográfica de la Identidad de Izipay ---
         // Se cifra la respuesta cruda 'kr-answer' usando el HMAC_SHA256 Secret key del Back-Office
         const calculatedHash = crypto.createHmac('sha256', HMAC_KEY)
-            .update(krAnswer)
+            .update(krAnswerCrudoParaFirma)
             .digest('hex');
 
         if (calculatedHash !== krHash) {
             console.error('ALERTA DE SEGURIDAD: Intento de validación Webhook fallido. Hash inválido.');
+            console.error(`  - Hash Recibido (Izipay): ${krHash}`);
+            console.error(`  - Hash Calculado (Nosotros): ${calculatedHash}`);
             return NextResponse.json({ error: 'Firma de seguridad no coincide.' }, { status: 403 });
         }
 
         // --- 2. Procesamiento de la Transacción Verificada ---
-        const paymentAnswer = JSON.parse(krAnswer);
-        const orderId = paymentAnswer.orderDetails.orderId; // Extraemos el UUID original de Supabase enviado al crear el token
+        const paymentAnswer = JSON.parse(krAnswerCrudoParaFirma);
+        const orderId = paymentAnswer.orderDetails.orderId; // UUID original de Supabase
         const orderStatus = paymentAnswer.orderStatus; // Estado oficial dentro de la entidad bancaria
 
         if (!orderId) {
             return NextResponse.json({ error: 'Falta OrderID para procesar en Supabase.' }, { status: 400 });
         }
 
-        // Usar cliente de administrador para saltar Políticas RLS de base de datos desde el Webhook
+        // Usar cliente de administrador para saltar Políticas RLS
         const supabaseAdmin = createAdminClient();
 
         if (orderStatus === 'PAID') {
-            // Actualizar la orden de 'PENDIENTE' a 'PAGADO' (único valor válido del check constraint de Supabase)
             const { error: errUpdate } = await supabaseAdmin
                 .from('ordenes')
                 .update({ estado_pago: 'PAGADO' })
@@ -61,7 +81,6 @@ export async function POST(req: Request) {
             return NextResponse.json({ success: true, message: 'Orden confirmada exitosamente.' }, { status: 200 });
         } else {
             console.warn(`Webhook Izipay - Transacción rechazada/abandonada: Orden ${orderId}. Estado: ${orderStatus}`);
-            // Marcar de rechazada si la operación falla, pero como Izipay permite reintentos, comúnmente se ignora
             return NextResponse.json({ success: true, message: 'Transacción notificada sin confirmación pagada.' }, { status: 200 });
         }
 
