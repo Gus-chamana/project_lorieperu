@@ -203,9 +203,9 @@ export default function ConfirmacionPage() {
   /* ─────── Loading ─────── */
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-lorie-cream via-white to-lorie-beige">
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-lorie-cream via-white to-lorie-beige">
         <Navbar />
-        <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+        <section className="flex-grow pt-32 pb-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
             <i className="ri-loader-4-line text-5xl text-lorie-brown animate-spin block mb-5"></i>
             <h2 className="font-serif text-xl font-semibold text-lorie-dark mb-2">Confirmando tu pago</h2>
@@ -220,9 +220,9 @@ export default function ConfirmacionPage() {
   /* ─────── Error ─────── */
   if (error || !ordenData) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-lorie-cream via-white to-lorie-beige">
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-lorie-cream via-white to-lorie-beige">
         <Navbar />
-        <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+        <section className="flex-grow pt-32 pb-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
             <div className="bg-white rounded-3xl shadow-lg p-8 border border-lorie-beige">
               <i className="ri-error-warning-line text-5xl text-amber-400 block mb-4"></i>
