@@ -117,43 +117,8 @@ export async function POST(req: Request) {
             }
         }
 
-        // 6. Buscar nombre del distrito para incluirlo en el correo
-        const { data: distritoData } = await supabase
-            .from('distritos')
-            .select('nombre')
-            .eq('id', direccion.distrito_id)
-            .single();
-
-        // 7. Enviar correo de confirmación al cliente (fire-and-forget: no bloquea la respuesta)
-        const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-        fetch(`${baseUrl}/api/email/confirmacion`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                email: cliente.email,
-                nombre_completo: cliente.nombre_completo,
-                numero_pedido: orden.id.split('-')[0].toUpperCase(),
-                productos: items.map(item => ({
-                    nombre: item.nombre_producto_snapshot,
-                    cantidad: item.cantidad,
-                    precio_unitario: item.precio_unitario_snapshot,
-                    subtotal_linea: item.subtotal_linea,
-                })),
-                subtotal,
-                monto_descuento: monto_descuento > 0 ? monto_descuento : undefined,
-                costo_envio,
-                total,
-                direccion: direccion.direccion,
-                distrito: distritoData?.nombre ?? direccion.distrito_id,
-                tipo_envio: direccion.tipo_envio,
-                celular: cliente.celular,
-                nombre_agencia: direccion.nombre_agencia,
-                referencia: direccion.referencia,
-            }),
-        }).catch(err => {
-            // Si el email falla, no bloqueamos ni rompemos la orden del cliente
-            console.error('⚠️ Error al disparar correo de confirmación (no bloquea la orden):', err);
-        });
+        // Email de confirmación: se envía desde la página /confirmacion luego de verificar el pago
+        // (no se envía aquí al crear la orden para evitar correos de pedidos no pagados)
 
         return NextResponse.json({ success: true, orden_id: orden.id }, { status: 201 });
 
