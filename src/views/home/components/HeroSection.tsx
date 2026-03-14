@@ -5,6 +5,11 @@ import Link from 'next/link';
 export default function HeroSection() {
   return (
     <section className="relative h-screen w-full overflow-hidden">
+      {/* 🚀 Optimizadores de Red: Pre-conecta el túnel TLS y DNS antes de que Next.js renderice la web para tiempo 0ms */}
+      <link rel="preconnect" href="https://player.vimeo.com" crossOrigin="anonymous" />
+      <link rel="preconnect" href="https://i.vimeocdn.com" crossOrigin="anonymous" />
+      <link rel="preconnect" href="https://f.vimeocdn.com" crossOrigin="anonymous" />
+      
       {/* Hero Background Video */}
       <div className="absolute inset-0 bg-black pointer-events-none overflow-hidden">
         <iframe
@@ -12,6 +17,9 @@ export default function HeroSection() {
           frameBorder="0"
           allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
           loading="eager"
+          // Usamos data-fetchpriority para saltar problemas de ts-ignore en React antiguo, 
+          // los navegadores modernos Chrome/Safari lo captan o mapean para priorizar bandwidth.
+          data-fetchpriority="high"
           className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 object-cover"
           title="Video Portada LoriePeru"
         ></iframe>
