@@ -161,16 +161,16 @@ export default function ConfirmacionPage() {
   function enviarEmail(data: OrdenData) {
     if (emailEnviado.current) return;
 
-    // Prevenir reenvío si el usuario recarga la página (F5)
-    const sessionKey = `email_enviado_${data.orden_id}`;
-    if (typeof window !== 'undefined' && sessionStorage.getItem(sessionKey) === 'true') {
+    // Prevenir reenvío asegurando el registro permanentemente en el navegador
+    const storageKey = `email_enviado_${data.orden_id}`;
+    if (typeof window !== 'undefined' && localStorage.getItem(storageKey) === 'true') {
       emailEnviado.current = true;
       return;
     }
 
     emailEnviado.current = true;
     if (typeof window !== 'undefined') {
-      sessionStorage.setItem(sessionKey, 'true');
+      localStorage.setItem(storageKey, 'true');
     }
 
     fetch('/api/email/confirmacion', {
