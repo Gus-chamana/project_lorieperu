@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { createAdminClient } from '@/lib/supabase-admin';
+import { decrementarStock } from '@/lib/decrementar-stock';
 
 export async function POST(req: Request) {
     try {
@@ -61,6 +62,16 @@ export async function POST(req: Request) {
         const supabaseAdmin = createAdminClient();
 
         if (orderStatus === 'PAID') {
+            // Verificar estado actual para prevenir doble decremento de stock
+            // (tanto el webhook IPN como verificar-retorno pueden procesar la misma orden)
+            const { data: ordenActual } = await supabaseAdmin
+                .from('ordenes')
+                .select('estado_pago')
+                .eq('id', orderId)
+                .single();
+
+            const yaPagada = ordenActual?.estado_pago === 'PAGADO';
+
             const { error: errUpdate } = await supabaseAdmin
                 .from('ordenes')
                 .update({ estado_pago: 'PAGADO' })
@@ -69,6 +80,16 @@ export async function POST(req: Request) {
             if (errUpdate) {
                 console.error(`Error actualizando el estado de la orden ${orderId} en base de datos:`, errUpdate);
                 return NextResponse.json({ error: 'Error interno actualizando Supabase.' }, { status: 500 });
+            }
+
+            // Solo decrementar stock si la orden NO estaba ya pagada (prevenir doble decremento)
+            if (!yaPagada) {
+                const resultStock = await decrementarStock(supabaseAdmin, orderId);
+                if (!resultStock.success) {
+                    console.error(`⚠️ Webhook: Estado de pago actualizado pero hubo error al decrementar stock: ${resultStock.error}`);
+                }
+            } else {
+                console.log(`ℹ️ Webhook: Orden ${orderId} ya estaba PAGADA, stock no decrementado de nuevo.`);
             }
 
             console.log(`✅ Webhook IPN Izipay completado: Orden ${orderId} registrada como PAGADA.`);

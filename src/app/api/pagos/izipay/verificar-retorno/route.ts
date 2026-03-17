@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { createAdminClient } from '@/lib/supabase-admin';
+import { decrementarStock } from '@/lib/decrementar-stock';
 
 /**
  * POST /api/pagos/izipay/verificar-retorno
@@ -68,6 +69,17 @@ export async function POST(req: Request) {
         // 3. Si el pago fue exitoso, actualizar Supabase
         if (orderStatus === 'PAID') {
             const supabase = createAdminClient();
+
+            // Verificar estado actual para prevenir doble decremento de stock
+            // (tanto el webhook IPN como verificar-retorno pueden procesar la misma orden)
+            const { data: ordenActual } = await supabase
+                .from('ordenes')
+                .select('estado_pago')
+                .eq('id', orderId)
+                .single();
+
+            const yaPagada = ordenActual?.estado_pago === 'PAGADO';
+
             const { error: errUpdate } = await supabase
                 .from('ordenes')
                 .update({ estado_pago: 'PAGADO' })
@@ -79,6 +91,16 @@ export async function POST(req: Request) {
                     { error: 'Error al actualizar el estado del pago' },
                     { status: 500 }
                 );
+            }
+
+            // Solo decrementar stock si la orden NO estaba ya pagada (prevenir doble decremento)
+            if (!yaPagada) {
+                const resultStock = await decrementarStock(supabase, orderId);
+                if (!resultStock.success) {
+                    console.error(`⚠️ Retorno: Estado de pago actualizado pero hubo error al decrementar stock: ${resultStock.error}`);
+                }
+            } else {
+                console.log(`ℹ️ Retorno: Orden ${orderId} ya estaba PAGADA, stock no decrementado de nuevo.`);
             }
 
             console.log(`✅ Pago verificado por retorno Izipay: Orden ${orderId} marcada como PAGADA`);
