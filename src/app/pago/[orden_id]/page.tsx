@@ -13,6 +13,14 @@ export default function IzipayPaymentPage({ params }: { params: { orden_id: stri
     const [formToken, setFormToken] = useState<string>('');
     const scriptLoaded = useRef(false);
 
+    // Persistir el orden_id en localStorage para poder retomar el pago
+    // si el usuario cierra el navegador o cambia de página
+    useEffect(() => {
+        if (ordenId) {
+            localStorage.setItem('pago_pendiente_orden_id', ordenId);
+        }
+    }, [ordenId]);
+
     // PASO 1: Obtener el FormToken desde nuestro backend seguro
     useEffect(() => {
         const fetchToken = async () => {

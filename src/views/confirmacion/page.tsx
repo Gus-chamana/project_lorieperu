@@ -125,6 +125,8 @@ export default function ConfirmacionPage() {
             // ✅ Pago confirmado
             setOrdenData(data);
             clearCart();
+            // Limpiar el pago pendiente del localStorage
+            localStorage.removeItem('pago_pendiente_orden_id');
             enviarEmail(data);
             setLoading(false);
             return;
