@@ -30,11 +30,25 @@ export default function AdminBannerDescuentos() {
             if (error && error.code !== "PGRST116") throw error; // PGRST116 = NO ROW
 
             if (data && data.valor) {
+                let isActive = data.valor.activo !== false;
+                const now = new Date();
+
+                // Auto-desactivar si la fecha_fin ya pasó
+                if (isActive && data.valor.fecha_fin && new Date(data.valor.fecha_fin) <= now) {
+                    isActive = false;
+                    // Corrección automática silenciosa en la DB si entra acá después de expirar
+                    fetch("/api/admin/descuentos", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ ...data.valor, activo: false })
+                    }).catch(console.error);
+                }
+
                 setFormData({
                     texto_principal: data.valor.texto_principal || "",
                     descuento_porcentaje: data.valor.descuento_porcentaje || "",
                     codigo_cupon: data.valor.codigo_cupon || "",
-                    activo: data.valor.activo !== false,
+                    activo: isActive,
                     fecha_inicio: data.valor.fecha_inicio || "",
                     fecha_fin: data.valor.fecha_fin || "",
                     color_fondo: data.valor.color_fondo || "#1f2937",
@@ -51,6 +65,20 @@ export default function AdminBannerDescuentos() {
 
     useEffect(() => {
         fetchConfig();
+
+        // Intervalo en tiempo real para desmarcar el check si la hora de fin llega mientras el admin mira la pantalla
+        const interval = setInterval(() => {
+            setFormData(prev => {
+                if (prev.activo && prev.fecha_fin) {
+                    if (new Date(prev.fecha_fin) <= new Date()) {
+                        return { ...prev, activo: false };
+                    }
+                }
+                return prev;
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
     }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
