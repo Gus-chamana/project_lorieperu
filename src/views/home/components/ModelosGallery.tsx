@@ -1,7 +1,7 @@
 "use client";
-import { motion, useMotionValue, animate } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { useRef, useState, useEffect } from 'react';
+import { useRef } from 'react';
 
 export default function ModelosGallery() {
   // URLs de imágenes desde el bucket "home" en Supabase.
@@ -139,40 +139,7 @@ export default function ModelosGallery() {
     url: `${img.url}?width=600&height=800&resize=cover`
   }));
 
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(0);
-  const x = useMotionValue(0);
-
-  useEffect(() => {
-    const updateWidth = () => {
-      if (carouselRef.current) {
-        setWidth(carouselRef.current.scrollWidth - carouselRef.current.offsetWidth);
-      }
-    };
-
-    updateWidth();
-    window.addEventListener("resize", updateWidth);
-
-    // Fallback: update again after images load naturally to prevent jumping
-    const timeoutId = setTimeout(updateWidth, 1000);
-
-    return () => {
-      window.removeEventListener("resize", updateWidth);
-      clearTimeout(timeoutId);
-    };
-  }, []);
-
-  const handleArrowClick = (direction: 'left' | 'right') => {
-    const currentX = x.get();
-    // Move slightly more than one card's width depending on screen
-    const shift = direction === 'left' ? 350 : -350;
-    let newX = currentX + shift;
-
-    if (newX > 0) newX = 0;
-    if (newX < -width) newX = -width;
-
-    animate(x, newX, { type: 'spring', stiffness: 300, damping: 30 });
-  };
+  const doubledImages = [...images, ...images];
 
   return (
     <section className="py-20 relative z-10 overflow-hidden">
@@ -307,74 +274,52 @@ export default function ModelosGallery() {
           </p>
         </motion.div>
 
-        {/* Hero Container for Carousel and Arrows */}
-        <div className="relative group">
-          {/* Btn Left */}
-          <button
-            onClick={() => handleArrowClick('left')}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 flex items-center justify-center bg-white/90 text-lorie-brown rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] opacity-0 md:group-hover:opacity-100 transition-all duration-300 hover:scale-110 hover:bg-lorie-dark hover:text-white"
-            aria-label="Anterior"
-          >
-            <i className="ri-arrow-left-s-line text-3xl"></i>
-          </button>
+        {/* Hero Container for Carousel */}
+        <div className="relative group w-full overflow-hidden px-2 py-4">
+          <style>{`
+            @keyframes scrollRight {
+              0% { transform: translateX(-50%); }
+              100% { transform: translateX(0%); }
+            }
+            .marquee-right {
+              animation: scrollRight 30s linear infinite;
+              display: flex;
+              gap: 1rem;
+            }
+            @media (min-width: 768px) {
+              .marquee-right { gap: 1.5rem; }
+            }
+            .marquee-right:hover {
+              animation-play-state: paused;
+            }
+          `}</style>
 
-          {/* Hero Animated Carousel */}
-          <motion.div
-            ref={carouselRef}
-            className="w-full overflow-hidden cursor-grab active:cursor-grabbing px-2 py-4"
-          >
-            <motion.div
-              drag="x"
-              dragConstraints={{ right: 0, left: -width }}
-              style={{ x }}
-              whileTap={{ cursor: "grabbing" }}
-              className="flex gap-4 md:gap-6 min-w-max"
-            >
-              {images.map((image, index) => (
-                <motion.div
-                  key={index}
-                  className="relative rounded-3xl overflow-hidden shadow-xl"
-                  style={{
-                    width: 'clamp(260px, 30vw, 360px)',
-                    aspectRatio: '4/5'
-                  }}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.7, delay: index * 0.1, ease: "easeOut" }}
-                >
-                  <Image
-                    src={image.url}
-                    alt={image.alt}
-                    fill
-                    className="object-cover pointer-events-none transition-transform duration-700 hover:scale-110"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    loading={index < 3 ? 'eager' : 'lazy'}
-                    priority={index < 3}
-                  />
-                  {/* Sutil gradiente inferior para darle estética premium (sin texto) */}
-                  <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-lorie-dark/40 to-transparent pointer-events-none mix-blend-multiply opacity-60"></div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </motion.div>
-
-          {/* Btn Right */}
-          <button
-            onClick={() => handleArrowClick('right')}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 flex items-center justify-center bg-white/90 text-lorie-brown rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] opacity-0 md:group-hover:opacity-100 transition-all duration-300 hover:scale-110 hover:bg-lorie-dark hover:text-white"
-            aria-label="Siguiente"
-          >
-            <i className="ri-arrow-right-s-line text-3xl"></i>
-          </button>
-        </div>
-
-        {/* Indicador de arrastre para dar mejor UX */}
-        <div className="flex justify-center mt-6 opacity-50 text-lorie-brown">
-          <div className="flex items-center gap-2 font-sans text-sm tracking-wide">
-            <i className="ri-arrow-left-line"></i>
-            <span>Desliza para explorar</span>
-            <i className="ri-arrow-right-line"></i>
+          <div className="marquee-right w-max">
+            {doubledImages.map((image, index) => (
+              <motion.div
+                key={index}
+                className="relative rounded-3xl overflow-hidden shadow-xl shrink-0"
+                style={{
+                  width: 'clamp(260px, 30vw, 360px)',
+                  aspectRatio: '4/5'
+                }}
+                initial={{ opacity: 1, scale: 1 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+              >
+                <Image
+                  src={image.url}
+                  alt={image.alt}
+                  fill
+                  className="object-cover pointer-events-none transition-transform duration-700 hover:scale-110"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  loading={index < 4 ? 'eager' : 'lazy'}
+                  priority={index < 4}
+                />
+                {/* Sutil gradiente inferior para darle estética premium (sin texto) */}
+                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-lorie-dark/40 to-transparent pointer-events-none mix-blend-multiply opacity-60"></div>
+              </motion.div>
+            ))}
           </div>
         </div>
 
