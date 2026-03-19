@@ -282,7 +282,7 @@ export default function ModelosGallery() {
               100% { transform: translateX(-50%); }
             }
             .marquee-left {
-              animation: scrollLeft 60s linear infinite;
+              animation: scrollLeft 120s linear infinite;
               display: flex;
               gap: 1rem;
             }
