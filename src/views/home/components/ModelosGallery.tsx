@@ -277,24 +277,24 @@ export default function ModelosGallery() {
         {/* Hero Container for Carousel */}
         <div className="relative group w-full overflow-hidden px-2 py-4">
           <style>{`
-            @keyframes scrollRight {
-              0% { transform: translateX(-50%); }
-              100% { transform: translateX(0%); }
+            @keyframes scrollLeft {
+              0% { transform: translateX(0%); }
+              100% { transform: translateX(-50%); }
             }
-            .marquee-right {
-              animation: scrollRight 30s linear infinite;
+            .marquee-left {
+              animation: scrollLeft 60s linear infinite;
               display: flex;
               gap: 1rem;
             }
             @media (min-width: 768px) {
-              .marquee-right { gap: 1.5rem; }
+              .marquee-left { gap: 1.5rem; }
             }
-            .marquee-right:hover {
+            .marquee-left:hover {
               animation-play-state: paused;
             }
           `}</style>
 
-          <div className="marquee-right w-max">
+          <div className="marquee-left w-max">
             {doubledImages.map((image, index) => (
               <motion.div
                 key={index}
