@@ -1,10 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
+import OrdenDetalleModal from "./OrdenDetalleModal";
 
 export default function AdminOrdenesLista() {
     const [ordenes, setOrdenes] = useState<any[]>([]);
     const [cargando, setCargando] = useState(true);
     const [toast, setToast] = useState<string | null>(null);
+    const [ordenSeleccionada, setOrdenSeleccionada] = useState<any | null>(null);
 
     const fetchOrdenes = async () => {
         setCargando(true);
@@ -37,6 +39,8 @@ export default function AdminOrdenesLista() {
         PENDIENTE: 'Pendiente',
         PAGADO: 'Pago Confirmado',
         RECHAZADO: 'Rechazado',
+        FALLIDO: 'Cancelado',
+        CANCELADO: 'Cancelado',
     };
 
     const cambiarEstadoPago = async (id: string, nuevoEstado: string) => {
@@ -70,6 +74,8 @@ export default function AdminOrdenesLista() {
     const PagoBadge = ({ estado, ordenId }: { estado: string; ordenId: string }) => {
         const isConfirmado = estado === 'PAGADO';
         const isRechazado = estado === 'RECHAZADO';
+        const isFallido = estado === 'FALLIDO';
+        const isCancelado = estado === 'CANCELADO';
 
         return (
             <div className="flex flex-col items-end gap-2">
@@ -86,23 +92,24 @@ export default function AdminOrdenesLista() {
                         Pago Rechazado
                     </span>
                 )}
-                {!isConfirmado && !isRechazado && (
+                {isFallido && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200 shadow-sm">
+                        <i className="ri-error-warning-fill text-sm"></i>
+                        Fallido
+                    </span>
+                )}
+                {isCancelado && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-gray-100 text-gray-600 border border-gray-200 shadow-sm">
+                        <i className="ri-forbid-line text-sm"></i>
+                        Cancelado
+                    </span>
+                )}
+                {!isConfirmado && !isRechazado && !isFallido && !isCancelado && (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-50 text-yellow-700 border border-yellow-200 shadow-sm">
                         <i className="ri-time-line text-sm"></i>
                         Pago Pendiente
                     </span>
                 )}
-
-                {/* Select para cambio manual de estado */}
-                <select
-                    value={estado}
-                    onChange={(e) => cambiarEstadoPago(ordenId, e.target.value)}
-                    className="text-xs text-lorie-brown/60 font-sans cursor-pointer outline-none border border-lorie-beige/50 rounded px-1 py-0.5 bg-transparent hover:border-lorie-brown/20 focus:ring-1 focus:ring-lorie-brown/20 transition-colors"
-                >
-                    <option value="PENDIENTE">Pendiente</option>
-                    <option value="PAGADO">Pago Confirmado</option>
-                    <option value="RECHAZADO">Rechazado</option>
-                </select>
             </div>
         );
     };
@@ -162,7 +169,11 @@ export default function AdminOrdenesLista() {
                                 </tr>
                             ) : (
                                 ordenes.map((orden) => (
-                                    <tr key={orden.id} className={`hover:bg-lorie-cream/10 transition-colors ${orden.estado_pago === 'PAGADO' ? 'border-l-4 border-l-green-400' : orden.estado_pago === 'RECHAZADO' ? 'border-l-4 border-l-red-300' : 'border-l-4 border-l-yellow-300'}`}>
+                                    <tr 
+                                        key={orden.id} 
+                                        onDoubleClick={() => setOrdenSeleccionada(orden)}
+                                        className={`hover:bg-lorie-cream/10 transition-colors cursor-pointer ${orden.estado_pago === 'PAGADO' ? 'border-l-4 border-l-green-400' : orden.estado_pago === 'RECHAZADO' ? 'border-l-4 border-l-red-300' : 'border-l-4 border-l-yellow-300'}`}
+                                    >
                                         <td className="py-4 px-6">
                                             <p className="font-mono text-xs font-semibold text-lorie-dark uppercase mb-1" title={orden.id}>
                                                 #{orden.id.split('-')[0]}
@@ -197,6 +208,18 @@ export default function AdminOrdenesLista() {
                     </table>
                 </div>
             </div>
+
+            {/* Modal de Detalle de Orden */}
+            {ordenSeleccionada && (
+                <OrdenDetalleModal
+                    orden={ordenSeleccionada}
+                    onClose={() => setOrdenSeleccionada(null)}
+                    onUpdate={(updatedOrden) => {
+                        setOrdenSeleccionada(updatedOrden);
+                        setOrdenes(prev => prev.map(o => o.id === updatedOrden.id ? updatedOrden : o));
+                    }}
+                />
+            )}
         </div>
     );
 }

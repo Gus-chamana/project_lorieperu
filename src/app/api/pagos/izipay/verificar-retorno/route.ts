@@ -82,7 +82,7 @@ export async function POST(req: Request) {
 
             const { error: errUpdate } = await supabase
                 .from('ordenes')
-                .update({ estado_pago: 'PAGADO' })
+                .update({ estado_pago: 'PAGADO', estado: 'PAGADO' })
                 .eq('id', orderId);
 
             if (errUpdate) {
@@ -108,9 +108,23 @@ export async function POST(req: Request) {
         }
 
         // 4. Pago no exitoso (rechazado, cancelado, etc.)
-        console.warn(`Retorno Izipay - Pago no exitoso. Orden: ${orderId}. Estado: ${orderStatus}`);
+        if (orderStatus !== 'RUNNING' && orderStatus !== 'PENDING') {
+            console.warn(`Retorno Izipay - Pago no exitoso. Orden: ${orderId}. Estado: ${orderStatus}. Marcando como FALLIDO.`);
+            const supabaseAdmin = createAdminClient();
+            const { error: errUpdateFail } = await supabaseAdmin
+                .from('ordenes')
+                .update({ estado_pago: 'FALLIDO', estado: 'CANCELADO' })
+                .eq('id', orderId);
+
+            if (errUpdateFail) {
+                console.error(`Error actualizando orden fallida ${orderId} en retorno:`, errUpdateFail);
+            }
+        } else {
+            console.warn(`Retorno Izipay - Pago en proceso. Orden: ${orderId}. Estado: ${orderStatus}`);
+        }
+
         return NextResponse.json(
-            { success: false, orden_id: orderId, estado_pago: orderStatus },
+            { success: false, orden_id: orderId, estado_pago: orderStatus !== 'RUNNING' && orderStatus !== 'PENDING' ? 'FALLIDO' : orderStatus },
             { status: 200 }
         );
 

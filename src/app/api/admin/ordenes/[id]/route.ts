@@ -19,7 +19,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         // Extraer campos permitidos para actualizar
         const updateData: any = {};
         if (body.estado_pago) updateData.estado_pago = body.estado_pago;
-        if (body.estado_pedido) updateData.estado_pedido = body.estado_pedido;
+        if (body.estado) updateData.estado = body.estado;
 
         if (Object.keys(updateData).length === 0) {
             return NextResponse.json({ error: 'No hay datos válidos para actualizar' }, { status: 400 });

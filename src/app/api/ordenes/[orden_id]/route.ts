@@ -110,3 +110,68 @@ export async function GET(
         return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
     }
 }
+
+/**
+ * PATCH /api/ordenes/[orden_id]
+ *
+ * Cancela una orden pendiente actualizando su estado_pago a 'CANCELADO'.
+ * Solo permite cancelar órdenes que estén en estado 'PENDIENTE'.
+ * Esto se usa cuando el usuario descarta un pago pendiente desde el frontend.
+ */
+export async function PATCH(
+    req: Request,
+    { params }: { params: { orden_id: string } }
+) {
+    try {
+        const { orden_id } = params;
+
+        if (!orden_id) {
+            return NextResponse.json({ error: 'orden_id requerido' }, { status: 400 });
+        }
+
+        const body = await req.json();
+
+        // Solo aceptamos la acción de cancelar
+        if (body.accion !== 'cancelar') {
+            return NextResponse.json({ error: 'Acción no válida' }, { status: 400 });
+        }
+
+        const supabase = createAdminClient();
+
+        // Verificar que la orden existe y está pendiente
+        const { data: orden, error: errOrden } = await supabase
+            .from('ordenes')
+            .select('id, estado_pago')
+            .eq('id', orden_id)
+            .single();
+
+        if (errOrden || !orden) {
+            return NextResponse.json({ error: 'Orden no encontrada' }, { status: 404 });
+        }
+
+        // Solo cancelar si está PENDIENTE — no permitir cancelar una orden ya pagada
+        if (orden.estado_pago !== 'PENDIENTE') {
+            return NextResponse.json(
+                { error: 'Solo se pueden cancelar órdenes pendientes', estado_actual: orden.estado_pago },
+                { status: 409 }
+            );
+        }
+
+        // Actualizar el estado general a CANCELADO y el pago a CANCELADO (ahora soportado por la DB)
+        const { error: errUpdate } = await supabase
+            .from('ordenes')
+            .update({ estado_pago: 'CANCELADO', estado: 'CANCELADO' })
+            .eq('id', orden_id);
+
+        if (errUpdate) {
+            console.error('Error al cancelar orden:', errUpdate);
+            return NextResponse.json({ error: 'Error al cancelar la orden' }, { status: 500 });
+        }
+
+        return NextResponse.json({ success: true, orden_id, estado_pago: 'CANCELADO' });
+
+    } catch (e) {
+        console.error('Error en PATCH /api/ordenes/[orden_id]:', e);
+        return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
+    }
+}

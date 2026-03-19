@@ -18,9 +18,20 @@ export async function POST(req: Request) {
         .single();
 
     if (!configError && configData?.valor?.activo) {
-        const { codigo_cupon, descuento_porcentaje } = configData.valor;
-        if (codigo_cupon && codigo_cupon.toUpperCase() === codigoLimpio) {
-            // El código coincide con el banner activo
+        const { codigo_cupon, descuento_porcentaje, fecha_inicio, fecha_fin } = configData.valor;
+        
+        const now = new Date();
+        let esValidoPorFecha = true;
+        
+        if (fecha_inicio && new Date(fecha_inicio) > now) {
+            esValidoPorFecha = false;
+        }
+        if (fecha_fin && new Date(fecha_fin) < now) {
+            esValidoPorFecha = false;
+        }
+
+        if (esValidoPorFecha && codigo_cupon && codigo_cupon.toUpperCase() === codigoLimpio) {
+            // El código coincide con el banner activo y está dentro de la fecha permitida
             const descuentoNumeric = Number(descuento_porcentaje);
             const montoCalculado = (subtotal * descuentoNumeric) / 100;
 

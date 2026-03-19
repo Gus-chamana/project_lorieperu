@@ -14,7 +14,21 @@ export async function GET() {
             .select(`
                 *,
                 cliente:clientes!cliente_id (*),
-                direccion:direcciones!direccion_id (*)
+                direccion:direcciones!direccion_id (
+                    *,
+                    distrito:distritos!distrito_id ( nombre )
+                ),
+                metodo_envio:metodos_envio!metodo_envio_id ( nombre ),
+                codigo_descuento:codigos_descuento!codigo_descuento_id ( codigo, valor, tipo_descuento ),
+                orden_items (
+                    id,
+                    producto_id,
+                    nombre_producto_snapshot,
+                    precio_unitario_snapshot,
+                    cantidad,
+                    subtotal_linea,
+                    producto:productos!producto_id ( nombre, producto_imagenes ( url_imagen ) )
+                )
             `)
             .order('creado_en', { ascending: false });
 

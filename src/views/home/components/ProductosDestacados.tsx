@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import Link from 'next/link';
@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useCart } from '../../../hooks/useCart';
 import { useProductos } from '../../../hooks/useProductos';
 import type { ProductoFrontend } from '../../../types/producto';
+import PagoPendienteModal from '../../../components/feature/PagoPendienteModal';
 
 function SkeletonCard() {
   return (
@@ -27,6 +28,15 @@ export default function ProductosDestacados() {
   const [productoSeleccionado, setProductoSeleccionado] = useState<ProductoFrontend | null>(null);
   const [imagenActiva, setImagenActiva] = useState(0);
   const [inputMedida, setInputMedida] = useState('');
+
+  // ── Modal de pago pendiente ──
+  const [pagoPendienteId, setPagoPendienteId] = useState<string | null>(null);
+  const [mostrarModalPago, setMostrarModalPago] = useState(false);
+
+  useEffect(() => {
+    const pendiente = localStorage.getItem('pago_pendiente_orden_id');
+    if (pendiente) setPagoPendienteId(pendiente);
+  }, []);
 
   const router = useRouter();
   const { cartItems, addToCart } = useCart();
@@ -60,6 +70,11 @@ export default function ProductosDestacados() {
   };
 
   const handleAddToCart = (producto: ProductoFrontend) => {
+    // Interceptar si hay pago pendiente
+    if (pagoPendienteId) {
+      setMostrarModalPago(true);
+      return;
+    }
     addToCart({
       id: producto.id,
       nombre: producto.nombre,
@@ -400,6 +415,19 @@ export default function ProductosDestacados() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Modal de pago pendiente */}
+      {pagoPendienteId && (
+        <PagoPendienteModal
+          visible={mostrarModalPago}
+          ordenId={pagoPendienteId}
+          onClose={() => setMostrarModalPago(false)}
+          onDescartar={() => {
+            setPagoPendienteId(null);
+            setMostrarModalPago(false);
+          }}
+        />
+      )}
     </section>
   );
 }

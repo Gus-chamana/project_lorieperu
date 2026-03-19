@@ -57,7 +57,16 @@ export default function PreCheckout({ onOrdenCreada }: PreCheckoutProps) {
     }, []);
 
     function descartarPagoPendiente() {
+        // Cancelar la orden en Supabase
+        if (pagoPendienteId) {
+            fetch(`/api/ordenes/${pagoPendienteId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ accion: 'cancelar' }),
+            }).catch(() => console.error('No se pudo cancelar la orden en el servidor'));
+        }
         localStorage.removeItem('pago_pendiente_orden_id');
+        clearCart();
         setPagoPendienteId(null);
     }
 
@@ -221,7 +230,8 @@ export default function PreCheckout({ onOrdenCreada }: PreCheckoutProps) {
                     fecha: new Date().toISOString(),
                 };
                 localStorage.setItem('ultimoPedido', JSON.stringify(pedidoParaConfirmacion));
-                clearCart();
+                // NO limpiar el carrito aquí: se limpia al confirmar el pago (en /confirmacion)
+                // para que el ícono del carrito siga mostrando el conteo hasta que se pague
                 onOrdenCreada?.(data.orden_id);
                 // PASARELA IZIPAY: Ahora redirigimos al pasillo de pago embebido en lugar de la confirmación directa
                 router.push(`/pago/${data.orden_id}`);
@@ -261,25 +271,25 @@ export default function PreCheckout({ onOrdenCreada }: PreCheckoutProps) {
                     {/* Stepper de pasos */}
                     <CheckoutSteps paso={2} />
 
-                    {/* Banner de pago pendiente */}
-                    {pagoPendienteId && (
-                        <div className="mb-8 bg-amber-50 border border-amber-200 rounded-2xl p-5 shadow-sm">
-                            <div className="flex items-start gap-4">
-                                <div className="w-11 h-11 flex-shrink-0 flex items-center justify-center bg-amber-100 rounded-full">
-                                    <i className="ri-time-line text-xl text-amber-600"></i>
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className="font-serif text-base font-bold text-amber-800 mb-1">
+                    {/* Banner de pago pendiente — oculta todo el formulario de checkout */}
+                    {pagoPendienteId ? (
+                        <div className="flex flex-col items-center justify-center min-h-[50vh]">
+                            <div className="w-full max-w-lg bg-amber-50 border border-amber-200 rounded-2xl p-8 shadow-sm">
+                                <div className="flex flex-col items-center text-center">
+                                    <div className="w-16 h-16 flex items-center justify-center bg-amber-100 rounded-full mb-4">
+                                        <i className="ri-time-line text-3xl text-amber-600"></i>
+                                    </div>
+                                    <h3 className="font-serif text-xl font-bold text-amber-800 mb-2">
                                         Tienes un pago pendiente
                                     </h3>
-                                    <p className="text-xs text-amber-700/80 font-sans leading-relaxed mb-3">
+                                    <p className="text-sm text-amber-700/80 font-sans leading-relaxed mb-6">
                                         Tu pedido <strong className="font-mono">#{pagoPendienteId.split('-')[0].toUpperCase()}</strong> aún no ha sido pagado. Puedes retomar el pago o descartarlo para hacer un nuevo pedido.
                                     </p>
-                                    <div className="flex flex-col sm:flex-row gap-2">
+                                    <div className="flex flex-col sm:flex-row gap-3 w-full">
                                         <button
                                             type="button"
                                             onClick={() => router.push(`/pago/${pagoPendienteId}`)}
-                                            className="px-5 py-2.5 bg-amber-600 text-white text-xs font-sans font-bold rounded-xl hover:bg-amber-700 transition-colors flex items-center justify-center gap-2"
+                                            className="flex-1 px-5 py-3 bg-amber-600 text-white text-sm font-sans font-bold rounded-xl hover:bg-amber-700 transition-colors flex items-center justify-center gap-2"
                                         >
                                             <i className="ri-secure-payment-line"></i>
                                             Retomar pago
@@ -287,7 +297,7 @@ export default function PreCheckout({ onOrdenCreada }: PreCheckoutProps) {
                                         <button
                                             type="button"
                                             onClick={descartarPagoPendiente}
-                                            className="px-5 py-2.5 border border-amber-300 text-amber-700 text-xs font-sans font-semibold rounded-xl hover:bg-amber-100 transition-colors flex items-center justify-center gap-2"
+                                            className="flex-1 px-5 py-3 border border-amber-300 text-amber-700 text-sm font-sans font-semibold rounded-xl hover:bg-amber-100 transition-colors flex items-center justify-center gap-2"
                                         >
                                             <i className="ri-close-circle-line"></i>
                                             Descartar y hacer nuevo pedido
@@ -296,8 +306,8 @@ export default function PreCheckout({ onOrdenCreada }: PreCheckoutProps) {
                                 </div>
                             </div>
                         </div>
-                    )}
-
+                    ) : (
+                    <>
                     {/* Título */}
                     <div className="text-center mb-10">
                         <h1
@@ -672,6 +682,8 @@ export default function PreCheckout({ onOrdenCreada }: PreCheckoutProps) {
                             </div>
                         </div>
                     </form>
+                    </>
+                    )}
                 </div>
             </div>
             <FooterMinimal />

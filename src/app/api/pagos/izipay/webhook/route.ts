@@ -74,7 +74,7 @@ export async function POST(req: Request) {
 
             const { error: errUpdate } = await supabaseAdmin
                 .from('ordenes')
-                .update({ estado_pago: 'PAGADO' })
+                .update({ estado_pago: 'PAGADO', estado: 'PAGADO' })
                 .eq('id', orderId);
 
             if (errUpdate) {
@@ -94,9 +94,21 @@ export async function POST(req: Request) {
 
             console.log(`✅ Webhook IPN Izipay completado: Orden ${orderId} registrada como PAGADA.`);
             return NextResponse.json({ success: true, message: 'Orden confirmada exitosamente.' }, { status: 200 });
+        } else if (orderStatus !== 'RUNNING' && orderStatus !== 'PENDING') {
+            console.warn(`Webhook Izipay - Transacción rechazada/abandonada: Orden ${orderId}. Estado: ${orderStatus}. Marcando como FALLIDO.`);
+            
+            const { error: errUpdateFail } = await supabaseAdmin
+                .from('ordenes')
+                .update({ estado_pago: 'FALLIDO', estado: 'CANCELADO' })
+                .eq('id', orderId);
+
+            if (errUpdateFail) {
+                console.error(`Error actualizando orden fallida ${orderId}:`, errUpdateFail);
+            }
+            
+            return NextResponse.json({ success: true, message: 'Transacción fallida registrada.' }, { status: 200 });
         } else {
-            console.warn(`Webhook Izipay - Transacción rechazada/abandonada: Orden ${orderId}. Estado: ${orderStatus}`);
-            return NextResponse.json({ success: true, message: 'Transacción notificada sin confirmación pagada.' }, { status: 200 });
+            return NextResponse.json({ success: true, message: 'Transacción aún en proceso (RUNNING).' }, { status: 200 });
         }
 
     } catch (e) {

@@ -60,7 +60,9 @@ export default function PromoBanner() {
     texto_principal: "Cargando promociones...",
     descuento_porcentaje: "",
     codigo_cupon: "",
-    activo: false
+    activo: false,
+    color_fondo: "#1f2937",
+    color_texto_cupon: "#fde047"
   });
   const [loaded, setLoaded] = useState(false);
 
@@ -79,8 +81,24 @@ export default function PromoBanner() {
           .single();
 
         if (data && data.valor && data.valor.activo) {
-          setConfig(data.valor);
-          setLoaded(true);
+          const value = data.valor;
+          const now = new Date();
+          let esValidoPorFecha = true;
+          
+          if (value.fecha_inicio && new Date(value.fecha_inicio) > now) {
+              esValidoPorFecha = false;
+          }
+          if (value.fecha_fin && new Date(value.fecha_fin) < now) {
+              esValidoPorFecha = false;
+          }
+
+          if (esValidoPorFecha) {
+            setConfig(value);
+            setLoaded(true);
+          } else {
+            setGlobalVisible(false);
+            setIsVisible(false);
+          }
         } else {
           // If not active in DB, hide it
           setGlobalVisible(false);
@@ -111,8 +129,8 @@ export default function PromoBanner() {
 
   return (
     <div
-      className="fixed top-0 left-0 right-0 z-[60] bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white px-4 shadow-md flex items-center justify-center"
-      style={{ height: `${PROMO_HEIGHT}px` }}
+      className="fixed top-0 left-0 right-0 z-[60] text-white px-4 shadow-md flex items-center justify-center transition-colors duration-500"
+      style={{ height: `${PROMO_HEIGHT}px`, backgroundColor: config.color_fondo || '#1f2937' }}
       role="region"
       aria-label="Promotional banner"
     >
@@ -123,7 +141,7 @@ export default function PromoBanner() {
             <span className="font-semibold">{config.texto_principal}</span>
             {config.descuento_porcentaje && ` con ${config.descuento_porcentaje}% de descuento usando el código `}
             {config.codigo_cupon && (
-              <span className="inline-block px-2 py-0.5 bg-white/20 rounded font-bold text-yellow-300 mx-1 text-xs uppercase">
+              <span className="inline-block px-2 py-0.5 bg-white/20 rounded font-bold mx-1 text-xs uppercase transition-colors duration-500" style={{ color: config.color_texto_cupon || '#fde047' }}>
                 {config.codigo_cupon}
               </span>
             )}

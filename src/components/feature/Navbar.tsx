@@ -18,6 +18,14 @@ export default function Navbar({ hideCart = false }: NavbarProps) {
   const cartCount = useCartCount();
   const promoBannerVisible = usePromoBannerState();
 
+  // Si hay un pago pendiente, el carrito redirige al checkout (donde está el banner)
+  const [cartLink, setCartLink] = useState('/carrito');
+
+  useEffect(() => {
+    const pendiente = localStorage.getItem('pago_pendiente_orden_id');
+    setCartLink(pendiente ? '/checkout' : '/carrito');
+  }, []);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -101,7 +109,7 @@ export default function Navbar({ hideCart = false }: NavbarProps) {
             {/* Cart Icon */}
             {!hideCart && (
               <Link
-                href="/carrito"
+                href={cartLink}
                 className="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-lorie-cream transition-all duration-300 cursor-pointer"
                 aria-label="Carrito"
                 style={{ color: navLinkColor }}
@@ -133,7 +141,7 @@ export default function Navbar({ hideCart = false }: NavbarProps) {
             {/* Cart Icon Mobile */}
             {!hideCart && (
               <Link
-                href="/carrito"
+                href={cartLink}
                 className="relative w-10 h-10 flex items-center justify-center rounded-full cursor-pointer"
                 aria-label="Carrito"
                 style={{ color: logoTextColor }}

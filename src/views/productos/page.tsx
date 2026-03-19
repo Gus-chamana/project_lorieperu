@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import Navbar from '../../components/feature/Navbar';
@@ -12,6 +12,7 @@ import { useProductos } from '../../hooks/useProductos';
 import type { ProductoFrontend } from '../../types/producto';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import PagoPendienteModal from '../../components/feature/PagoPendienteModal';
 
 // ── Skeleton card ─────────────────────────────────────────────────────────────
 function SkeletonCard() {
@@ -36,6 +37,15 @@ export default function ProductosPage() {
   const [productoSeleccionado, setProductoSeleccionado] = useState<ProductoFrontend | null>(null);
   const [imagenActiva, setImagenActiva] = useState(0);
   const [inputMedida, setInputMedida] = useState('');
+
+  // ── Modal de pago pendiente ──
+  const [pagoPendienteId, setPagoPendienteId] = useState<string | null>(null);
+  const [mostrarModalPago, setMostrarModalPago] = useState(false);
+
+  useEffect(() => {
+    const pendiente = localStorage.getItem('pago_pendiente_orden_id');
+    if (pendiente) setPagoPendienteId(pendiente);
+  }, []);
 
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
@@ -91,6 +101,11 @@ export default function ProductosPage() {
   };
 
   const handleAddToCart = (producto: ProductoFrontend) => {
+    // Interceptar si hay pago pendiente
+    if (pagoPendienteId) {
+      setMostrarModalPago(true);
+      return;
+    }
     addToCart({
       id: producto.id,
       nombre: producto.nombre,
@@ -477,6 +492,19 @@ export default function ProductosPage() {
       <Footer />
       <WhatsAppButton />
       <ScrollToTop />
+
+      {/* Modal de pago pendiente */}
+      {pagoPendienteId && (
+        <PagoPendienteModal
+          visible={mostrarModalPago}
+          ordenId={pagoPendienteId}
+          onClose={() => setMostrarModalPago(false)}
+          onDescartar={() => {
+            setPagoPendienteId(null);
+            setMostrarModalPago(false);
+          }}
+        />
+      )}
     </div>
   );
 }

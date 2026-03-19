@@ -12,7 +12,11 @@ export default function AdminBannerDescuentos() {
         texto_principal: "CELEBRA EL DÍA DE LA MUJER",
         descuento_porcentaje: "50",
         codigo_cupon: "MUJER50",
-        activo: true
+        activo: true,
+        fecha_inicio: "",
+        fecha_fin: "",
+        color_fondo: "#1f2937",
+        color_texto_cupon: "#fde047"
     });
 
     const fetchConfig = async () => {
@@ -30,7 +34,11 @@ export default function AdminBannerDescuentos() {
                     texto_principal: data.valor.texto_principal || "",
                     descuento_porcentaje: data.valor.descuento_porcentaje || "",
                     codigo_cupon: data.valor.codigo_cupon || "",
-                    activo: data.valor.activo !== false
+                    activo: data.valor.activo !== false,
+                    fecha_inicio: data.valor.fecha_inicio || "",
+                    fecha_fin: data.valor.fecha_fin || "",
+                    color_fondo: data.valor.color_fondo || "#1f2937",
+                    color_texto_cupon: data.valor.color_texto_cupon || "#fde047"
                 });
             }
         } catch (e: any) {
@@ -99,12 +107,15 @@ export default function AdminBannerDescuentos() {
                     <h3 className="text-sm font-semibold text-lorie-brown mb-4 uppercase tracking-wider">Vista Previa Dinámica</h3>
 
                     {/* Componente visual idéntico al navbar real */}
-                    <div className={`w-full py-2 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white rounded-lg flex items-center justify-center transition-opacity ${formData.activo ? 'opacity-100' : 'opacity-40 grayscale'}`}>
+                    <div 
+                        className={`w-full py-2 text-white rounded-lg flex items-center justify-center transition-opacity ${formData.activo ? 'opacity-100' : 'opacity-40 grayscale'}`}
+                        style={{ backgroundColor: formData.color_fondo }}
+                    >
                         <div className="flex items-center gap-2 text-center">
                             <i className="ri-gift-line text-sm hidden sm:block"></i>
                             <p className="text-xs font-medium tracking-wide">
                                 <span className="font-semibold uppercase">{formData.texto_principal || '_____'}</span> con {formData.descuento_porcentaje || '0'}% de descuento usando el código{' '}
-                                <span className="inline-block px-2 py-0.5 bg-white/20 rounded font-bold text-yellow-300 mx-1 text-xs uppercase">
+                                <span className="inline-block px-2 py-0.5 bg-white/20 rounded font-bold mx-1 text-xs uppercase" style={{ color: formData.color_texto_cupon }}>
                                     {formData.codigo_cupon || 'CUPÓN'}
                                 </span>
                             </p>
@@ -154,6 +165,58 @@ export default function AdminBannerDescuentos() {
                                 style={{ textTransform: "uppercase" }}
                                 className="w-full px-4 py-3 rounded-xl border border-lorie-beige bg-lorie-cream/30 text-lorie-dark font-sans text-sm focus:outline-none focus:ring-2 focus:ring-lorie-brown/50 uppercase"
                             />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-lorie-beige">
+                        <div>
+                            <label className="block text-sm font-sans font-semibold text-lorie-dark mb-1">Fecha y Hora de Inicio (Opcional)</label>
+                            <input
+                                type="datetime-local"
+                                name="fecha_inicio"
+                                value={formData.fecha_inicio}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 rounded-xl border border-lorie-beige bg-lorie-cream/30 text-lorie-dark font-sans text-sm focus:outline-none focus:ring-2 focus:ring-lorie-brown/50"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-sans font-semibold text-lorie-dark mb-1">Fecha y Hora de Fin (Opcional)</label>
+                            <input
+                                type="datetime-local"
+                                name="fecha_fin"
+                                value={formData.fecha_fin}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 rounded-xl border border-lorie-beige bg-lorie-cream/30 text-lorie-dark font-sans text-sm focus:outline-none focus:ring-2 focus:ring-lorie-brown/50"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-lorie-beige">
+                        <div>
+                            <label className="block text-sm font-sans font-semibold text-lorie-dark mb-1">Color de Fondo de la Barra</label>
+                            <div className="flex items-center gap-3">
+                                <input
+                                    type="color"
+                                    name="color_fondo"
+                                    value={formData.color_fondo}
+                                    onChange={handleChange}
+                                    className="w-12 h-12 rounded cursor-pointer border-0 p-0"
+                                />
+                                <span className="text-sm font-mono text-gray-500">{formData.color_fondo}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-sans font-semibold text-lorie-dark mb-1">Color de Letra del Cupón</label>
+                             <div className="flex items-center gap-3">
+                                <input
+                                    type="color"
+                                    name="color_texto_cupon"
+                                    value={formData.color_texto_cupon}
+                                    onChange={handleChange}
+                                    className="w-12 h-12 rounded cursor-pointer border-0 p-0"
+                                />
+                                <span className="text-sm font-mono text-gray-500">{formData.color_texto_cupon}</span>
+                            </div>
                         </div>
                     </div>
 

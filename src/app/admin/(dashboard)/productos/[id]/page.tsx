@@ -12,6 +12,10 @@ export default function AdminProductoForm({ params }: { params: { id: string } }
     const [guardando, setGuardando] = useState(false);
     const [error, setError] = useState("");
 
+    // Estados para la alerta de stock en producto agotado
+    const [showAgotadoAlert, setShowAgotadoAlert] = useState(false);
+    const [pendingStockValue, setPendingStockValue] = useState("");
+
     const [formData, setFormData] = useState({
         nombre: "",
         descripcion: "",
@@ -79,10 +83,49 @@ export default function AdminProductoForm({ params }: { params: { id: string } }
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target;
         if (type === "checkbox") {
-            setFormData((prev) => ({ ...prev, [name]: (e.target as HTMLInputElement).checked }));
+            const checked = (e.target as HTMLInputElement).checked;
+            setFormData((prev) => {
+                const updated = { ...prev, [name]: checked };
+                if (name === "agotado" && checked) {
+                    updated.stock = "0";
+                }
+                return updated;
+            });
         } else {
+            if (name === "stock") {
+                const numericValue = Number(value);
+
+                if (formData.agotado) {
+                    if (numericValue > 0) {
+                        setPendingStockValue(value);
+                        setShowAgotadoAlert(true);
+                        return;
+                    }
+                } else {
+                    // Si no está agotado y el administrador digita o baja el stock a 0, se auto-marca "Forzar Agotado"
+                    if (numericValue === 0 && value.trim() !== "") {
+                        setFormData((prev) => ({ ...prev, [name]: "0", agotado: true }));
+                        return;
+                    }
+                }
+            }
             setFormData((prev) => ({ ...prev, [name]: value }));
         }
+    };
+
+    const confirmarQuitarAgotado = () => {
+        // Al dar Sí, limpiamos los 0s a la izquierda si los hay
+        const cleanStock = pendingStockValue.replace(/^0+/, '') || "0";
+        setFormData(prev => ({ ...prev, agotado: false, stock: cleanStock }));
+        setShowAgotadoAlert(false);
+        setPendingStockValue("");
+    };
+
+    const cancelarQuitarAgotado = () => {
+        // Al dar No, el stock se resetea visualmente a 0 de nuevo
+        setFormData(prev => ({ ...prev, stock: "0" }));
+        setShowAgotadoAlert(false);
+        setPendingStockValue("");
     };
 
     const comprimirImagen = (file: File): Promise<File> => {
@@ -201,7 +244,8 @@ export default function AdminProductoForm({ params }: { params: { id: string } }
             if (formData.precio_oferta) {
                 formDataPayload.append("precio_oferta", formData.precio_oferta.toString());
             }
-            formDataPayload.append("stock", formData.stock.toString());
+            const stockFinal = formData.agotado ? "0" : formData.stock.toString();
+            formDataPayload.append("stock", stockFinal);
             formDataPayload.append("nuevo", formData.nuevo.toString());
             formDataPayload.append("agotado", formData.agotado.toString());
             formDataPayload.append("requiere_medida", formData.requiere_medida.toString());
@@ -472,6 +516,39 @@ export default function AdminProductoForm({ params }: { params: { id: string } }
                     </button>
                 </div>
             </form>
+
+            {/* Modal Alerta Forzar Agotado */}
+            {showAgotadoAlert && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+                    <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl transform transition-all animate-scale-up">
+                        <div className="p-6 text-center space-y-4">
+                            <div className="w-16 h-16 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                                <i className="ri-error-warning-fill text-3xl"></i>
+                            </div>
+                            <h3 className="font-serif text-xl font-bold text-lorie-dark">Producto Agotado</h3>
+                            <p className="font-sans text-sm text-lorie-brown/70">
+                                Tienes activada la etiqueta "Forzar Agotado". Si ingresas un stock disponible, el producto volverá a estar a la venta. ¿Deseas agregar stock y reactivarlo?
+                            </p>
+                        </div>
+                        <div className="p-4 bg-lorie-cream/30 flex flex-col-reverse sm:flex-row gap-3">
+                            <button
+                                type="button"
+                                onClick={cancelarQuitarAgotado}
+                                className="w-full py-2.5 rounded-xl font-sans font-medium text-lorie-brown bg-white border border-lorie-beige hover:bg-lorie-cream transition-colors"
+                            >
+                                Conservar agotado
+                            </button>
+                            <button
+                                type="button"
+                                onClick={confirmarQuitarAgotado}
+                                className="w-full py-2.5 rounded-xl font-sans font-bold text-white bg-[#BB9B8A] hover:bg-[#A68676] transition-colors shadow-md"
+                            >
+                                Sí, agregar stock
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
