@@ -21,13 +21,7 @@ export default function OrdenDetalleModal({ orden, onClose, onUpdate }: OrdenDet
     const [actualizando, setActualizando] = useState(false);
     const [actualizandoPago, setActualizandoPago] = useState(false);
     const [enviandoCorreo, setEnviandoCorreo] = useState(false);
-    const [enviosCorreoCount, setEnviosCorreoCount] = useState(() => {
-        if (typeof window !== 'undefined') {
-            const count = localStorage.getItem(`lorie_email_sent_${orden.id}`);
-            return count ? parseInt(count, 10) : 0;
-        }
-        return 0;
-    });
+    const [enviosCorreoCount, setEnviosCorreoCount] = useState(orden.envios_correo_count || 0);
 
     // Detectar si la orden fue pagada con QR
     const esQR = orden.estado_pago === 'REVISION_QR' || !!orden.comprobante_url;
@@ -207,11 +201,22 @@ export default function OrdenDetalleModal({ orden, onClose, onUpdate }: OrdenDet
 
             if (!res.ok) throw new Error('Error al enviar correo');
 
-            setEnviosCorreoCount(prev => {
-                const next = prev + 1;
-                localStorage.setItem(`lorie_email_sent_${orden.id}`, next.toString());
-                return next;
+            const nextCount = enviosCorreoCount + 1;
+            
+            // Actualizar en base de datos globalmente
+            await fetch(`/api/admin/ordenes/${orden.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ envios_correo_count: nextCount }),
             });
+
+            setEnviosCorreoCount(nextCount);
+            
+            // Si hay una función onUpdate, podemos decirle al panel que recargue (opcional)
+            if (onUpdate) {
+                onUpdate({ ...orden, envios_correo_count: nextCount });
+            }
+
         } catch (error) {
             console.error(error);
             alert('No se pudo enviar el correo de confirmación. Intenta de nuevo.');

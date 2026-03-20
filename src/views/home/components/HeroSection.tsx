@@ -13,7 +13,7 @@ export default function HeroSection() {
       {/* Hero Background Video */}
       <div className="absolute inset-0 bg-black pointer-events-none overflow-hidden">
         <iframe
-          src="https://player.vimeo.com/video/1173486200?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1&autopause=0&playsinline=1&dnt=1"
+          src="https://player.vimeo.com/video/1175247747?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1&autopause=0&playsinline=1&dnt=1"
           frameBorder="0"
           allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
           loading="eager"

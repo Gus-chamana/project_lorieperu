@@ -20,6 +20,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         const updateData: any = {};
         if (body.estado_pago) updateData.estado_pago = body.estado_pago;
         if (body.estado) updateData.estado = body.estado;
+        if (body.envios_correo_count !== undefined) updateData.envios_correo_count = body.envios_correo_count;
 
         if (Object.keys(updateData).length === 0) {
             return NextResponse.json({ error: 'No hay datos válidos para actualizar' }, { status: 400 });
