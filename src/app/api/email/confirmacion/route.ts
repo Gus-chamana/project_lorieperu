@@ -31,6 +31,7 @@ interface EmailPayload {
     celular: string;
     nombre_agencia?: string;
     referencia?: string;
+    metodo_pago?: string;
 }
 
 // Genera el HTML Premium del correo de confirmación con branding Lorie Perú
@@ -99,6 +100,7 @@ function buildEmailHtml(d: EmailPayload): string {
                                 <p style="margin: 0; font-size: 16px; color: #27ae60; font-weight: bold; font-family: Arial, sans-serif;">
                                     ✅ ¡Tu pedido y pago han sido confirmados exitosamente!
                                 </p>
+                                ${d.metodo_pago ? `<p style="margin: 6px 0 0; font-size: 13px; color: #27ae60; font-family: Arial, sans-serif;">Método de pago: <strong>${d.metodo_pago}</strong></p>` : ''}
                             </td>
                         </tr>
 

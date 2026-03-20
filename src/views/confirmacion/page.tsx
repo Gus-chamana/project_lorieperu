@@ -64,10 +64,12 @@ export default function ConfirmacionPage() {
   const ordenId    = searchParams.get('orden');
   const krAnswer   = searchParams.get('kr-answer');
   const krHash     = searchParams.get('kr-hash');
+  const tipoPago   = searchParams.get('tipo'); // 'qr' para pagos por QR
 
   const [ordenData, setOrdenData] = useState<OrdenData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [esQR, setEsQR] = useState(false);
 
   // Guards para evitar doble ejecución en React StrictMode
   const emailEnviado = useRef(false);
@@ -82,6 +84,19 @@ export default function ConfirmacionPage() {
 
     if (ejecutando.current) return;
     ejecutando.current = true;
+
+    /* ─────────────────────────────────────────────────────────────
+     * FLUJO QR: El comprobante ya fue subido y la orden está en
+     *           estado REVISION_QR. No necesitamos verificar con
+     *           Izipay, solo limpiar el estado y mostrar mensaje.
+     * ───────────────────────────────────────────────────────────── */
+    if (tipoPago === 'qr') {
+      setEsQR(true);
+      clearCart();
+      localStorage.removeItem('pago_pendiente_orden_id');
+      setLoading(false);
+      return;
+    }
 
     const confirmarPago = async () => {
       try {
@@ -212,6 +227,154 @@ export default function ConfirmacionPage() {
             <i className="ri-loader-4-line text-5xl text-lorie-brown animate-spin block mb-5"></i>
             <h2 className="font-serif text-xl font-semibold text-lorie-dark mb-2">Confirmando tu pago</h2>
             <p className="text-sm text-lorie-brown/60">Verificando la confirmación de tu transacción...</p>
+          </div>
+        </section>
+        <FooterMinimal />
+      </div>
+    );
+  }
+
+  /* ─────── Confirmación QR (comprobante recibido) ─────── */
+  if (esQR) {
+    return (
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-lorie-cream via-white to-lorie-beige">
+        <Navbar />
+        <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto">
+            <CheckoutSteps paso={3} />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="bg-white rounded-3xl shadow-2xl p-8 md:p-12"
+            >
+              {/* Ícono */}
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                className="w-24 h-24 mx-auto mb-6 flex items-center justify-center bg-gradient-to-br from-amber-400 to-amber-500 rounded-full shadow-lg"
+              >
+                <i className="ri-time-line text-5xl text-white"></i>
+              </motion.div>
+
+              {/* Título */}
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="text-3xl md:text-4xl font-serif font-bold text-lorie-dark mb-4 text-center uppercase"
+              >
+                ¡Comprobante Recibido!
+              </motion.h1>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="text-center mb-8"
+              >
+                <p className="text-lg text-lorie-brown mb-2">Tu comprobante de pago ha sido recibido exitosamente.</p>
+                <p className="text-sm text-lorie-brown/70 leading-relaxed px-4">
+                  Nuestro equipo revisará tu pago y te confirmaremos por <strong>correo electrónico</strong> y/o <strong>WhatsApp</strong> en las próximas horas. Una vez confirmado, procederemos con el envío de tu pedido.
+                </p>
+              </motion.div>
+
+              {/* Número de pedido */}
+              {ordenId && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="bg-gradient-to-r from-lorie-cream/50 to-lorie-beige/30 rounded-2xl p-6 mb-8 text-center"
+                >
+                  <p className="text-sm text-lorie-brown mb-2">Número de Pedido</p>
+                  <p className="text-2xl font-bold text-lorie-dark font-mono">{ordenId.split('-')[0].toUpperCase()}</p>
+                </motion.div>
+              )}
+
+              {/* Info de proceso */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-8"
+              >
+                <h3 className="font-serif text-lg font-semibold text-amber-800 mb-3 flex items-center gap-2">
+                  <i className="ri-information-line text-amber-600"></i>
+                  ¿Qué sigue?
+                </h3>
+                <div className="space-y-3">
+                  {[
+                    { icon: 'ri-search-eye-line', text: 'Verificaremos tu comprobante de pago' },
+                    { icon: 'ri-mail-check-line', text: 'Te notificaremos la confirmación por correo y/o WhatsApp' },
+                    { icon: 'ri-truck-line', text: 'Procederemos con el envío de tu pedido' },
+                  ].map((step, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white rounded-full shadow-sm">
+                        <i className={`${step.icon} text-amber-600`}></i>
+                      </div>
+                      <p className="text-sm text-amber-700 font-sans">{step.text}</p>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Botones */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+                className="flex flex-col sm:flex-row gap-4 justify-center mb-8"
+              >
+                <Link
+                  href="/productos"
+                  className="px-8 py-4 text-white rounded-full font-sans font-semibold text-base transition-all duration-300 hover:opacity-90 shadow-md text-center"
+                  style={{ backgroundColor: 'rgb(185, 150, 128)' }}
+                >
+                  <i className="ri-shopping-bag-line mr-2"></i>Seguir Comprando
+                </Link>
+                <Link
+                  href="/"
+                  className="px-8 py-4 border-2 border-lorie-beige text-lorie-brown rounded-full font-sans font-semibold text-base hover:bg-lorie-cream transition-all duration-300 text-center"
+                >
+                  <i className="ri-home-line mr-2"></i>Volver al Inicio
+                </Link>
+              </motion.div>
+
+              {/* Soporte */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8 }}
+                className="pt-8 border-t border-lorie-beige text-center"
+              >
+                <p className="text-sm text-lorie-brown mb-3">¿Tienes alguna pregunta sobre tu pedido?</p>
+                <a
+                  href={`https://wa.me/51957026753?text=Hola%20Lorie%20Per%C3%BA,%20consulta%20sobre%20pedido%20${ordenId?.split('-')[0].toUpperCase()}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center space-x-2 text-green-600 hover:text-green-700 font-medium transition-colors"
+                >
+                  <i className="ri-whatsapp-line text-xl"></i>
+                  <span>Contáctanos por WhatsApp</span>
+                </a>
+              </motion.div>
+            </motion.div>
+
+            {/* Decoración */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.9 }}
+              className="mt-12 text-center"
+            >
+              <div className="inline-flex items-center space-x-2 text-lorie-brown/50">
+                <i className="ri-heart-fill text-lorie-rose"></i>
+                <span className="text-sm font-sans">Gracias por confiar en Lorie Perú</span>
+                <i className="ri-heart-fill text-lorie-rose"></i>
+              </div>
+            </motion.div>
           </div>
         </section>
         <FooterMinimal />

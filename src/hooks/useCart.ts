@@ -89,6 +89,9 @@ export function useCart() {
   const clearCart = () => {
     setCartItems([]);
     setDescuentoData(null);
+    localStorage.removeItem(CART_STORAGE_KEY);
+    localStorage.removeItem(DISCOUNT_STORAGE_KEY);
+    window.dispatchEvent(new CustomEvent('cartUpdated', { detail: [] }));
   };
 
   const setDescuento = (descuento: ValidacionDescuento | null) => {

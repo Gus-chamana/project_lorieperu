@@ -41,6 +41,12 @@ export default function AdminOrdenesLista() {
         RECHAZADO: 'Rechazado',
         FALLIDO: 'Cancelado',
         CANCELADO: 'Cancelado',
+        REVISION_QR: 'En Revisión (QR)',
+    };
+
+    // Detectar si la orden fue pagada con QR
+    const esMetodoQR = (orden: any) => {
+        return orden.estado_pago === 'REVISION_QR' || !!orden.comprobante_url;
     };
 
     const cambiarEstadoPago = async (id: string, nuevoEstado: string) => {
@@ -104,7 +110,13 @@ export default function AdminOrdenesLista() {
                         Cancelado
                     </span>
                 )}
-                {!isConfirmado && !isRechazado && !isFallido && !isCancelado && (
+                {estado === 'REVISION_QR' && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-orange-100 text-orange-700 border border-orange-200 shadow-sm">
+                        <i className="ri-search-eye-line text-sm"></i>
+                        En Revisión (QR)
+                    </span>
+                )}
+                {!isConfirmado && !isRechazado && !isFallido && !isCancelado && estado !== 'REVISION_QR' && (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-50 text-yellow-700 border border-yellow-200 shadow-sm">
                         <i className="ri-time-line text-sm"></i>
                         Pago Pendiente
@@ -150,20 +162,21 @@ export default function AdminOrdenesLista() {
                                 <th className="py-4 px-6 font-medium">Contacto</th>
                                 <th className="py-4 px-6 font-medium">Envío</th>
                                 <th className="py-4 px-6 font-medium text-right">Total (S/)</th>
+                                <th className="py-4 px-6 font-medium text-center">Método</th>
                                 <th className="py-4 px-6 font-medium text-right">Estado de Pago</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-lorie-beige/30">
                             {cargando ? (
                                 <tr>
-                                    <td colSpan={6} className="py-12 text-center text-lorie-brown/50">
+                                    <td colSpan={7} className="py-12 text-center text-lorie-brown/50">
                                         <i className="ri-loader-4-line text-2xl animate-spin block mb-2"></i>
                                         Cargando órdenes de la base de datos...
                                     </td>
                                 </tr>
                             ) : ordenes.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="py-12 text-center text-lorie-brown/50 font-sans">
+                                    <td colSpan={7} className="py-12 text-center text-lorie-brown/50 font-sans">
                                         Aún no hay compras registradas.
                                     </td>
                                 </tr>
@@ -196,6 +209,20 @@ export default function AdminOrdenesLista() {
                                         </td>
                                         <td className="py-4 px-6 text-right">
                                             <span className="font-sans font-bold text-lorie-dark text-lg">S/ {orden.total.toFixed(2)}</span>
+                                        </td>
+                                        {/* Columna de Método de Pago */}
+                                        <td className="py-4 px-6 text-center">
+                                            {esMetodoQR(orden) ? (
+                                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200">
+                                                    <i className="ri-qr-code-line text-sm"></i>
+                                                    QR
+                                                </span>
+                                            ) : (
+                                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                                                    <i className="ri-bank-card-line text-sm"></i>
+                                                    Tarjeta
+                                                </span>
+                                            )}
                                         </td>
                                         {/* Columna dedicada de Estado de Pago con badge visual */}
                                         <td className="py-4 px-6 text-right">
