@@ -38,6 +38,7 @@ export default function ProductosPage() {
   const [imagenActiva, setImagenActiva] = useState(0);
   const [medidaAlto, setMedidaAlto] = useState('');
   const [medidaAncho, setMedidaAncho] = useState('');
+  const [terminoBusqueda, setTerminoBusqueda] = useState('');
 
   // ── Modal de pago pendiente ──
   const [pagoPendienteId, setPagoPendienteId] = useState<string | null>(null);
@@ -67,7 +68,16 @@ export default function ProductosPage() {
       filtrados = filtrados.filter((p) => p.precioOferta !== null);
     }
 
-    // 2. Ordenar según jerarquía requerida
+    // 2. Filtrar por término de búsqueda
+    if (terminoBusqueda.trim() !== '') {
+      const termino = terminoBusqueda.toLowerCase();
+      filtrados = filtrados.filter(p => 
+        p.nombre.toLowerCase().includes(termino) || 
+        (p.descripcion && p.descripcion.toLowerCase().includes(termino))
+      );
+    }
+
+    // 3. Ordenar según jerarquía requerida
     filtrados.sort((a, b) => {
       // Función auxiliar para asignar un "peso" o prioridad al producto
       const getPriority = (p: ProductoFrontend) => {
@@ -88,7 +98,7 @@ export default function ProductosPage() {
     });
 
     return filtrados;
-  }, [filtroActivo, productos]);
+  }, [filtroActivo, productos, terminoBusqueda]);
 
   const abrirDetalle = (producto: ProductoFrontend) => {
     setProductoSeleccionado(producto);
@@ -171,20 +181,41 @@ export default function ProductosPage() {
       {/* Filtros */}
       <section className="sticky top-24 z-40 bg-white/80 backdrop-blur-md shadow-sm py-6 px-4 sm:px-6 lg:px-8 mb-12">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            {filtros.map((filtro) => (
-              <button
-                key={filtro}
-                onClick={() => setFiltroActivo(filtro)}
-                className={`px-6 py-2 rounded-full font-sans text-sm font-medium transition-all duration-300 cursor-pointer whitespace-nowrap ${filtroActivo === filtro
-                  ? 'text-white shadow-md'
-                  : 'bg-white border border-lorie-beige text-lorie-brown hover:border-lorie-brown hover:text-lorie-dark'
-                  }`}
-                style={filtroActivo === filtro ? { backgroundColor: 'rgb(185, 150, 128)' } : undefined}
-              >
-                {filtro}
-              </button>
-            ))}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {filtros.map((filtro) => (
+                <button
+                  key={filtro}
+                  onClick={() => setFiltroActivo(filtro)}
+                  className={`px-6 py-2 rounded-full font-sans text-sm font-medium transition-all duration-300 cursor-pointer whitespace-nowrap ${filtroActivo === filtro
+                    ? 'text-white shadow-md'
+                    : 'bg-white border border-lorie-beige text-lorie-brown hover:border-lorie-brown hover:text-lorie-dark'
+                    }`}
+                  style={filtroActivo === filtro ? { backgroundColor: 'rgb(185, 150, 128)' } : undefined}
+                >
+                  {filtro}
+                </button>
+              ))}
+            </div>
+
+            <div className="relative w-full md:w-72">
+              <input
+                type="text"
+                placeholder="Buscar carteras..."
+                value={terminoBusqueda}
+                onChange={(e) => setTerminoBusqueda(e.target.value)}
+                className="w-full pl-10 pr-10 py-2 rounded-full border border-lorie-beige bg-white text-lorie-dark font-sans text-sm focus:outline-none focus:ring-1 focus:ring-lorie-brown transition-all"
+              />
+              <i className="ri-search-line absolute left-4 top-1/2 -translate-y-1/2 text-lorie-brown/60"></i>
+              {terminoBusqueda && (
+                <button 
+                  onClick={() => setTerminoBusqueda('')}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-lorie-brown/60 hover:text-lorie-brown cursor-pointer"
+                >
+                  <i className="ri-close-line"></i>
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </section>
