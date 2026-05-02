@@ -27,7 +27,8 @@ export default function ProductosDestacados() {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [productoSeleccionado, setProductoSeleccionado] = useState<ProductoFrontend | null>(null);
   const [imagenActiva, setImagenActiva] = useState(0);
-  const [inputMedida, setInputMedida] = useState('');
+  const [medidaAlto, setMedidaAlto] = useState('');
+  const [medidaAncho, setMedidaAncho] = useState('');
 
   // ── Modal de pago pendiente ──
   const [pagoPendienteId, setPagoPendienteId] = useState<string | null>(null);
@@ -61,7 +62,8 @@ export default function ProductosDestacados() {
   const abrirDetalle = (producto: ProductoFrontend) => {
     setProductoSeleccionado(producto);
     setImagenActiva(0);
-    setInputMedida('');
+    setMedidaAlto('');
+    setMedidaAncho('');
   };
 
   const cerrarDetalle = () => {
@@ -75,13 +77,18 @@ export default function ProductosDestacados() {
       setMostrarModalPago(true);
       return;
     }
+    
+    const medidaCombinada = (medidaAlto.trim() && medidaAncho.trim()) 
+      ? `Alto: ${medidaAlto.trim()}cm x Ancho: ${medidaAncho.trim()}cm` 
+      : undefined;
+
     addToCart({
       id: producto.id,
       nombre: producto.nombre,
       precio: producto.precio,
       precioOferta: producto.precioOferta,
       imagen: producto.imagenes?.[0] || '',
-      medida: producto.requiere_medida ? inputMedida.trim() : undefined,
+      medida: producto.requiere_medida ? medidaCombinada : undefined,
     });
   };
 
@@ -347,23 +354,41 @@ export default function ProductosDestacados() {
 
                   {productoSeleccionado.requiere_medida && !productoSeleccionado.agotado && (
                     <div className="mb-6 bg-lorie-cream/30 p-4 rounded-xl border border-lorie-beige">
-                      <label htmlFor="medidaPulgadas" className="block text-lorie-dark font-sans font-semibold text-sm mb-2">
-                        Especifica el tamaño en pulgadas <span className="text-lorie-rose">*</span>
+                      <label className="block text-lorie-dark font-sans font-semibold text-sm mb-2">
+                        Especifica el tamaño en centímetros <span className="text-lorie-rose">*</span>
                       </label>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        id="medidaPulgadas"
-                        value={inputMedida}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          if (value === '' || /^\d*\.?\d*$/.test(value)) {
-                            setInputMedida(value);
-                          }
-                        }}
-                        placeholder='Ej: 13", 14", 15.6"'
-                        className="w-full px-4 py-3 rounded-xl border border-lorie-beige bg-white text-lorie-dark font-sans text-sm focus:outline-none focus:ring-2 focus:ring-lorie-brown/50 transition-all"
-                      />
+                      <div className="flex gap-4">
+                        <div className="w-1/2">
+                          <label htmlFor="medidaAlto" className="block text-xs text-lorie-brown/80 mb-1">Alto (cm)</label>
+                          <input
+                            type="text"
+                            inputMode="decimal"
+                            id="medidaAlto"
+                            value={medidaAlto}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value === '' || /^\d*\.?\d*$/.test(value)) setMedidaAlto(value);
+                            }}
+                            placeholder='Ej: 25'
+                            className="w-full px-4 py-3 rounded-xl border border-lorie-beige bg-white text-lorie-dark font-sans text-sm focus:outline-none focus:ring-2 focus:ring-lorie-brown/50 transition-all"
+                          />
+                        </div>
+                        <div className="w-1/2">
+                          <label htmlFor="medidaAncho" className="block text-xs text-lorie-brown/80 mb-1">Ancho (cm)</label>
+                          <input
+                            type="text"
+                            inputMode="decimal"
+                            id="medidaAncho"
+                            value={medidaAncho}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value === '' || /^\d*\.?\d*$/.test(value)) setMedidaAncho(value);
+                            }}
+                            placeholder='Ej: 18'
+                            className="w-full px-4 py-3 rounded-xl border border-lorie-beige bg-white text-lorie-dark font-sans text-sm focus:outline-none focus:ring-2 focus:ring-lorie-brown/50 transition-all"
+                          />
+                        </div>
+                      </div>
                       <p className="text-xs text-lorie-brown/70 mt-2">
                         Necesitamos conocer la medida exacta de tu dispositivo para confeccionar la funda a medida.
                       </p>
@@ -374,10 +399,11 @@ export default function ProductosDestacados() {
                     <button
                       onClick={() => {
                         if (productoSeleccionado.agotado) return;
-                        if (productoSeleccionado.requiere_medida && !inputMedida.trim()) return;
+                        const medidaComb = `Alto: ${medidaAlto.trim()}cm x Ancho: ${medidaAncho.trim()}cm`;
+                        if (productoSeleccionado.requiere_medida && (!medidaAlto.trim() || !medidaAncho.trim())) return;
 
                         const isSpecificItemInCart = productoSeleccionado.requiere_medida
-                          ? isInCart(productoSeleccionado.id, inputMedida.trim())
+                          ? isInCart(productoSeleccionado.id, medidaComb)
                           : isInCart(productoSeleccionado.id);
                         if (isSpecificItemInCart) {
                           router.push('/carrito');
@@ -385,12 +411,12 @@ export default function ProductosDestacados() {
                           handleAddToCart(productoSeleccionado);
                         }
                       }}
-                      disabled={productoSeleccionado.agotado || !!(productoSeleccionado.requiere_medida && !inputMedida.trim() && !isInCart(productoSeleccionado.id, inputMedida.trim()))}
-                      className={`w-full py-3.5 rounded-full font-sans font-semibold text-base transition-all duration-300 flex items-center justify-center space-x-2 whitespace-nowrap shadow-md ${(productoSeleccionado.agotado || (productoSeleccionado.requiere_medida && !inputMedida.trim())) ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : (productoSeleccionado.requiere_medida ? isInCart(productoSeleccionado.id, inputMedida.trim()) : isInCart(productoSeleccionado.id)) ? 'bg-green-600 text-white' : 'text-white hover:opacity-90 hover:shadow-lg cursor-pointer'}`}
-                      style={!(productoSeleccionado.agotado || (productoSeleccionado.requiere_medida && !inputMedida.trim())) && !(productoSeleccionado.requiere_medida ? isInCart(productoSeleccionado.id, inputMedida.trim()) : isInCart(productoSeleccionado.id)) ? { backgroundColor: 'rgb(187,155,138)' } : undefined}
+                      disabled={productoSeleccionado.agotado || !!(productoSeleccionado.requiere_medida && (!medidaAlto.trim() || !medidaAncho.trim()) && !isInCart(productoSeleccionado.id, `Alto: ${medidaAlto.trim()}cm x Ancho: ${medidaAncho.trim()}cm`))}
+                      className={`w-full py-3.5 rounded-full font-sans font-semibold text-base transition-all duration-300 flex items-center justify-center space-x-2 whitespace-nowrap shadow-md ${(productoSeleccionado.agotado || (productoSeleccionado.requiere_medida && (!medidaAlto.trim() || !medidaAncho.trim()))) ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : (productoSeleccionado.requiere_medida ? isInCart(productoSeleccionado.id, `Alto: ${medidaAlto.trim()}cm x Ancho: ${medidaAncho.trim()}cm`) : isInCart(productoSeleccionado.id)) ? 'bg-green-600 text-white' : 'text-white hover:opacity-90 hover:shadow-lg cursor-pointer'}`}
+                      style={!(productoSeleccionado.agotado || (productoSeleccionado.requiere_medida && (!medidaAlto.trim() || !medidaAncho.trim()))) && !(productoSeleccionado.requiere_medida ? isInCart(productoSeleccionado.id, `Alto: ${medidaAlto.trim()}cm x Ancho: ${medidaAncho.trim()}cm`) : isInCart(productoSeleccionado.id)) ? { backgroundColor: 'rgb(187,155,138)' } : undefined}
                     >
-                      <i className={productoSeleccionado.agotado ? 'ri-close-circle-line text-lg' : (productoSeleccionado.requiere_medida ? isInCart(productoSeleccionado.id, inputMedida.trim()) : isInCart(productoSeleccionado.id)) ? 'ri-check-line text-lg' : 'ri-shopping-bag-3-line text-lg'} />
-                      <span>{productoSeleccionado.agotado ? 'Agotado' : (productoSeleccionado.requiere_medida ? isInCart(productoSeleccionado.id, inputMedida.trim()) : isInCart(productoSeleccionado.id)) ? '¡Añadido a tu carrito!' : 'Añadir a mi carrito'}</span>
+                      <i className={productoSeleccionado.agotado ? 'ri-close-circle-line text-lg' : (productoSeleccionado.requiere_medida ? isInCart(productoSeleccionado.id, `Alto: ${medidaAlto.trim()}cm x Ancho: ${medidaAncho.trim()}cm`) : isInCart(productoSeleccionado.id)) ? 'ri-check-line text-lg' : 'ri-shopping-bag-3-line text-lg'} />
+                      <span>{productoSeleccionado.agotado ? 'Agotado' : (productoSeleccionado.requiere_medida ? isInCart(productoSeleccionado.id, `Alto: ${medidaAlto.trim()}cm x Ancho: ${medidaAncho.trim()}cm`) : isInCart(productoSeleccionado.id)) ? '¡Añadido a tu carrito!' : 'Añadir a mi carrito'}</span>
                     </button>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">

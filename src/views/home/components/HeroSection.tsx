@@ -1,8 +1,32 @@
 "use client";
+import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Player from '@vimeo/player';
 
 export default function HeroSection() {
+  const videoRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      const player = new Player(videoRef.current, {
+        id: 1175247747,
+        background: true,
+        autoplay: true,
+        loop: true,
+        muted: true,
+        playsinline: true,
+        dnt: true
+      });
+
+      player.ready().then(() => {
+        player.play().catch((error) => {
+          console.warn("Autoplay bloqueado por iOS (ej. Modo Ahorro Batería)", error);
+        });
+      });
+    }
+  }, []);
+
   return (
     <section className="relative h-screen w-full overflow-hidden">
       {/* 🚀 Optimizadores de Red: Pre-conecta el túnel TLS y DNS antes de que Next.js renderice la web para tiempo 0ms */}
@@ -12,17 +36,10 @@ export default function HeroSection() {
       
       {/* Hero Background Video */}
       <div className="absolute inset-0 bg-black pointer-events-none overflow-hidden">
-        <iframe
-          src="https://player.vimeo.com/video/1175247747?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1&autopause=0&playsinline=1&dnt=1"
-          frameBorder="0"
-          allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-          loading="eager"
-          // Usamos data-fetchpriority para saltar problemas de ts-ignore en React antiguo, 
-          // los navegadores modernos Chrome/Safari lo captan o mapean para priorizar bandwidth.
-          data-fetchpriority="high"
-          className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 object-cover"
-          title="Video Portada LoriePeru"
-        ></iframe>
+        <div 
+          ref={videoRef}
+          className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 object-cover [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:object-cover"
+        />
         {/* Dark Overlay for better text contrast */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/35 to-black/50 z-10"></div>
       </div>

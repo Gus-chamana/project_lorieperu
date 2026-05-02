@@ -44,7 +44,31 @@ export default function PreCheckout({ onOrdenCreada }: PreCheckoutProps) {
     const [errores, setErrores] = useState<Record<string, string>>({});
     const router = useRouter();
 
-    const { cartItems, clearCart, descuentoData } = useCart();
+    const { cartItems, clearCart, descuentoData, setDescuento } = useCart();
+
+    // ── Validar descuento en tiempo real (por si se desactiva en el admin) ──
+    useEffect(() => {
+        // Obtenemos el subtotal actual de forma independiente para la validación
+        const currentSubtotal = cartItems.reduce((sum: number, item: CartItem) => {
+            const precio = item.precioOferta ?? item.precio;
+            return sum + precio * item.cantidad;
+        }, 0);
+
+        if (descuentoData?.codigo && currentSubtotal > 0) {
+            fetch('/api/descuento/validar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ codigo: descuentoData.codigo, subtotal: currentSubtotal })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.valido) {
+                    setDescuento(null);
+                }
+            })
+            .catch(() => {});
+        }
+    }, [descuentoData?.codigo, cartItems, setDescuento]);
 
     // ── Detectar pago pendiente en localStorage ──
     const [pagoPendienteId, setPagoPendienteId] = useState<string | null>(null);
@@ -103,7 +127,7 @@ export default function PreCheckout({ onOrdenCreada }: PreCheckoutProps) {
                 const motorizado = metodosEnvio.find(m => m.tipo_envio === 'LIMA');
                 if (motorizado) {
                     setMetodoEnvioId(motorizado.id);
-                    setCostoEnvio(motorizado.precio);
+                    setCostoEnvio(0); // Costo 0 porque se paga en destino
                 }
             } else {
                 const shalom = metodosEnvio.find(m => m.tipo_envio === 'PROVINCIA');
@@ -399,11 +423,19 @@ export default function PreCheckout({ onOrdenCreada }: PreCheckoutProps) {
                                         )}
                                         <div className="flex justify-between text-sm font-sans text-lorie-brown/70">
                                             <span>Envío</span>
-                                            <span>{costoEnvio > 0 ? `S/ ${costoEnvio.toFixed(2)}` : form.distrito_id ? (esLima ? 'S/ 10.00' : 'Por coordinar con Shalom') : '—'}</span>
+                                            <span>{form.distrito_id ? 'Pago contra entrega' : '—'}</span>
                                         </div>
                                         <div className="flex justify-between text-base font-bold font-sans text-lorie-dark pt-2 border-t border-lorie-cream/80">
                                             <span>TOTAL</span>
                                             <span className="text-lorie-rose">S/ {total.toFixed(2)}</span>
+                                        </div>
+                                        
+                                        {/* Mensaje aclaratorio de envío */}
+                                        <div className="mt-3 bg-lorie-cream/30 p-3 rounded-xl border border-lorie-beige">
+                                            <p className="text-xs text-lorie-brown/80 font-sans leading-relaxed">
+                                                <i className="ri-information-line text-lorie-rose mr-1"></i>
+                                                <strong>Importante:</strong> El pago del envío no está incluido y se realizará directamente al motorizado (Lima) o en agencia (Provincia) al momento de recibir su pedido.
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -560,12 +592,12 @@ export default function PreCheckout({ onOrdenCreada }: PreCheckoutProps) {
                                                 <i className={`${esLima ? 'ri-e-bike-line text-green-600' : 'ri-truck-line text-amber-600'} text-base flex-shrink-0 mt-0.5`}></i>
                                                 <div>
                                                     <p className={`font-bold ${esLima ? 'text-green-700' : 'text-amber-700'}`}>
-                                                        {esLima ? 'Envío Motorizado Guerreros – S/ 10.00' : 'Envío Shalom Provincia'}
+                                                        {esLima ? 'Envío Motorizado Guerreros' : 'Envío Shalom Provincia'}
                                                     </p>
                                                     <p className={`mt-0.5 ${esLima ? 'text-green-600' : 'text-amber-600'}`}>
                                                         {esLima
-                                                            ? 'Entrega a domicilio en Lima Metropolitana'
-                                                            : 'El costo de envío se coordina directamente con tu agencia Shalom'}
+                                                            ? 'El costo del envío se pagará directamente al motorizado al momento de la entrega.'
+                                                            : 'El costo de envío se coordina y paga directamente a tu agencia Shalom.'}
                                                     </p>
                                                 </div>
                                             </div>

@@ -41,6 +41,7 @@ export async function POST(req: Request) {
                 tipo: 'PORCENTAJE',
                 valor: descuentoNumeric,
                 codigo_id: null, // No hay ID porque viene de configuración, no de la tabla de códigos
+                codigo: codigoLimpio,
             });
         }
     }
@@ -78,5 +79,6 @@ export async function POST(req: Request) {
         tipo: data.tipo_descuento,
         valor: data.valor,
         codigo_id: data.id,
+        codigo: codigoLimpio,
     });
 }

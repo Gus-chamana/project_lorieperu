@@ -54,6 +54,7 @@ export interface ValidacionDescuento {
     tipo?: 'PORCENTAJE' | 'MONTO_FIJO';
     valor?: number;
     codigo_id?: string;
+    codigo?: string;
     error?: string;
 }
 
@@ -88,6 +89,7 @@ export interface PayloadOrden {
     direccion: FormularioDireccion;
     metodo_envio_id: string;
     codigo_descuento_id: string | null;
+    codigo_aplicado?: string | null;
     items: ItemCarritoCheckout[];
     subtotal: number;
     monto_descuento: number;

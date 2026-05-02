@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -28,6 +28,31 @@ export default function CarritoPage() {
   } = useCart();
 
   const { productos: catalogoBD, cargando: cargandoBD } = useProductos();
+
+  // ── Validar descuento en tiempo real (por si se desactiva en el admin) ──
+  useEffect(() => {
+    // Obtenemos el subtotal actual de forma independiente para la validación
+    const currentSubtotal = cartItems.reduce((acc, item) => {
+        const pReal = catalogoBD.find(p => p.id === item.id);
+        const precioUnit = pReal ? (pReal.precioOferta || pReal.precio) : (item.precioOferta || item.precio);
+        return acc + (precioUnit * item.cantidad);
+    }, 0);
+
+    if (descuentoData?.codigo && currentSubtotal > 0) {
+        fetch('/api/descuento/validar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ codigo: descuentoData.codigo, subtotal: currentSubtotal })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (!data.valido) {
+                setDescuento(null);
+            }
+        })
+        .catch(() => {});
+    }
+  }, [descuentoData?.codigo, cartItems, catalogoBD, setDescuento]);
 
   const [inputCodigo, setInputCodigo] = useState('');
   const [aplicandoDescuento, setAplicandoDescuento] = useState(false);
@@ -416,7 +441,7 @@ export default function CarritoPage() {
 
                     <div className="flex justify-between items-center text-lorie-brown/60 text-sm">
                       <span className="flex items-center gap-1.5"><i className="ri-truck-line"></i> Envío</span>
-                      <span>Por coordinar</span>
+                      <span>Pago contra entrega</span>
                     </div>
                   </div>
 

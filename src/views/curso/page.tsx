@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import Navbar from '../../components/feature/Navbar';
@@ -6,12 +7,34 @@ import Footer from '../../components/feature/Footer';
 import WhatsAppButton from '../../components/feature/WhatsAppButton';
 import ScrollToTop from '../../components/feature/ScrollToTop';
 import Image from 'next/image';
+import Player from '@vimeo/player';
 
 export default function CursoPage() {
+  const videoRef = useRef<HTMLDivElement>(null);
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
+
+  useEffect(() => {
+    if (videoRef.current) {
+      const player = new Player(videoRef.current, {
+        id: 1175634340,
+        background: true,
+        autoplay: true,
+        loop: true,
+        muted: true,
+        playsinline: true,
+        dnt: true
+      });
+
+      player.ready().then(() => {
+        player.play().catch((error) => {
+          console.warn("Autoplay bloqueado por iOS en vista de curso", error);
+        });
+      });
+    }
+  }, []);
 
   const handleReserva = () => {
     const mensaje = encodeURIComponent(
@@ -88,13 +111,10 @@ export default function CursoPage() {
                   className="relative rounded-3xl overflow-hidden shadow-2xl w-full"
                   style={{ paddingTop: '177.78%' }}
                 >
-                  <iframe
-                    src="https://player.vimeo.com/video/1175634340?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1&background=1&dnt=1"
-                    frameBorder="0"
-                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-                    className="absolute top-0 left-0 w-full h-full object-cover"
-                    title="curso video lorie"
-                  ></iframe>
+                  <div
+                    ref={videoRef}
+                    className="absolute top-0 left-0 w-full h-full object-cover [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:object-cover"
+                  />
                 </div>
 
                 {/* Floating Price Badge */}
