@@ -22,6 +22,7 @@ export default function OrdenDetalleModal({ orden, onClose, onUpdate }: OrdenDet
     const [actualizandoPago, setActualizandoPago] = useState(false);
     const [enviandoCorreo, setEnviandoCorreo] = useState(false);
     const [enviosCorreoCount, setEnviosCorreoCount] = useState(orden.envios_correo_count || 0);
+    const [mostrarAlertaCorreo, setMostrarAlertaCorreo] = useState(false);
 
     // Detectar si la orden fue pagada con QR
     const esQR = orden.estado_pago === 'REVISION_QR' || !!orden.comprobante_url;
@@ -160,8 +161,10 @@ export default function OrdenDetalleModal({ orden, onClose, onUpdate }: OrdenDet
     };
 
     // Handler para enviar correo de confirmación QR
-    const handleEnviarCorreo = async () => {
+    const procederEnvioCorreo = async () => {
+        setMostrarAlertaCorreo(false);
         if (enviandoCorreo) return;
+
         const emailCliente = cliente?.email;
         if (!emailCliente) {
             alert('Esta orden no tiene un email de cliente registrado.');
@@ -497,7 +500,7 @@ export default function OrdenDetalleModal({ orden, onClose, onUpdate }: OrdenDet
                             <div className="flex justify-between">
                                 <span className="text-lorie-brown/60">Costo de envío</span>
                                 <span className="text-lorie-dark font-medium">
-                                    {orden.costo_envio > 0 ? `S/ ${orden.costo_envio.toFixed(2)}` : 'Gratis'}
+                                    {orden.costo_envio > 0 ? `S/ ${orden.costo_envio.toFixed(2)}` : 'Pago contra entrega'}
                                 </span>
                             </div>
                             <div className="flex justify-between pt-2 border-t border-lorie-beige/40">
@@ -540,7 +543,7 @@ export default function OrdenDetalleModal({ orden, onClose, onUpdate }: OrdenDet
                     {esQR && (
                         <div className="mb-6">
                             <button
-                                onClick={handleEnviarCorreo}
+                                onClick={() => setMostrarAlertaCorreo(true)}
                                 disabled={enviandoCorreo}
                                 className={`w-full py-3.5 px-6 rounded-xl font-sans font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2.5 shadow-sm ${
                                     enviandoCorreo
@@ -575,6 +578,23 @@ export default function OrdenDetalleModal({ orden, onClose, onUpdate }: OrdenDet
                         </div>
                     )}
 
+                    {/* Indicador de correo de confirmación (solo Tarjeta) */}
+                    {!esQR && (
+                        <div className="mb-6">
+                            {estadoPagoLocal === 'PAGADO' ? (
+                                <div className="w-full py-3.5 px-6 rounded-xl font-sans font-semibold text-sm flex items-center justify-center gap-2.5 shadow-sm bg-green-100 text-green-700 border border-green-200 transition-colors">
+                                    <i className="ri-mail-check-line text-base"></i>
+                                    Se envió el correo de confirmación de pago
+                                </div>
+                            ) : (
+                                <div className="w-full py-3.5 px-6 rounded-xl font-sans font-semibold text-sm flex items-center justify-center gap-2.5 shadow-sm bg-red-50 text-red-600 border border-red-200 transition-colors">
+                                    <i className="ri-mail-close-line text-base"></i>
+                                    No se envió la confirmación de pago al correo
+                                </div>
+                            )}
+                        </div>
+                    )}
+
                     {/* ID completo */}
                     <div className="mt-5 pt-4 border-t border-lorie-beige/30">
                         <p className="text-xs text-lorie-brown/40 font-sans font-mono break-all">
@@ -583,6 +603,37 @@ export default function OrdenDetalleModal({ orden, onClose, onUpdate }: OrdenDet
                     </div>
                 </div>
             </div>
+
+            {/* Modal de Alerta para enviar correo */}
+            {mostrarAlertaCorreo && (
+                <div style={{ position: 'fixed', inset: 0, zIndex: 999999, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                    <div className="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full mx-4 border border-lorie-beige">
+                        <div className="text-center mb-5">
+                            <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mx-auto mb-4">
+                                <i className="ri-error-warning-fill text-2xl text-yellow-600"></i>
+                            </div>
+                            <h3 className="text-lg font-serif font-bold text-lorie-dark mb-2">¿Enviar correo?</h3>
+                            <p className="text-sm font-sans text-lorie-brown/70 leading-relaxed">
+                                ¿Está seguro en enviar el correo? Verifique bien el pago en el POS donde llegará el pago por QR antes de confirmar.
+                            </p>
+                        </div>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setMostrarAlertaCorreo(false)}
+                                className="flex-1 py-2.5 px-4 rounded-lg font-sans font-semibold text-sm border border-lorie-beige text-lorie-brown hover:bg-lorie-cream/50 transition-colors"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={procederEnvioCorreo}
+                                className="flex-1 py-2.5 px-4 rounded-lg font-sans font-semibold text-sm bg-gradient-to-r from-[#c4a38c] to-[#a67c7c] text-white hover:shadow-md transition-all"
+                            >
+                                Sí, enviar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 
