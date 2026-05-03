@@ -1,28 +1,45 @@
 /*
- * Lorie Perú – CSS MÍNIMO para Izipay (classic.css base)
- * REGLA ESTRICTA: NO sobreescribir .kr-embedded ni ninguna clase de campo.
- * Solo se estiliza el botón de pago para que coincida con la marca.
- * Todo lo demás lo controla Krypton internamente.
+ * Lorie Perú – Estilos Premium para Izipay (basado en classic.css)
+ * Personalización Premium y Ocultación de campos de cuotas.
  */
+
+/* ── OCULTAR CUOTAS Y PAGOS DIFERIDOS ────────────────────────────────────────── */
+.kr-embedded .kr-installment-number,
+.kr-embedded .kr-first-installment-delay {
+    display: none !important;
+}
+
+/* ── MANTENER CAMPOS DE ENTRADA ORIGINALES PARA EVITAR CONFLICTOS ────────────────── */
+/* Se eliminaron los bordes manuales para no superponer con el iframe interno de Izipay */
 
 /* ── BOTÓN DE PAGO ────────────────────────────────────────────────────────── */
 .kr-embedded .kr-payment-button {
-    background: linear-gradient(135deg, #8B5A5A 0%, #6B4444 100%) !important;
-    border-radius: 8px !important;
-    height: 52px !important;
-    letter-spacing: 1px !important;
+    background: linear-gradient(135deg, #c4a38c 0%, #a67c7c 100%) !important;
+    border-radius: 12px !important;
+    height: 56px !important;
+    letter-spacing: 0.5px !important;
     font-weight: 600 !important;
     text-transform: uppercase !important;
-    box-shadow: 0 4px 14px rgba(107, 68, 68, 0.28) !important;
-    transition: all 0.2s ease !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 4px 14px rgba(166, 124, 124, 0.25) !important;
+    transition: all 0.3s ease !important;
+    margin-top: 10px !important;
+    font-family: inherit !important;
 }
 
 .kr-embedded .kr-payment-button:hover {
-    background: linear-gradient(135deg, #9d6666 0%, #7a4e4e 100%) !important;
-    box-shadow: 0 6px 18px rgba(107, 68, 68, 0.38) !important;
-    transform: translateY(-1px) !important;
+    background: linear-gradient(135deg, #b8957c 0%, #996e6e 100%) !important;
+    box-shadow: 0 6px 18px rgba(166, 124, 124, 0.35) !important;
+    transform: translateY(-2px) !important;
 }
 
 .kr-embedded .kr-payment-button:active {
     transform: translateY(0) !important;
+}
+
+/* ── FONDO GENERAL FORMULARIO ──────────────────────────────────────────────── */
+.kr-embedded {
+    background: transparent !important;
+    font-family: inherit !important;
 }
