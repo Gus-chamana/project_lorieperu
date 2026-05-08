@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 
 // Global visibility state shared across all PromoBanner instances
-let globalIsVisible = true;
+let globalIsVisible = false;
 type VisibilityListener = (v: boolean) => void;
 const listeners: VisibilityListener[] = [];
 
@@ -95,6 +95,8 @@ export default function PromoBanner() {
           if (esValidoPorFecha) {
             setConfig(value);
             setLoaded(true);
+            setGlobalVisible(true);
+            setIsVisible(true);
           } else {
             setGlobalVisible(false);
             setIsVisible(false);
