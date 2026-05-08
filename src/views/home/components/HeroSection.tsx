@@ -1,11 +1,13 @@
 "use client";
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import Player from '@vimeo/player';
 
 export default function HeroSection() {
   const videoRef = useRef<HTMLDivElement>(null);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -17,6 +19,10 @@ export default function HeroSection() {
         muted: true,
         playsinline: true,
         dnt: true
+      });
+
+      player.on('play', () => {
+        setIsVideoPlaying(true);
       });
 
       player.ready().then(() => {
@@ -36,9 +42,23 @@ export default function HeroSection() {
       
       {/* Hero Background Video */}
       <div className="absolute inset-0 bg-black pointer-events-none overflow-hidden">
+        
+        {/* Poster Image - La Regla de Oro */}
+        <div 
+          className={`absolute inset-0 transition-opacity duration-1000 z-0 ${isVideoPlaying ? 'opacity-0' : 'opacity-100'}`}
+        >
+          <Image 
+            src="/fotograma-1.webp"
+            alt="Lorie Perú Portada"
+            fill
+            priority
+            className="object-cover"
+          />
+        </div>
+
         <div 
           ref={videoRef}
-          className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 object-cover [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:object-cover"
+          className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 object-cover [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:object-cover z-0"
         />
         {/* Dark Overlay for better text contrast */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/35 to-black/50 z-10"></div>
