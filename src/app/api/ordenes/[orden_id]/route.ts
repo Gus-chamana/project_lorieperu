@@ -22,6 +22,12 @@ export async function GET(
             return NextResponse.json({ error: 'orden_id requerido' }, { status: 400 });
         }
 
+        // Validación de seguridad: Asegurar que sea un UUID válido
+        const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (!UUID_REGEX.test(orden_id)) {
+            return NextResponse.json({ error: 'Formato de ID inválido' }, { status: 400 });
+        }
+
         const supabase = createAdminClient();
 
         // 1. Obtener la orden con su estado de pago, totales y relaciones
