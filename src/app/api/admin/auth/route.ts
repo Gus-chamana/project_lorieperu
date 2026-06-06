@@ -1,8 +1,16 @@
 import { createAdminClient } from '@/lib/supabase-admin';
 import { NextResponse } from 'next/server';
+import bcrypt from 'bcryptjs';
+import { checkRateLimit, getClientIp } from '@/lib/security';
 
 export async function POST(req: Request) {
     try {
+        // Rate limiting: máximo 10 intentos de login por IP cada 15 minutos
+        const ip = getClientIp(req);
+        if (!checkRateLimit(`admin-login:${ip}`, 10, 15 * 60 * 1000)) {
+            return NextResponse.json({ error: 'Demasiados intentos. Intenta de nuevo en unos minutos.' }, { status: 429 });
+        }
+
         const { username, password } = await req.json();
 
         if (!username || !password) {
@@ -11,16 +19,21 @@ export async function POST(req: Request) {
 
         const adminSupabase = createAdminClient();
 
-        // Buscamos el usuario en la tabla admin_users
-        // Usamos el cliente admin para saltar el RLS que bloquea la lectura pública
+        // Buscamos el usuario en la tabla admin_users por username únicamente
+        // La contraseña se verifica con bcrypt.compare() contra el hash almacenado
         const { data, error } = await adminSupabase
             .from('admin_users')
-            .select('id, username')
+            .select('id, username, password')
             .eq('username', username)
-            .eq('password', password)
             .single();
 
         if (error || !data) {
+            return NextResponse.json({ error: 'Credenciales inválidas' }, { status: 401 });
+        }
+
+        // Verificar contraseña con bcrypt (compara texto plano vs hash almacenado)
+        const passwordValid = await bcrypt.compare(password, data.password);
+        if (!passwordValid) {
             return NextResponse.json({ error: 'Credenciales inválidas' }, { status: 401 });
         }
 

@@ -1,6 +1,7 @@
 import { createAdminClient } from '@/lib/supabase-admin';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { checkRateLimit, getClientIp } from '@/lib/security';
 import type { PayloadOrden } from '@/types/checkout';
 
 const itemSchema = z.object({
@@ -36,6 +37,12 @@ const ordenSchema = z.object({
 
 export async function POST(req: Request) {
     try {
+        // Rate limiting: máximo 5 órdenes por IP cada 10 minutos
+        const ip = getClientIp(req);
+        if (!checkRateLimit(`crear-orden:${ip}`, 5, 10 * 60 * 1000)) {
+            return NextResponse.json({ error: 'Demasiadas solicitudes. Intenta de nuevo más tarde.' }, { status: 429 });
+        }
+
         const body: PayloadOrden = await req.json();
 
         // Cliente admin: usa service role key para bypasear RLS de Supabase en el backend
@@ -102,19 +109,11 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Error al guardar productos del pedido' }, { status: 500 });
         }
 
-        // 5. Incrementar uso del código de descuento si aplica
+        // 5. Incrementar uso del código de descuento si aplica (operación atómica)
         if (codigo_descuento_id) {
-            const { data: codigoActual } = await supabase
-                .from('codigos_descuento')
-                .select('veces_usado')
-                .eq('id', codigo_descuento_id)
-                .single();
-            if (codigoActual) {
-                await supabase
-                    .from('codigos_descuento')
-                    .update({ veces_usado: codigoActual.veces_usado + 1 })
-                    .eq('id', codigo_descuento_id);
-            }
+            await supabase.rpc('incrementar_uso_cupon', {
+                p_codigo_id: codigo_descuento_id,
+            });
         }
 
         // Email de confirmación: se envía desde la página /confirmacion luego de verificar el pago

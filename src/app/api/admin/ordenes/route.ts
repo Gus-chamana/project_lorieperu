@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { createAdminClient } from '@/lib/supabase-admin';
+import { verifyAdminSession } from '@/lib/security';
 
 // Deshabilitar cache de Next.js/Vercel para que siempre devuelva datos frescos de Supabase
 export const dynamic = 'force-dynamic';
@@ -7,6 +9,14 @@ export const dynamic = 'force-dynamic';
 // GET /api/admin/ordenes – Lista todas las órdenes (usa service role para bypassear RLS)
 export async function GET() {
     try {
+        // Verificar sesión administrativa contra la BD
+        const cookieStore = cookies();
+        const adminSession = cookieStore.get('lorie_admin_session');
+        const isValid = await verifyAdminSession(adminSession?.value);
+        if (!isValid) {
+            return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+        }
+
         const supabase = createAdminClient();
 
         const { data, error } = await supabase

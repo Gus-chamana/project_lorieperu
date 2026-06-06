@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createAdminClient } from '@/lib/supabase-admin';
+import { verifyAdminSession } from '@/lib/security';
 
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
-    // 1. Verificar sesión de administrador
+    // 1. Verificar sesión de administrador contra la BD
     const cookieStore = cookies();
     const adminSession = cookieStore.get('lorie_admin_session');
-
-    if (!adminSession?.value) {
+    const isValid = await verifyAdminSession(adminSession?.value);
+    if (!isValid) {
         return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
     }
 
@@ -60,11 +61,11 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
 }
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
-    // 1. Verificar sesión
+    // 1. Verificar sesión contra la BD
     const cookieStore = cookies();
     const adminSession = cookieStore.get('lorie_admin_session');
-
-    if (!adminSession?.value) {
+    const isValid = await verifyAdminSession(adminSession?.value);
+    if (!isValid) {
         return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
     }
 

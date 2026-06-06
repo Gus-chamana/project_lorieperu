@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createAdminClient } from '@/lib/supabase-admin';
+import { verifyAdminSession } from '@/lib/security';
 
 export async function POST(req: Request) {
     const cookieStore = cookies();
     const adminSession = cookieStore.get('lorie_admin_session');
-
-    if (!adminSession?.value) {
+    const isValid = await verifyAdminSession(adminSession?.value);
+    if (!isValid) {
         return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
     }
 
