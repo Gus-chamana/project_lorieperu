@@ -8,6 +8,14 @@ export async function POST(req: Request) {
         return NextResponse.json({ valido: false, error: 'Datos incompletos' }, { status: 400 });
     }
 
+    if (typeof codigo !== 'string' || typeof subtotal !== 'number' || subtotal <= 0) {
+        return NextResponse.json({ valido: false, error: 'Datos inválidos' }, { status: 400 });
+    }
+
+    if (codigo.length > 50) {
+        return NextResponse.json({ valido: false, error: 'Código demasiado largo' }, { status: 400 });
+    }
+
     const codigoLimpio = (codigo as string).toUpperCase().trim();
 
     // 1. Primero verificamos si coincide con el cupón temporal del banner (configuracion_tienda)

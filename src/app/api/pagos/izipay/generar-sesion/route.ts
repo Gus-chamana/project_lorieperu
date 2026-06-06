@@ -13,6 +13,11 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'ID de orden requerido' }, { status: 400 });
         }
 
+        const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (!UUID_REGEX.test(orden_id)) {
+            return NextResponse.json({ error: 'ID de orden inválido' }, { status: 400 });
+        }
+
         // 1. Verificar la orden en Supabase y obtener el Total Fiable (nunca confiar en el monto del frontend)
         const { data: orden, error: errOrden } = await supabase
             .from('ordenes')

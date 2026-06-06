@@ -129,6 +129,11 @@ export async function PATCH(
             return NextResponse.json({ error: 'orden_id requerido' }, { status: 400 });
         }
 
+        const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (!UUID_REGEX.test(orden_id)) {
+            return NextResponse.json({ error: 'ID de orden inválido' }, { status: 400 });
+        }
+
         const body = await req.json();
 
         // Solo aceptamos la acción de cancelar

@@ -32,6 +32,30 @@ export async function POST(req: Request) {
             activo: formData.get('activo') === 'true',
         };
 
+        // --- VALIDACIÓN DE SEGURIDAD ---
+        if (!payload.nombre || payload.nombre.trim().length < 2) {
+            return NextResponse.json({ error: 'Nombre del producto requerido (mínimo 2 caracteres)' }, { status: 400 });
+        }
+        if (isNaN(payload.precio) || payload.precio <= 0) {
+            return NextResponse.json({ error: 'Precio debe ser un número positivo' }, { status: 400 });
+        }
+        if (isNaN(payload.stock) || payload.stock < 0) {
+            return NextResponse.json({ error: 'Stock debe ser un número no negativo' }, { status: 400 });
+        }
+        if (payload.precio_oferta !== null && (isNaN(payload.precio_oferta) || payload.precio_oferta <= 0)) {
+            return NextResponse.json({ error: 'Precio de oferta inválido' }, { status: 400 });
+        }
+        if (payload.nombre.length > 200) {
+            return NextResponse.json({ error: 'Nombre demasiado largo' }, { status: 400 });
+        }
+        if (payload.descripcion && payload.descripcion.length > 5000) {
+            return NextResponse.json({ error: 'Descripción demasiado larga' }, { status: 400 });
+        }
+        if (payload.caracteristicas && payload.caracteristicas.length > 5000) {
+            return NextResponse.json({ error: 'Características demasiado largas' }, { status: 400 });
+        }
+        // -------------------------------
+
         let currentProductoId = productoId;
 
         // 2. Insertar o Actualizar Producto a nivel Servidor
