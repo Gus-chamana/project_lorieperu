@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Cormorant, Montserrat, Cormorant_Garamond, Pinyon_Script, Lora } from 'next/font/google';
 import ClientProviders from './ClientProviders';
 import CookieBanner from '@/components/feature/CookieBanner';
+import Preloader from '@/components/feature/Preloader';
 import '../index.css';
 
 const cormorant = Cormorant({
@@ -83,6 +84,7 @@ export default function RootLayout({
             </head>
             <body className={`${cormorant.variable} ${montserrat.variable} ${cormorantGaramond.variable} ${pinyonScript.variable} ${lora.variable} font-sans bg-lorie-cream text-lorie-dark antialiased overflow-x-hidden w-full`}>
                 {/* Renderizado de las páginas y componentes preservando la estructura actual */}
+                <Preloader />
                 <ClientProviders>
                     {children}
                     <CookieBanner />

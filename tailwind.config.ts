@@ -23,6 +23,8 @@ export default {
         'fade-in': 'fadeIn 0.6s ease-out',
         'slide-up': 'slideUp 0.6s ease-out',
         'bounce-slow': 'bounce 2s infinite',
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'loading-bar': 'loadingBar 1.5s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -32,6 +34,11 @@ export default {
         slideUp: {
           '0%': { transform: 'translateY(30px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        loadingBar: {
+          '0%': { transform: 'translateX(-100%)' },
+          '50%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(100%)' },
         },
       },
     },

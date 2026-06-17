@@ -23,6 +23,9 @@ export default function HeroSection() {
 
       player.on('play', () => {
         setIsVideoPlaying(true);
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new Event('page-video-ready'));
+        }
       });
 
       player.ready().then(() => {
@@ -43,19 +46,7 @@ export default function HeroSection() {
       {/* Hero Background Video */}
       <div className="absolute inset-0 bg-black pointer-events-none overflow-hidden">
         
-        {/* Poster Image - La Regla de Oro */}
-        <div 
-          className={`absolute inset-0 transition-opacity duration-1000 z-0 ${isVideoPlaying ? 'opacity-0' : 'opacity-100'}`}
-        >
-          <Image 
-            src="/fotograma-1.webp"
-            alt="Lorie Perú Portada"
-            fill
-            priority
-            className="object-cover"
-          />
-        </div>
-
+        {/* El preloader global se encargará de cubrir la carga inicial del video */}
         <div 
           ref={videoRef}
           className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 object-cover [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:object-cover z-0"

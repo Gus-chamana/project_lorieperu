@@ -28,6 +28,12 @@ export default function CursoPage() {
         dnt: true
       });
 
+      player.on('play', () => {
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new Event('page-video-ready'));
+        }
+      });
+
       player.ready().then(() => {
         player.play().catch((error) => {
           console.warn("Autoplay bloqueado por iOS en vista de curso", error);
