@@ -23,16 +23,12 @@ export async function POST(req: Request) {
         if (codigo_cupon && (typeof codigo_cupon !== 'string' || codigo_cupon.length > 50)) {
             return NextResponse.json({ error: 'Código de cupón inválido' }, { status: 400 });
         }
-        let pct: number | undefined = undefined;
-        if (descuento_porcentaje !== undefined && descuento_porcentaje !== '') {
-            pct = Number(descuento_porcentaje);
-            if (isNaN(pct) || pct < 0 || pct > 100) {
-                return NextResponse.json({ error: 'Porcentaje de descuento debe estar entre 0 y 100' }, { status: 400 });
-            }
+        if (descuento_porcentaje !== undefined && (typeof descuento_porcentaje !== 'number' || descuento_porcentaje < 0 || descuento_porcentaje > 100)) {
+            return NextResponse.json({ error: 'Porcentaje de descuento debe estar entre 0 y 100' }, { status: 400 });
         }
 
         // Solo guardamos las propiedades conocidas y validadas
-        const valorLimpio = { activo, codigo_cupon, descuento_porcentaje: pct, titulo, subtitulo, fecha_inicio, fecha_fin };
+        const valorLimpio = { activo, codigo_cupon, descuento_porcentaje, titulo, subtitulo, fecha_inicio, fecha_fin };
         // -------------------------------
 
         const adminSupabase = createAdminClient();
