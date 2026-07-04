@@ -93,10 +93,15 @@ export default function AdminBannerDescuentos() {
         setMensajeObj("");
 
         try {
+            const payload = {
+                ...formData,
+                descuento_porcentaje: formData.descuento_porcentaje ? Number(formData.descuento_porcentaje) : 0
+            };
+
             const res = await fetch("/api/admin/descuentos", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(payload)
             });
 
             if (!res.ok) {
