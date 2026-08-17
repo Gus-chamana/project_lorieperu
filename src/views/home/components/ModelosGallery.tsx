@@ -128,16 +128,8 @@ export default function ModelosGallery() {
     },
   ];
 
-  /* 
-   Optimización de Supabase:
-   Agregamos parámetros a la URL pública para indicarle al servidor de Supabase que 
-   re-escale y entregue un webp optimizado de 600x800 antes de enviarlo al cliente.
-   Esto ahorra Mbs masivos en la carga inicial independientemente del peso original.
-  */
-  const images = rawImages.map(img => ({
-    ...img,
-    url: `${img.url}?width=600&height=800&resize=cover`
-  }));
+  // Next.js Image Optimization se encarga automáticamente del redimensionamiento y formato
+  const images = rawImages;
 
   const doubledImages = [...images, ...images];
 
@@ -313,8 +305,7 @@ export default function ModelosGallery() {
                   fill
                   className="object-cover pointer-events-none transition-transform duration-700 hover:scale-110"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  loading={index < 4 ? 'eager' : 'lazy'}
-                  priority={index < 4}
+                  loading="lazy"
                 />
                 {/* Sutil gradiente inferior para darle estética premium (sin texto) */}
                 <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-lorie-dark/40 to-transparent pointer-events-none mix-blend-multiply opacity-60"></div>

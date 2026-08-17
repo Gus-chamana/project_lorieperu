@@ -80,7 +80,11 @@ export async function GET(request: Request) {
             requiere_medida: p.requiere_medida ?? false,
         }));
 
-        return NextResponse.json(productos);
+        return NextResponse.json(productos, {
+            headers: {
+                'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+            },
+        });
     } catch (err) {
         const e = err as Error;
         console.error('[/api/productos] Error:', e.message);

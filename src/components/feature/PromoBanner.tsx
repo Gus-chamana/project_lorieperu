@@ -47,6 +47,10 @@ export function usePromoBannerState() {
 
 export const PROMO_HEIGHT = 36;
 
+let cachedPromoConfig: any = null;
+let lastPromoFetchTime = 0;
+const PROMO_CACHE_TTL = 5 * 60 * 1000; // 5 minutos de caché en memoria
+
 /**
  * PromoBanner component.
  * Displays a dismissible banner. Its visibility is also reflected in the
@@ -72,7 +76,40 @@ export default function PromoBanner() {
     const sync = (v: boolean) => setIsVisible(v);
     listeners.push(sync);
 
+    const applyConfig = (value: any) => {
+      const now = new Date();
+      let esValidoPorFecha = true;
+
+      if (value.fecha_inicio && new Date(value.fecha_inicio) > now) {
+        esValidoPorFecha = false;
+      }
+      if (value.fecha_fin && new Date(value.fecha_fin) < now) {
+        esValidoPorFecha = false;
+      }
+
+      if (esValidoPorFecha) {
+        setConfig(value);
+        setLoaded(true);
+        setGlobalVisible(true);
+        setIsVisible(true);
+      } else {
+        setGlobalVisible(false);
+        setIsVisible(false);
+      }
+    };
+
     const fetchConfig = async () => {
+      // Si tenemos datos en caché válidos, los usamos directamente sin consultar Supabase
+      if (cachedPromoConfig !== null && Date.now() - lastPromoFetchTime < PROMO_CACHE_TTL) {
+        if (cachedPromoConfig.activo) {
+          applyConfig(cachedPromoConfig);
+        } else {
+          setGlobalVisible(false);
+          setIsVisible(false);
+        }
+        return;
+      }
+
       try {
         const { data, error } = await supabase
           .from("configuracion_tienda")
@@ -81,27 +118,12 @@ export default function PromoBanner() {
           .single();
 
         if (data && data.valor && data.valor.activo) {
-          const value = data.valor;
-          const now = new Date();
-          let esValidoPorFecha = true;
-          
-          if (value.fecha_inicio && new Date(value.fecha_inicio) > now) {
-              esValidoPorFecha = false;
-          }
-          if (value.fecha_fin && new Date(value.fecha_fin) < now) {
-              esValidoPorFecha = false;
-          }
-
-          if (esValidoPorFecha) {
-            setConfig(value);
-            setLoaded(true);
-            setGlobalVisible(true);
-            setIsVisible(true);
-          } else {
-            setGlobalVisible(false);
-            setIsVisible(false);
-          }
+          cachedPromoConfig = data.valor;
+          lastPromoFetchTime = Date.now();
+          applyConfig(data.valor);
         } else {
+          cachedPromoConfig = { activo: false };
+          lastPromoFetchTime = Date.now();
           // If not active in DB, hide it
           setGlobalVisible(false);
           setIsVisible(false);

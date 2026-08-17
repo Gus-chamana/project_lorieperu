@@ -11,5 +11,9 @@ export async function GET() {
         return NextResponse.json({ error: 'Error al obtener métodos de envío' }, { status: 500 });
     }
 
-    return NextResponse.json(data);
+    return NextResponse.json(data, {
+        headers: {
+            'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+        },
+    });
 }
