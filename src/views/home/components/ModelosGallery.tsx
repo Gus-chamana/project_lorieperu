@@ -4,126 +4,126 @@ import Image from 'next/image';
 import { useRef } from 'react';
 
 export default function ModelosGallery() {
-  // URLs de imágenes desde el bucket "home" en Supabase.
+  // Imágenes locales desde /public/img/carrusel/
   const rawImages = [
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h1.jpeg',
+      url: '/img/carrusel/h1.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 1'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h2.jpeg',
+      url: '/img/carrusel/h2.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 2'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h3.jpeg',
+      url: '/img/carrusel/h3.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 3'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h4.jpeg',
+      url: '/img/carrusel/h4.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 4'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h5.jpeg',
+      url: '/img/carrusel/h5.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 5'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h6.jpeg',
+      url: '/img/carrusel/h6.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 6'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h7.jpeg',
+      url: '/img/carrusel/h7.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 7'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h8.jpeg',
+      url: '/img/carrusel/h8.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 8'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h9.jpeg',
+      url: '/img/carrusel/h9.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 9'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h10.jpeg',
+      url: '/img/carrusel/h10.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 10'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h11.jpeg',
+      url: '/img/carrusel/h11.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 11'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h12.jpeg',
+      url: '/img/carrusel/h12.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 12'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h13.jpeg',
+      url: '/img/carrusel/h13.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 13'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h14.jpeg',
+      url: '/img/carrusel/h14.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 14'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h15.jpeg',
+      url: '/img/carrusel/h15.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 15'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h16.jpeg',
+      url: '/img/carrusel/h16.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 16'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h17.jpeg',
+      url: '/img/carrusel/h17.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 17'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h18.jpeg',
+      url: '/img/carrusel/h18.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 18'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h19.jpeg',
+      url: '/img/carrusel/h19.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 19'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h20.jpeg',
+      url: '/img/carrusel/h20.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 20'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h21.jpeg',
+      url: '/img/carrusel/h21.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 21'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h22.jpeg',
+      url: '/img/carrusel/h22.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 22'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h23.jpeg',
+      url: '/img/carrusel/h23.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 23'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h24.jpeg',
+      url: '/img/carrusel/h24.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 24'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h25.jpeg',
+      url: '/img/carrusel/h25.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 25'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h26.jpeg',
+      url: '/img/carrusel/h26.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 26'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h27.jpeg',
+      url: '/img/carrusel/h27.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 27'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h28.jpeg',
+      url: '/img/carrusel/h28.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 28'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h29.jpeg',
+      url: '/img/carrusel/h29.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 29'
     },
     {
-      url: 'https://sfpjbtvoulmxldwfstnr.supabase.co/storage/v1/object/public/home/h30.jpeg',
+      url: '/img/carrusel/h30.jpeg',
       alt: 'Bolso Lorie Perú - Diseño 30'
     },
   ];
