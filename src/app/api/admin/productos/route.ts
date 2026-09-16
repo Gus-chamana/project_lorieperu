@@ -99,7 +99,7 @@ export async function POST(req: Request) {
                     .from("productos")
                     .upload(fileName, buffer, {
                         contentType: file.type,
-                        cacheControl: '3600',
+                        cacheControl: '31536000',
                         upsert: false
                     });
 
