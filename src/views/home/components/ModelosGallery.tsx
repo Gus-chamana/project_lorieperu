@@ -4,134 +4,30 @@ import Image from 'next/image';
 import { useRef } from 'react';
 
 export default function ModelosGallery() {
-  // Imágenes locales desde /public/img/carrusel/
-  const rawImages = [
-    {
-      url: '/img/carrusel/h1.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 1'
-    },
-    {
-      url: '/img/carrusel/h2.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 2'
-    },
-    {
-      url: '/img/carrusel/h3.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 3'
-    },
-    {
-      url: '/img/carrusel/h4.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 4'
-    },
-    {
-      url: '/img/carrusel/h5.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 5'
-    },
-    {
-      url: '/img/carrusel/h6.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 6'
-    },
-    {
-      url: '/img/carrusel/h7.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 7'
-    },
-    {
-      url: '/img/carrusel/h8.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 8'
-    },
-    {
-      url: '/img/carrusel/h9.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 9'
-    },
-    {
-      url: '/img/carrusel/h10.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 10'
-    },
-    {
-      url: '/img/carrusel/h11.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 11'
-    },
-    {
-      url: '/img/carrusel/h12.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 12'
-    },
-    {
-      url: '/img/carrusel/h13.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 13'
-    },
-    {
-      url: '/img/carrusel/h14.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 14'
-    },
-    {
-      url: '/img/carrusel/h15.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 15'
-    },
-    {
-      url: '/img/carrusel/h16.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 16'
-    },
-    {
-      url: '/img/carrusel/h17.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 17'
-    },
-    {
-      url: '/img/carrusel/h18.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 18'
-    },
-    {
-      url: '/img/carrusel/h19.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 19'
-    },
-    {
-      url: '/img/carrusel/h20.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 20'
-    },
-    {
-      url: '/img/carrusel/h21.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 21'
-    },
-    {
-      url: '/img/carrusel/h22.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 22'
-    },
-    {
-      url: '/img/carrusel/h23.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 23'
-    },
-    {
-      url: '/img/carrusel/h24.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 24'
-    },
-    {
-      url: '/img/carrusel/h25.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 25'
-    },
-    {
-      url: '/img/carrusel/h26.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 26'
-    },
-    {
-      url: '/img/carrusel/h27.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 27'
-    },
-    {
-      url: '/img/carrusel/h28.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 28'
-    },
-    {
-      url: '/img/carrusel/h29.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 29'
-    },
-    {
-      url: '/img/carrusel/h30.jpeg',
-      alt: 'Bolso Lorie Perú - Diseño 30'
-    },
+  // Imágenes locales desde /public/img/carrusel/ (WebP optimizadas)
+  const images = [
+    { url: '/img/carrusel/h1.webp', alt: 'Bolso Lorie Perú - Diseño 1' },
+    { url: '/img/carrusel/h2.webp', alt: 'Bolso Lorie Perú - Diseño 2' },
+    { url: '/img/carrusel/h3.webp', alt: 'Bolso Lorie Perú - Diseño 3' },
+    { url: '/img/carrusel/h4.webp', alt: 'Bolso Lorie Perú - Diseño 4' },
+    { url: '/img/carrusel/h5.webp', alt: 'Bolso Lorie Perú - Diseño 5' },
+    { url: '/img/carrusel/h6.webp', alt: 'Bolso Lorie Perú - Diseño 6' },
+    { url: '/img/carrusel/h7.webp', alt: 'Bolso Lorie Perú - Diseño 7' },
+    { url: '/img/carrusel/h8.webp', alt: 'Bolso Lorie Perú - Diseño 8' },
+    { url: '/img/carrusel/h9.webp', alt: 'Bolso Lorie Perú - Diseño 9' },
+    { url: '/img/carrusel/h10.webp', alt: 'Bolso Lorie Perú - Diseño 10' },
+    { url: '/img/carrusel/h11.webp', alt: 'Bolso Lorie Perú - Diseño 11' },
+    { url: '/img/carrusel/h12.webp', alt: 'Bolso Lorie Perú - Diseño 12' },
+    { url: '/img/carrusel/h13.webp', alt: 'Bolso Lorie Perú - Diseño 13' },
+    { url: '/img/carrusel/h14.webp', alt: 'Bolso Lorie Perú - Diseño 14' },
+    { url: '/img/carrusel/h15.webp', alt: 'Bolso Lorie Perú - Diseño 15' },
   ];
 
-  // Next.js Image Optimization se encarga automáticamente del redimensionamiento y formato
-  const images = rawImages;
-
+  // Duplicar para efecto marquee infinito
   const doubledImages = [...images, ...images];
+
+  // Primeras 8 imágenes cargan eager (visibles de inmediato), el resto lazy
+  const EAGER_COUNT = 8;
 
   return (
     <section className="py-20 relative z-10 overflow-hidden">
@@ -274,7 +170,7 @@ export default function ModelosGallery() {
               100% { transform: translateX(-50%); }
             }
             .marquee-left {
-              animation: scrollLeft 120s linear infinite;
+              animation: scrollLeft 60s linear infinite;
               display: flex;
               gap: 1rem;
             }
@@ -304,8 +200,8 @@ export default function ModelosGallery() {
                   alt={image.alt}
                   fill
                   className="object-cover pointer-events-none transition-transform duration-700 hover:scale-110"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  loading="lazy"
+                  sizes="(max-width: 768px) 260px, (max-width: 1200px) 30vw, 360px"
+                  loading={index < EAGER_COUNT ? "eager" : "lazy"}
                 />
                 {/* Sutil gradiente inferior para darle estética premium (sin texto) */}
                 <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-lorie-dark/40 to-transparent pointer-events-none mix-blend-multiply opacity-60"></div>
